@@ -18,10 +18,10 @@ import webapp2
 
 import seasons
 
-class MainHandler(webapp2.RequestHandler):
+class AddClubHandler(webapp2.RequestHandler):
   def get(self):
     season = seasons.Season.get_by_id('Spr14')
       
 app = webapp2.WSGIApplication([
-  ('/admin/', MainHandler)
+  (r'/.*', AddClubHandler)
 ], debug=True)

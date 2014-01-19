@@ -22,22 +22,6 @@ class View():
     
     response.write('<title>ASPA {0}</title>\n'.format(season.name))
     response.write('<script language="JavaScript1.2" src="/js/tablesort.js"></script>\n')
-    response.write('<script language="javascript">\n')
-    
-    stats.insert(response)
-    
-    response.write('  function setHandicap(selectName, inputName) {\n')
-    response.write('    var inputElement = document.getElementById(inputName);\n')
-    response.write('    var selectElement = document.getElementById(selectName);\n')
-    response.write('    if (!inputElement || !selectElement) {\n')
-    response.write('      inputElement.value = "";\n')
-    response.write('      return;\n')
-    response.write('    }\n')
-    response.write('    var playerCode = selectElement.options[selectElement.selectedIndex].value;\n')
-    response.write('    inputElement.value = findHandicap(playerCode);\n')
-    response.write('  }\n')
-    
-    response.write('</script>\n')
     response.write('</head>\n')
     response.write('<body bgcolor="#f0f0f0">\n')
     response.write('<center>\n')

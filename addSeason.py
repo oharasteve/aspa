@@ -16,30 +16,12 @@
 #
 import webapp2
 
-import fakeData
-import highRun
 import seasons
-import view
 
-class MainHandler(webapp2.RequestHandler):
+class AddSeasonHandler(webapp2.RequestHandler):
   def get(self):
-    # Destroy or create fake data
-    #f = fakeData.FakeData()
-    #f.destroy()
-    #f.create()
-    
-    #hr = highRun.HighRun()
-    #hr.destroy()
-    #hr.create()
-
     season = seasons.Season.get_by_id('Spr14')
-
-    # Show the webpage
-    v = view.View()
-    v.header(self.response, season)
-    v.show(self.response, season)
-    v.footer(self.response)
       
 app = webapp2.WSGIApplication([
-  (r'/', MainHandler)
+  (r'/.*', AddSeasonHandler)
 ], debug=True)

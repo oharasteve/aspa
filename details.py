@@ -5,7 +5,7 @@ import matches
 import players
 import seasons
 
-class MainHandler(webapp2.RequestHandler):
+class DetailHandler(webapp2.RequestHandler):
   def get(self):
     season = seasons.Season.get_by_id(self.request.get('Season'))
     player = players.Player.get_by_id(self.request.get('Player'))
@@ -17,7 +17,7 @@ class MainHandler(webapp2.RequestHandler):
     d.footer(self.response)
 
 app = webapp2.WSGIApplication([
-   ('/details/', MainHandler)
+   ('/details/', DetailHandler)
 ], debug=True)
 
 class Details():

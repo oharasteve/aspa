@@ -16,5 +16,6 @@ class PlayerSummary(ndb.Model):
 def insert(response):
   response.write('  function findHandicap(key) {\n')
   for stat in PlayerSummary.query():
-    response.write('    if(key == "{0}") return {1};\n'.format(stat.player.id(), stat.handicap))
+    response.write('    if (key == "{0}") return {1};\n'.format(stat.player.id(), stat.handicap))
+  response.write('    return 0;\n')
   response.write('  }\n')
