@@ -16,12 +16,9 @@
 #
 import webapp2
 
-import addMatch
-import addPerson
 import fakeData
 import highRun
 import seasons
-import suggestMatch
 import view
 
 class MainHandler(webapp2.RequestHandler):
@@ -33,24 +30,14 @@ class MainHandler(webapp2.RequestHandler):
     
     hr = highRun.HighRun()
     #hr.destroy()
-    hr.create()
+    #hr.create()
 
-    season = seasons.Season.get_by_id('F13')
+    season = seasons.Season.get_by_id('Spr14')
 
     # Show the webpage
     v = view.View()
     v.header(self.response, season)
     v.show(self.response, season)
-    
-    ap = addPerson.AddPerson()
-    ap.show(self.response)
-    
-    am = addMatch.AddMatch()
-    am.show(self.response, season)
-    
-    sm = suggestMatch.SuggestMatch()
-    sm.show(self.response, season)
-    
     v.footer(self.response)
       
 app = webapp2.WSGIApplication([

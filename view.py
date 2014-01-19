@@ -1,11 +1,7 @@
 import datetime
 
-import clubs
-import highRun
 import players
-import seasons
 import stats
-import suggestMatch
 
 class View():
   def header(self, response, season):
@@ -41,10 +37,6 @@ class View():
     response.write('    inputElement.value = findHandicap(playerCode);\n')
     response.write('  }\n')
     
-    highRun.insert(response)
-    
-    suggestMatch.insert(response)
-
     response.write('</script>\n')
     response.write('</head>\n')
     response.write('<body bgcolor="#f0f0f0">\n')
@@ -78,10 +70,13 @@ class View():
       pct = 100 * summary.wins / (summary.wins + summary.losses)
       seq += 1
       
+      # For linking to detail page
+      ref = 'details/?Season={0}&Player={1}'.format(season.key.id(), summary.player.id())
+      
       response.write('  <tr>\n')
-      response.write('    <td class="white center">{0}</td>\n'.format(seq))
-      response.write('    <td class="white left">{0}</td>\n'.format(player.firstName))
-      response.write('    <td class="white left">{0}</td>\n'.format(player.lastName))
+      response.write('    <td class="white center"><a href="{1}">{0}</a></td>\n'.format(seq, ref))
+      response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.firstName, ref))
+      response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.lastName, ref))
       response.write('    <td class="white center">{0}</td>\n'.format(summary.handicap))
       response.write('    <td class="gray center">{0}</td>\n'.format(summary.wins))
       response.write('    <td class="gray center">{0}</td>\n'.format(summary.losses))

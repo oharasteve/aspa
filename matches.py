@@ -6,9 +6,9 @@ import seasons
 
 class Match(ndb.Model):
   """Models a match between two players."""
-  date = ndb.DateTimeProperty()
+  date = ndb.DateProperty()
   season = ndb.KeyProperty(kind=seasons.Season)
-  club = ndb.KeyProperty(kind=clubs.Club())
+  club = ndb.KeyProperty(kind=clubs.Club)
   
   playerW = ndb.KeyProperty(kind=players.Player)
   handicapW = ndb.IntegerProperty()
