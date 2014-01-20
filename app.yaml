@@ -12,7 +12,7 @@ handlers:
 - url: /js
   static_dir: js
   
-- url: /results/.*
+- url: /results/
   static_dir: results
   
 - url: /admin
@@ -27,7 +27,7 @@ handlers:
 - url: /admin/addSeason/
   script: addSeason.app
   
-- url: /admin/addPerson/
+- url: /admin/addPlayer/
   script: addPerson.app
   
 - url: /admin/addMatch/
@@ -35,6 +35,12 @@ handlers:
   
 - url: /admin/suggestMatch/
   script: suggestMatch.app
+  
+- url: /admin/destroy/
+  script: destroy.app
+  
+- url: /admin/regenerate/
+  script: fakeData.app
   
 - url: /details/.*
   script: details.app
