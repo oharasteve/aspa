@@ -23,7 +23,7 @@ import stats
 class SuggestMatchHandler(webapp2.RequestHandler):
   def get(self):
     season = seasons.Season.get_by_id('Spr14')
-    s = SuggestMatch()
+    sm = SuggestMatch()
 
     self.response.write('<html>\n')
     self.response.write('<head>\n')
@@ -34,23 +34,20 @@ class SuggestMatchHandler(webapp2.RequestHandler):
     self.response.write('</style>\n')
     self.response.write('<script language="javascript">\n')
     
-    s.setHandicap(self.response)
-    s.showMatches(self.response)
-    stats.insert(self.response)
+    sm.setHandicap(self.response)
+    sm.showMatches(self.response)
+    
+    stats.insertJavascript(self.response)
     
     self.response.write('</script>\n')
     self.response.write('</head>\n')
     self.response.write('<body>\n')
 
-    s.show(self.response, season)
+    sm.show(self.response, season)
     
+    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
     self.response.write('</body>\n')
     self.response.write('</html>\n')
-      
-app = webapp2.WSGIApplication([
-  (r'/.*', SuggestMatchHandler)
-], debug=True)
-
 
 class SuggestMatch():
   def setHandicap(self, response):
@@ -65,21 +62,6 @@ class SuggestMatch():
     response.write('    inputElement.value = findHandicap(playerCode);\n')
     response.write('    showMatches();\n')
     response.write('  }\n')
-
-  def DELETEME(self, response, season):
-    response.write('<h3>Suggested Race:</h3>\n')
-    response.write('<table border>\n')
-    response.write('  <tr><td>Player 1: \n')
-    self.showNames(response, season, "playerA", "handicapA")
-    response.write('    <td>Handicap: <input id="handicapA" onchange="showMatches()" name="handicapA" value="" size="5"/>\n')
-    for x in range(5, 15):
-      response.write('    <td id="A_{0}0">&nbsp;\n'.format(x))
-    response.write('  <tr><td>Player 2: \n')
-    self.showNames(response, season, "playerB", "handicapB")
-    response.write('    <td>Handicap: <input id="handicapB" onchange="showMatches()" name="handicapB" value="" size="5"/>\n')
-    for x in range(5, 15):
-      response.write('    <td id="B_{0}0">&nbsp;\n'.format(x))
-    response.write('</table>\n')
 
   def show(self, response, season):
     response.write('<h3>Suggested Race:</h3>\n')
@@ -137,3 +119,7 @@ class SuggestMatch():
     response.write('      ElementB.innerHTML = "&nbsp;";\n')
     response.write('    }\n')
     response.write('  }\n')
+    
+app = webapp2.WSGIApplication([
+  (r'/.*', SuggestMatchHandler)
+], debug=True)

@@ -13,7 +13,7 @@ class PlayerSummary(ndb.Model):
   wins = ndb.IntegerProperty()
   losses = ndb.IntegerProperty()
 
-def insert(response):
+def insertJavascript(response):
   response.write('  function findHandicap(key) {\n')
   for stat in PlayerSummary.query():
     response.write('    if (key == "{0}") return {1};\n'.format(stat.player.id(), stat.handicap))

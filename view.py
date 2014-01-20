@@ -20,15 +20,16 @@ class View():
     response.write('  input { text-align: center; }\n')
     response.write('</style>\n')
     
-    response.write('<title>ASPA {0}</title>\n'.format(season.name))
+    response.write('<title>ASPA {0}</title>\n'.format(season.name if season else ''))
     response.write('<script language="JavaScript1.2" src="/js/tablesort.js"></script>\n')
     response.write('</head>\n')
     response.write('<body bgcolor="#f0f0f0">\n')
     response.write('<center>\n')
 
     response.write('<h1>American Straight Pool Association</h1>\n')
-    response.write('<h2>{0} : {1} to {2}</h2>\n'.format(season.name,
-        season.startDate.strftime("%b %d, %Y"), season.endDate.strftime("%b %d, %Y")))
+    if season:
+      response.write('<h2>{0} : {1} to {2}</h2>\n'.format(season.name,
+          season.startDate.strftime("%b %d, %Y"), season.endDate.strftime("%b %d, %Y")))
         
   def show(self, response, season):
     response.write('<table class="details">\n')
@@ -46,37 +47,37 @@ class View():
     response.write('    <th class="hdr num">{0}</td>\n'.format('% Goal'))
     response.write('  </tr></thead><tbody>\n')
 
-    seq = 0
-    for summary in stats.PlayerSummary.query(stats.PlayerSummary.season == season.key):
-      player = players.Player.get_by_id(summary.player.id())
-      points = 3 * summary.wins - summary.losses / 2.0 + (summary.wins + summary.losses) / 1000000.0
-      goal = 100 * summary.highRun / summary.highRunTarget
-      pct = 100 * summary.wins / (summary.wins + summary.losses)
-      seq += 1
-      
-      # For linking to detail page
-      ref = 'details/?Season={0}&Player={1}'.format(season.key.id(), summary.player.id())
-      
-      response.write('  <tr>\n')
-      response.write('    <td class="white center"><a href="{1}">{0}</a></td>\n'.format(seq, ref))
-      response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.firstName, ref))
-      response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.lastName, ref))
-      response.write('    <td class="white center">{0}</td>\n'.format(summary.handicap))
-      response.write('    <td class="gray center">{0}</td>\n'.format(summary.wins))
-      response.write('    <td class="gray center">{0}</td>\n'.format(summary.losses))
-      response.write('    <td class="gray center">{:.2f}</td>\n'.format(pct))
-      response.write('    <td class="gray right">{:.6f}</td>\n'.format(points))
-      response.write('    <td class="white center">{0}</td>\n'.format(summary.highRun))
-      response.write('    <td class="white center">{:.2f}</td>\n'.format(summary.highRunTarget))
-      response.write('    <td class="white center">{:.2f}</td>\n'.format(goal))
-      response.write('  </tr>\n')
+    if season:
+      seq = 0
+      for summary in stats.PlayerSummary.query(stats.PlayerSummary.season == season.key).order(-stats.PlayerSummary.wins).order(stats.PlayerSummary.losses):
+        player = players.Player.get_by_id(summary.player.id())
+        points = 3 * summary.wins - summary.losses / 2.0 + (summary.wins + summary.losses) / 1000000.0
+        goal = 0.0
+        if summary.highRunTarget > 0:
+          goal = summary.highRun * 100.0 / summary.highRunTarget
+        pct = 0.0
+        if summary.wins > 0:
+          pct = summary.wins * 100.0 / (summary.wins + summary.losses)
+        seq += 1
+        
+        # For linking to detail page
+        ref = 'details/?Season={0}&Player={1}'.format(season.key.id(), summary.player.id())
+        
+        response.write('  <tr>\n')
+        response.write('    <td class="white center"><a href="{1}">{0}</a></td>\n'.format(seq, ref))
+        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.firstName, ref))
+        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.lastName, ref))
+        response.write('    <td class="white center">{0}</td>\n'.format(summary.handicap))
+        response.write('    <td class="gray center">{0}</td>\n'.format(summary.wins))
+        response.write('    <td class="gray center">{0}</td>\n'.format(summary.losses))
+        response.write('    <td class="gray center">{:.2f}</td>\n'.format(pct))
+        response.write('    <td class="gray right">{:.6f}</td>\n'.format(points))
+        response.write('    <td class="white center">{0}</td>\n'.format(summary.highRun))
+        response.write('    <td class="white center">{:.2f}</td>\n'.format(summary.highRunTarget))
+        response.write('    <td class="white center">{:.2f}</td>\n'.format(goal))
+        response.write('  </tr>\n')
 
     response.write('</tbody></table>\n')
     response.write('</center>\n')
     response.write('</br>\n')
     
-  def footer(self, response):
-    response.write('<hr/><font size=-1><i>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a></i></font>\n')
-    response.write('<br/><font size=-1><i>Web Issues: <a href="mailto:steve@oharasteve.com">steve@oharasteve.com</a></i></font>\n')
-    response.write('</body>\n')
-    response.write('</html>\n')

@@ -4,6 +4,8 @@ import webapp2
 import matches
 import players
 import seasons
+import shared
+import stats
 
 class DetailHandler(webapp2.RequestHandler):
   def get(self):
@@ -14,7 +16,7 @@ class DetailHandler(webapp2.RequestHandler):
     d = Details()
     d.header(self.response, season, player)
     d.show(self.response, season, player)
-    d.footer(self.response)
+    shared.footer(self.response)
 
 app = webapp2.WSGIApplication([
    ('/details/', DetailHandler)
@@ -62,7 +64,7 @@ class Details():
     response.write('    <th class="hdr num">{0}</td>\n'.format('High Run'))
     response.write('  </tr></thead><tbody>\n')
 
-    for match in matches.Match.query(ndb.OR(matches.Match.playerW == player.key, matches.Match.playerL == player.key)):
+    for match in matches.Match.query(ndb.AND(ndb.OR(matches.Match.playerW == player.key, matches.Match.playerL == player.key), stats.PlayerSummary.season == season.key)).order(matches.Match.date):
       response.write('  <tr>\n')
       response.write('    <td class="white center"><a href="/results/LSB_{0}.pdf">{0}</a></td>\n'.format(match.date, match.date))
       if (player.key == match.playerW):
@@ -72,14 +74,14 @@ class Details():
         response.write('    <td class="white center">{0}</td>\n'.format(match.handicapW))
         response.write('    <td class="white center">{0}</td>\n'.format(match.scoreW))
         response.write('    <td class="white center">{0}</td>\n'.format(match.targetW))
-        response.write('    <td class="white center">{0}</td>\n'.format(match.highRunW))
+        response.write('    <td class="white center">{0}</td>\n'.format(match.highRunW if match.highRunW > 0 else '-'))
         loser = players.Player.get_by_id(match.playerL.id())
         response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(loser.firstName, ref))
         response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(loser.lastName, ref))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.handicapL))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.scoreL))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.targetL))
-        response.write('    <td class="gray center">{0}</td>\n'.format(match.highRunL))
+        response.write('    <td class="gray center">{0}</td>\n'.format(match.highRunL if match.highRunL > 0 else '-'))
       else:
         # For linking to opponent
         ref = '/details/?Season={0}&Player={1}'.format(season.key.id(), match.playerW.id())
@@ -87,22 +89,20 @@ class Details():
         response.write('    <td class="white center">{0}</td>\n'.format(match.handicapL))
         response.write('    <td class="white center">{0}</td>\n'.format(match.scoreL))
         response.write('    <td class="white center">{0}</td>\n'.format(match.targetL))
-        response.write('    <td class="white center">{0}</td>\n'.format(match.highRunL))
+        response.write('    <td class="white center">{0}</td>\n'.format(match.highRunL if match.highRunL > 0 else '-'))
         winner = players.Player.get_by_id(match.playerW.id())
         response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(winner.firstName, ref))
         response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(winner.lastName, ref))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.handicapW))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.scoreW))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.targetW))
-        response.write('    <td class="gray center">{0}</td>\n'.format(match.highRunW))
+        response.write('    <td class="gray center">{0}</td>\n'.format(match.highRunW if match.highRunW > 0 else '-'))
       response.write('  </tr>\n')
-
     response.write('</tbody></table>\n')
+    
+    stat = stats.PlayerSummary.query(ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).fetch(1)[0]
+    response.write('<p>Wins={0}, Losses={1}\n'.format(stat.wins, stat.losses))
+    response.write('<br/>High Run={0}, Target={1}\n'.format(stat.highRun, stat.highRunTarget))
+    response.write('<br/><a href="/">Home</a>\n')
     response.write('</center>\n')
     response.write('</br>\n')
-    
-  def footer(self, response):
-    response.write('<hr/><font size=-1><i>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a></i></font>\n')
-    response.write('<br/><font size=-1><i>Web Issues: <a href="mailto:steve@oharasteve.com">steve@oharasteve.com</a></i></font>\n')
-    response.write('</body>\n')
-    response.write('</html>\n')

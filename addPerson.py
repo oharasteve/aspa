@@ -21,6 +21,19 @@ import seasons
 class AddPersonHandler(webapp2.RequestHandler):
   def get(self):
     season = seasons.Season.get_by_id('Spr14')
+
+    self.response.write('<html>\n')
+    self.response.write('<head>\n')
+    self.response.write('<title>ASPA {0}</title>\n'.format(season.name))
+    self.response.write('</head>\n')
+    self.response.write('<body>\n')
+    self.response.write('<h3>Add a new Player</h3>\n')
+
+    self.response.write('<h3><i>Not yet implemented.</i></h3>\n')
+    
+    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
+    self.response.write('</body>\n')
+    self.response.write('</html>\n')
       
 app = webapp2.WSGIApplication([
   (r'/.*', AddPersonHandler)
