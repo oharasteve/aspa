@@ -30,6 +30,7 @@ class FakeHandler(webapp2.RequestHandler):
   def get(self):
     w1 = datetime.date(2014, 1, 7)
     w2 = datetime.date(2014, 1, 14)
+    w3 = datetime.date(2014, 1, 21)
 
     f = FakeData()
     f.createHighRuns()
@@ -38,6 +39,11 @@ class FakeHandler(webapp2.RequestHandler):
     f.createPlayers(spr14)
     f.createWeek1(spr14, luckyShot, w1)
     f.createWeek2(spr14, luckyShot, w2)
+    f.adjustHandicap(spr14, 'Henry', 14)
+    f.adjustHandicap(spr14, 'Raj', 25)
+    f.adjustHandicap(spr14, 'Chris', -10)
+    f.adjustHandicap(spr14, 'Eve', -10)
+    f.createWeek3(spr14, luckyShot, w3)
 
     self.response.write('<html>\n')
     self.response.write('<head>\n')
@@ -90,13 +96,14 @@ class FakeData:
   # Create all the players
   def createPlayers(self, season):
     self.addPlayer(season, 'BenW', 'Ben', 'Wong', '', 718, 68.08)
-    self.addPlayer(season, 'BobJ', 'Bob', 'Jewett', '', 763, 91.6)
+    self.addPlayer(season, 'BobJ', 'Bob', 'Jewett', '', 760, 91.6)
     self.addPlayer(season, 'Brad', 'Brad', 'Jacobs', '', 609, 34.16)
     self.addPlayer(season, 'Chris', 'Chris', 'Koyama', '', 680, 49.6)
     self.addPlayer(season, 'CJ', 'CJ', 'Robinson', '', 717, 67.52)
     self.addPlayer(season, 'DPham', 'David', 'Pham', '', 549, 25.92)
     self.addPlayer(season, 'Eric', 'Eric', 'Harada', '', 770, 97.2)
-    self.addPlayer(season, 'Henry', 'Henry', 'Lin', '', 586, 30.32)
+    self.addPlayer(season, 'Eve', 'Eve', 'Noonan', '', 500, 21.6)
+    self.addPlayer(season, 'Henry', 'Henry', 'Lin', '', 586, 32.0)
     self.addPlayer(season, 'Horia', 'Horia', 'Udrea', '', 739, 79.84)
     self.addPlayer(season, 'Johonny', 'Johonny', 'Donoho', '', 695, 56.32)
     self.addPlayer(season, 'JoshR', 'Josh', 'Rousseau', '', 662, 47.36)
@@ -104,10 +111,10 @@ class FakeData:
     self.addPlayer(season, 'KimM', 'Kim', 'Merrill', '', 674, 50.72)
     self.addPlayer(season, 'Mark', 'Mark', 'Davidson', '', 727, 73.12)
     self.addPlayer(season, 'Noah', 'Noah', 'Zimmerman', '', 618, 36.32)
-    self.addPlayer(season, 'Raj', 'Rajesh', 'Parvatheneni', '', 535, 24.8)
+    self.addPlayer(season, 'Raj', 'Rajesh', 'Parvatheneni', '', 535, 27.2)
     self.addPlayer(season, 'Reid', 'Reid', 'Stensrud', '', 731, 75.36)
     self.addPlayer(season, 'Richard', 'Richard', 'Dweck', '', 577, 29.24)
-    self.addPlayer(season, 'Shelby', 'Shelby', '***', '', 570, 28.4)
+    self.addPlayer(season, 'Shelby', 'Shelby', 'Noonan', '', 570, 28.4)
     self.addPlayer(season, 'Srivats', 'Srivats', 'Balachandran', '', 642, 42.08)
     self.addPlayer(season, 'SteveO', 'Steve', 'O\'Hara', '512-565-8626', 634, 40.16)
     self.addPlayer(season, 'Tony', 'Tony', 'Sugimoto', '', 485, 21.4)
@@ -165,6 +172,21 @@ class FakeData:
     self.addMatch(season, club, week, 'SteveO', 634, 90, 59, 0, 'Raj', 535, 45, 45, 10)
     self.addMatch(season, club, week, 'CJ', 720, 90, 65, 0, 'Henry', 589, 35, 35, 0)
     
+  # Jan 21, 2014 results
+  def createWeek3(self, season, club, week):  
+    self.addMatch(season, club, week, 'Richard', 0, 40, 40, 0, 'Johonny', 0, 90, 66, 0)
+    self.addMatch(season, club, week, 'Mark', 0, 90, 45, 0, 'JoshR', 0, 60, 60, 18)
+    self.addMatch(season, club, week, 'Jud', 0, 80, 52, 0, 'SteveO', 0, 60, 60, 0)
+    self.addMatch(season, club, week, 'BobJ', 0, 120, 52, 0, 'Shelby', 0, 30, 30, 8)
+    self.addMatch(season, club, week, 'Eve', 500, 40, 30, 0, 'Richard', 597, 70, 70, 0)
+    self.addMatch(season, club, week, 'Horia', 0, 100, 97, 0, 'Mark', 0, 90, 90, 0)
+    self.addMatch(season, club, week, 'JoshR', 0, 70, 20, 0, 'CJ', 0, 100, 100, 34)
+    self.addMatch(season, club, week, 'Raj', 0, 35, 35, 0, 'KimM', 671, 90, 74, 0)
+    self.addMatch(season, club, week, 'SteveO', 0, 80, 80, 0, 'Shelby', 0, 55, 32, 0)
+    self.addMatch(season, club, week, 'Eric', 0, 120, 80, 0, 'Henry', 0, 35, 35, 0)
+    self.addMatch(season, club, week, 'JoshR', 0, 60, 58, 0, 'Horia', 0, 100, 100, 27)
+    self.addMatch(season, club, week, 'KimM', 0, 90, 90, 14, 'Henry', 0, 50, 40, 0)
+    
   def addMatch(self, season, club, dat, p1, hc1, t1, s1, hr1, p2, hc2, t2, s2, hr2):
     match = matches.Match()
     match.date = dat
@@ -173,7 +195,15 @@ class FakeData:
     player1 = players.Player.get_by_id(p1)
     player2 = players.Player.get_by_id(p2)
     
-    if t1 == s1:
+    if hc1 == 0:
+      stats1 = stats.PlayerSummary.query(stats.PlayerSummary.player == player1.key).fetch(1)[0]
+      hc1 = stats1.handicap
+    
+    if hc2 == 0:
+      stats2 = stats.PlayerSummary.query(stats.PlayerSummary.player == player2.key).fetch(1)[0]
+      hc2 = stats2.handicap
+    
+    if t1 == s1 and t2 > s2:
       logging.info('********************* W = %s, L = %s' % (player1.firstName, player2.firstName))
       match.playerW = player1.key
       match.handicapW = hc1
@@ -186,7 +216,7 @@ class FakeData:
       match.scoreL = s2
       match.targetL = t2
       match.highRunL = hr2
-    elif t2 == s2:
+    elif t2 == s2 and t1 > s1:
       logging.info('********************* W = %s, L = %s' % (player2.firstName, player1.firstName))
       match.playerW = player2.key
       match.handicapW = hc2
@@ -200,8 +230,8 @@ class FakeData:
       match.targetL = t1
       match.highRunL = hr1
     else:
-      logging.error('********** Nobody won between %s and %s' % (p1.firstName, p2.firstName))
-      pass
+      logging.error('********** Nobody won between %s and %s' % (player1.firstName, player2.firstName))
+      return
 
     # Save new match result
     match.put()
@@ -226,6 +256,12 @@ class FakeData:
     
     winner.put()
     loser.put()
+
+  def adjustHandicap(self, season, name, delta):
+    player = players.Player.get_by_id(name)
+    stat = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
+    stat.handicap = stat.handicap + delta
+    stat.put()
 
 app = webapp2.WSGIApplication([
    (r'/.*', FakeHandler)
