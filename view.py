@@ -1,3 +1,4 @@
+import cgi
 import datetime
 
 import players
@@ -61,12 +62,12 @@ class View():
         seq += 1
         
         # For linking to detail page
-        ref = 'details/?Season={0}&Player={1}'.format(season.key.id(), summary.player.id())
+        ref = 'details/?Season={0}&Player={1}'.format(cgi.escape(season.key.id()), cgi.escape(summary.player.id()))
         
         response.write('  <tr>\n')
         response.write('    <td class="white center"><a href="{1}">{0}</a></td>\n'.format(seq, ref))
-        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.firstName, ref))
-        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(player.lastName, ref))
+        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(player.firstName), ref))
+        response.write('    <td class="white left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(player.lastName), ref))
         response.write('    <td class="white center">{0}</td>\n'.format(summary.handicap))
         response.write('    <td class="gray center">{0}</td>\n'.format(summary.wins))
         response.write('    <td class="gray center">{0}</td>\n'.format(summary.losses))

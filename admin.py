@@ -34,6 +34,7 @@ class AdminHandler(webapp2.RequestHandler):
     self.response.write('<li><a href="/admin/addPlayer/">Add New Player</a>\n')
     self.response.write('<li><a href="/admin/addSeason/">Add New Season</a>\n')
     self.response.write('<li><a href="/admin/addClub/">Add New Club</a>\n')
+    self.response.write('<li><a href="/admin/adjustHandicap/">Adjust Player Handicap</a>\n')
     self.response.write('<li><a href="/admin/destroy/">Delete All Data (careful!!!)</a>\n')
     self.response.write('<li><a href="/admin/regenerate/">Generate Three Weeks (once only)</a>\n')
 

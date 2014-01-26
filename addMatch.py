@@ -47,7 +47,6 @@ class AddMatchHandler(webapp2.RequestHandler):
 
     am.show(self.response, season)
     
-    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
     self.response.write('</body>\n')
     self.response.write('</html>\n')
       
@@ -71,7 +70,7 @@ class AddMatch():
 
   def show(self, response, season):
     response.write('<form action="." method="post">\n')
-    response.write('  <p>Date: <input name="date" value="{0}" size="10"/>\n'.format(time.strftime("%m/%d/%Y")))
+    response.write('  <p>Date: <input name="date" value="{0}" size="10"/>\n'.format(time.strftime("%Y-%m-%d")))
     response.write('  <p>Club: \n')
     self.showClubs(response, 'club')
     response.write('  <p><table border>\n')
@@ -88,7 +87,7 @@ class AddMatch():
     response.write('    <tr><td>High Run: <input name="highRunW" value="" size="5"/>\n')
     response.write('      <td>High Run: <input name="highRunL" value="" size="5"/>\n')
     response.write('  </table>\n')
-    response.write('  <p><input type="Button" value="Add Match Result"/>\n')
+    response.write('  <p><input type="button" value="Cancel"><input type="Submit" value="Submit"/>\n')
     response.write('</form>\n')
 
   def showClubs(self, response, selectName):

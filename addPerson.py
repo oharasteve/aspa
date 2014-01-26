@@ -14,41 +14,126 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from google.appengine.ext import ndb
+import cgi
 import webapp2
 
+import highRun
+import players
 import seasons
+import stats
 
 class AddPersonHandler(webapp2.RequestHandler):
-  def get(self):
+  def post(self):
     season = seasons.Season.get_by_id('Spr14')
-
-    self.response.write('<html>\n')
-    self.response.write('<head>\n')
-    self.response.write('<title>ASPA {0}</title>\n'.format(season.name))
-    self.response.write('</head>\n')
-    self.response.write('<body>\n')
-    self.response.write('<h3>Add a new Player</h3>\n')
-
-    self.response.write('<h3><i>Not yet implemented.</i></h3>\n')
+    player_code = self.request.get('code')
+    player_first = self.request.get('first')
+    player_last = self.request.get('last')
+    player_hcap = self.request.get('handicap')
+    player_hrun = self.request.get('highRunTarget')
+    player_phone = self.request.get('phone')
     
-    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
-    self.response.write('</body>\n')
-    self.response.write('</html>\n')
+    self.header(self.response)
+    errmsg = ""
+    if len(player_code) == 0:
+      errmsg += "<li>Player code is required\n"
+    else:
+      player = players.Player.get_by_id(player_code)
+      if player:
+        errmsg += "<li>Duplicate player (%s)\n" % cgi.escape(player_code)
+    if len(player_first) == 0:
+      errmsg += "<li>First name is required\n"
+    if len(player_last) == 0:
+      errmsg += "<li>Last name is required\n"
+      
+    if len(player_hcap) == 0:
+      errmsg += "<li>Handicap is required\n"
+    else:
+      try:
+        hcap = int(player_hcap)
+      except ValueError as err:
+        errmsg += "<li>Invalid handicap: %s (%s)" % (cgi.escape(player_hcap), err)
+    if len(player_hrun) == 0:
+      errmsg += "<li>High run target is required\n"
+    else:
+      try:
+        hrun = float(player_hrun)
+      except ValueError as err:
+        errmsg += "<li>Invalid high run target: %s (%s)" % (cgi.escape(player_hrun), err)
+
+    if errmsg:
+      self.response.write("<h3><font color=red>Errors:<ul>%s</ul></font></h3>\n" % errmsg)
+      self.shared(self.response, player_code, player_first, player_last, player_hcap, player_hrun, player_phone)
+    else:
+      player = players.Player(key=ndb.Key(players.Player,player_code))
+      player.firstName = player_first
+      player.lastName = player_last
+      player.phone = player_phone
+      player.put()
+      
+      stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,player_code))
+      stat.player = player.key
+      stat.season = season.key
+      stat.handicap = hcap
+      stat.highRunTarget = hrun
+      stat.highRun = 0
+      stat.wins = 0
+      stat.losses = 0
+      stat.put()
+      
+      self.response.write('<h3>Successfully added new Player: %s %s (%s)</h3>\n' % (cgi.escape(player_first), cgi.escape(player_last), cgi.escape(player_code)))
+      self.response.write('<p><input type="button" value="Done" onclick="window.location=\'/admin\'">\n')
+    self.footer(self.response)
+  
+  def get(self):
+    self.header(self.response)
+    self.shared(self.response, "", "", "", "", "", "")
+    self.footer(self.response)
+    
+
+  def header(self, response):
+    season = seasons.Season.get_by_id('Spr14')
+    response.write('<html>\n')
+    response.write('<head>\n')
+    response.write('<title>ASPA {0}</title>\n'.format(cgi.escape(season.name)))
+    response.write('<script language="javascript">\n')
+    highRun.insertJavascript(self.response)
+    response.write('</script>\n')
+    response.write('</head>\n')
+    response.write('<body>\n')
+    
+  def shared(self, response, player_code, player_first, player_last, player_hcap, player_hrun, player_phone):
+    response.write('<h3>Add a New Player</h3>\n')
+    response.write('<hr/><form action="/admin/addPlayer/" method="post">\n')
+    response.write('<table>\n')
+    response.write('  <tr>\n')
+    response.write('    <td align="right">Code:\n')
+    response.write('    <td align="left"><input name="code" size="5" type="text" value="%s">\n' % cgi.escape(player_code))
+    response.write('  <tr>\n')
+    response.write('    <td align="right">First Name:\n')
+    response.write('    <td align="left"><input name="first" type="text" value="%s">\n' % cgi.escape(player_first))
+    response.write('  <tr>\n')
+    response.write('    <td align="right">Last Name:\n')
+    response.write('    <td align="left"><input name="last" type="text" value="%s">\n' % cgi.escape(player_last))
+    response.write('  <tr>\n')
+    response.write('    <td align="right">Handicap:\n')
+    response.write('    <td align="left"><input size="5" onchange=\'highRun("handicap","highRunTarget")\' id="handicap" name="handicap" type="text" value="%s">\n' % cgi.escape(player_hcap))
+    response.write('  <tr>\n')
+    response.write('    <td align="right">High Run Target:\n')
+    response.write('    <td align="left"><input size="5" id="highRunTarget" name="highRunTarget" type="text" value="%s">\n' % cgi.escape(player_hrun))
+    response.write('  <tr>\n')
+    response.write('    <td align="right">Phone:\n')
+    response.write('    <td align="left"><input name="phone" type="text" value="%s">\n' % cgi.escape(player_phone))
+    response.write('</table>\n')
+    response.write('<p>\n')
+    response.write('  <input type="button" value="Cancel" onclick="window.location=\'/admin\'">\n')
+    response.write('  <input type="submit" value="Submit">\n')
+    response.write('</form>\n')
+
+  def footer(self, response):
+    response.write('</body>\n')
+    response.write('</html>\n')
       
 app = webapp2.WSGIApplication([
   (r'/.*', AddPersonHandler)
 ], debug=True)
-
-
-class AddPerson():
-  def show(self, response):
-    response.write('<hr/><form action="." method="post">\n')
-    response.write('  <table>\n')
-    response.write('    <tr><td rowspan=2>New Player\n')
-    response.write('      <td>First: <input name="firstName" value="" size="20"/>\n')
-    response.write('      <td class="right">Handicap: <input onchange=\'highRun("handicap","highRunTarget")\' id="handicap" name="handicap" value="" size="5"/>\n')
-    response.write('      <td rowspan=2><input type="Button" value="Add New Player"/>\n')
-    response.write('    <tr><td>Last: <input name="lastName" value="" size="20"/>\n')
-    response.write('      <td class="right">High Run Target: <input id="highRunTarget" name="highRunTarget" value="" size="5"/>\n')
-    response.write('  </table>\n')
-    response.write('</form>\n')

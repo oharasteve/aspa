@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+import cgi
 import webapp2
 
 import matches
@@ -39,13 +40,13 @@ class Details():
     response.write('  input { text-align: center; }\n')
     response.write('</style>\n')
     
-    response.write('<title>ASPA {0}</title>\n'.format(season.name))
+    response.write('<title>ASPA {0}</title>\n'.format(cgi.escape(season.name)))
     response.write('<script language="JavaScript1.2" src="/js/tablesort.js"></script>\n')
     response.write('</head>\n')
     response.write('<body bgcolor="#f0f0f0">\n')
     response.write('<center>\n')
 
-    response.write('<h1>ASPA {0} : {1} {2}</h1>\n'.format(season.name, player.firstName, player.lastName))
+    response.write('<h1>ASPA {0} : {1} {2}</h1>\n'.format(cgi.escape(season.name), cgi.escape(player.firstName), cgi.escape(player.lastName)))
         
   def show(self, response, season, player):
     response.write('<table class="details">\n')
@@ -69,30 +70,30 @@ class Details():
       response.write('    <td class="white center"><a href="/results/LSB_{0}.pdf">{0}</a></td>\n'.format(match.date, match.date))
       if (player.key == match.playerW):
         # For linking to opponent
-        ref = '/details/?Season={0}&Player={1}'.format(season.key.id(), match.playerL.id())
+        ref = '/details/?Season={0}&Player={1}'.format(cgi.escape(season.key.id()), cgi.escape(match.playerL.id()))
         response.write('    <td class="white center">{0}</td>\n'.format('Won'))
         response.write('    <td class="white center">{0}</td>\n'.format(match.handicapW))
         response.write('    <td class="white center">{0}</td>\n'.format(match.scoreW))
         response.write('    <td class="white center">{0}</td>\n'.format(match.targetW))
         response.write('    <td class="white center">{0}</td>\n'.format(match.highRunW if match.highRunW > 0 else '-'))
         loser = players.Player.get_by_id(match.playerL.id())
-        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(loser.firstName, ref))
-        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(loser.lastName, ref))
+        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(loser.firstName), ref))
+        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(loser.lastName), ref))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.handicapL))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.scoreL))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.targetL))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.highRunL if match.highRunL > 0 else '-'))
       else:
         # For linking to opponent
-        ref = '/details/?Season={0}&Player={1}'.format(season.key.id(), match.playerW.id())
+        ref = '/details/?Season={0}&Player={1}'.format(cgi.escape(season.key.id()), cgi.escape(match.playerW.id()))
         response.write('    <td class="white center">{0}</td>\n'.format('Lost'))
         response.write('    <td class="white center">{0}</td>\n'.format(match.handicapL))
         response.write('    <td class="white center">{0}</td>\n'.format(match.scoreL))
         response.write('    <td class="white center">{0}</td>\n'.format(match.targetL))
         response.write('    <td class="white center">{0}</td>\n'.format(match.highRunL if match.highRunL > 0 else '-'))
         winner = players.Player.get_by_id(match.playerW.id())
-        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(winner.firstName, ref))
-        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(winner.lastName, ref))
+        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(winner.firstName), ref))
+        response.write('    <td class="gray left"><a href="{1}">{0}</a></td>\n'.format(cgi.escape(winner.lastName), ref))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.handicapW))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.scoreW))
         response.write('    <td class="gray center">{0}</td>\n'.format(match.targetW))

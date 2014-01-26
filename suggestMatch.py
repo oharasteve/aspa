@@ -45,7 +45,7 @@ class SuggestMatchHandler(webapp2.RequestHandler):
 
     sm.show(self.response, season)
     
-    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
+    self.response.write('<p><input type="button" value="Done" onclick="window.location=\'/admin\'">\n')
     self.response.write('</body>\n')
     self.response.write('</html>\n')
 

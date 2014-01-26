@@ -36,6 +36,9 @@ handlers:
 - url: /admin/suggestMatch/
   script: suggestMatch.app
   
+- url: /admin/adjustHandicap/
+  script: adjustHandicap.app
+  
 - url: /admin/destroy/
   script: destroy.app
   
