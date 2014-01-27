@@ -15,6 +15,9 @@ handlers:
 - url: /results/
   static_dir: results
   
+- url: /stylesheets
+  static_dir: stylesheets
+
 - url: /admin
   script: admin.app
   
@@ -54,3 +57,5 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.2"
+- name: jinja2
+  version: "2.6"
