@@ -38,10 +38,12 @@ class AddSeasonHandler(webapp2.RequestHandler):
         errmsg += "<li>Duplicate season name (%s)\n" % cgi.escape(season_code)
     if len(season_name) == 0:
       errmsg += "<li>Season name is required\n"
+      
     try:
       sstart = datetime.datetime.strptime(season_start, "%Y-%m-%d")
     except ValueError as err:
       errmsg += "<li>Invalid start date: %s (%s)\n" % (cgi.escape(season_start), err)
+    
     try:
       send = datetime.datetime.strptime(season_end, "%Y-%m-%d")
     except ValueError as err:

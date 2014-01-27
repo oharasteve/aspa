@@ -33,7 +33,7 @@ class AddPersonHandler(webapp2.RequestHandler):
     player_hrun = self.request.get('highRunTarget')
     player_phone = self.request.get('phone')
     
-    self.header(self.response)
+    self.header(self.response, season)
     errmsg = ""
     if len(player_code) == 0:
       errmsg += "<li>Player code is required\n"
@@ -52,14 +52,15 @@ class AddPersonHandler(webapp2.RequestHandler):
       try:
         hcap = int(player_hcap)
       except ValueError as err:
-        errmsg += "<li>Invalid handicap: %s (%s)" % (cgi.escape(player_hcap), err)
+        errmsg += "<li>Invalid handicap: %s (%s)\n" % (cgi.escape(player_hcap), err)
+        
     if len(player_hrun) == 0:
       errmsg += "<li>High run target is required\n"
     else:
       try:
         hrun = float(player_hrun)
       except ValueError as err:
-        errmsg += "<li>Invalid high run target: %s (%s)" % (cgi.escape(player_hrun), err)
+        errmsg += "<li>Invalid high run target: %s (%s)\n" % (cgi.escape(player_hrun), err)
 
     if errmsg:
       self.response.write("<h3><font color=red>Errors:<ul>%s</ul></font></h3>\n" % errmsg)
@@ -86,13 +87,13 @@ class AddPersonHandler(webapp2.RequestHandler):
     self.footer(self.response)
   
   def get(self):
-    self.header(self.response)
+    season = seasons.Season.get_by_id('Spr14')
+    self.header(self.response, season)
     self.shared(self.response, "", "", "", "", "", "")
     self.footer(self.response)
     
 
-  def header(self, response):
-    season = seasons.Season.get_by_id('Spr14')
+  def header(self, response, season):
     response.write('<html>\n')
     response.write('<head>\n')
     response.write('<title>ASPA {0}</title>\n'.format(cgi.escape(season.name)))
