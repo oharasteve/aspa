@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Google Inc.
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
+import logging
 import os
 import urllib
 
@@ -26,16 +24,16 @@ import webapp2
 
 
 class MainHandler(webapp2.RequestHandler):
-  def get(self):
-    season = seasons.Season.get_by_id('Spr14')
+    def get(self):
+        season = seasons.Season.get_by_id('Spr14')
 
-    # Show the webpage
-    v = view.View()
-    v.showPage(JINJA_ENVIRONMENT, self.response, season)
+        # Show the webpage
+        v = view.View()
+        v.showPage(JINJA_ENVIRONMENT, self.response, season)
 
 
 def datetimeformat(value, format='%b %d, %Y'):
-      return value.strftime(format)
+    return value.strftime(format)
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -44,6 +42,4 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 JINJA_ENVIRONMENT.filters['datetimeformat'] = datetimeformat
 
-app = webapp2.WSGIApplication([
-  (r'/', MainHandler)
-], debug=True)
+app = webapp2.WSGIApplication([ (r'/', MainHandler) ], debug=True)
