@@ -13,7 +13,6 @@ class PlayerSummary(ndb.Model):
   highRun = ndb.IntegerProperty()
   wins = ndb.IntegerProperty()
   losses = ndb.IntegerProperty()
-  pct = ndb.FloatProperty(default=0.0)
   points = ndb.ComputedProperty(lambda self: 3 * self.wins - self.losses / 2.0 + (self.wins + self.losses) / 1000000.0)
   goal = ndb.ComputedProperty(lambda self: self.highRun * 100.0 / self.highRunTarget if self.highRunTarget and self.highRun else 0.0)
   pct = ndb.ComputedProperty(lambda self: self.wins * 100.0 /(self.wins + self.losses) if self.wins else 0.0)
