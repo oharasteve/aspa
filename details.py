@@ -37,16 +37,16 @@ class Details():
             seq += 1
             match_data = matches.match_util(match)
             if player.key == match_data['winner']['player']:
-                protagonist = match_data['winner']
+                participant = match_data['winner']
                 opponent = match_data['loser']
                 result = 'Won'
             else:
-                protagonist = match_data['loser']
+                participant = match_data['loser']
                 opponent = match_data['winner']
                 result = 'Lost'
 
-            protagonist['player_obj'] = players.Player.get_by_id(
-                    protagonist['player'].id())
+            participant['player_obj'] = players.Player.get_by_id(
+                    participant['player'].id())
             opponent['player_obj'] = players.Player.get_by_id(
                     opponent['player'].id())
             entry = {
@@ -56,7 +56,7 @@ class Details():
                         match.date),
                     'date': match.date,
                     'result': result,
-                    'player': protagonist,
+                    'player': participant,
                     'opponent': opponent,
                     'opponent_details_page_url':
                     '/details/?Season={0}&Player={1}'.format(
