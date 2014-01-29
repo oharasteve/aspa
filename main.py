@@ -21,15 +21,15 @@ import shared
 import view
 
 class MainHandler(webapp2.RequestHandler):
-  def get(self):
-    season = seasons.Season.get_by_id('Spr14')
+    def get(self):
+        season = seasons.Season.get_by_id('Spr14')
 
-    # Show the webpage
-    v = view.View()
-    v.header(self.response, season)
-    v.show(self.response, season)
-    shared.footer(self.response)
-      
+        # Show the webpage
+        v = view.View()
+        v.header(self.response, season)
+        v.show(self.response, season)
+        shared.footer(self.response)
+
 app = webapp2.WSGIApplication([
   (r'/', MainHandler)
 ], debug=True)
