@@ -52,7 +52,7 @@ handlers:
   script: details.app
 
 - url: /
-  script: main.app
+  script: view.app
 
 libraries:
 - name: webapp2

@@ -6,6 +6,7 @@ import logging
 import players
 import seasons
 import stats
+import webapp2
 
 TEMPLATE = 'html/view.html'
 
@@ -17,6 +18,11 @@ class MainHandler(base_handler.BaseHandler):
         # Show the webpage
         context = View().get_context(season)
         self.render_response(TEMPLATE, **context)
+
+
+app = webapp2.WSGIApplication([(r'/', MainHandler)],
+    debug=True,
+    config=base_handler.CONFIG)
 
 
 class View():
