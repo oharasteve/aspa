@@ -12,34 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+import base_handler
+import details
 import os
-import urllib
-
-import jinja2
-import seasons
-import shared
 import view
 import webapp2
 
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        season = seasons.Season.get_by_id('Spr14')
-
-        # Show the webpage
-        v = view.View()
-        v.showPage(JINJA_ENVIRONMENT, self.response, season)
-
-
-def datetimeformat(value, format='%b %d, %Y'):
-    return value.strftime(format)
-
-
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
-JINJA_ENVIRONMENT.filters['datetimeformat'] = datetimeformat
-
-app = webapp2.WSGIApplication([ (r'/', MainHandler) ], debug=True)
+app = webapp2.WSGIApplication([(r'/', view.MainHandler)],
+    debug=True,
+    config=base_handler.CONFIG)

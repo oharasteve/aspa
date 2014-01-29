@@ -1,12 +1,6 @@
-{% autoescape true %}
-<!DOCTYPE html>
-<html>
-<head>
-  <link type="text/css" rel="stylesheet" href="/stylesheets/shared.css" />
-  <title>ASPA {{ season.name }}</title>
-  <script language="JavaScript1.2" src="/js/tablesort.js"></script>
-</head>
-<body>
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {{ season.name }}{% endblock %}
+{% block content %}
   <center>
   <h1>American Straight Pool Association</h1>
   {% if season %}
@@ -51,18 +45,4 @@
     </tbody>
   </table>
   </center>
-
-  <hr/>
-  <font size=-1>
-    <!--
-    <i>Last Updated: {{ page.last_updated_date }}</i>
-    <br/>
-    -->
-    <i>League Manager: <a href="mailto:{{ league_manager.email }}">{{ league_manager.name }}</a> </i>
-    <br/>
-    <i>Web Issues: <a href="mailto:{{ site_admin.email }}">{{ site_admin.name }}</a>
-    </i>
-  </font>
-</body>
-</html>
-{% endautoescape %}
+{% endblock %}
