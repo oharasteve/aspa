@@ -11,7 +11,7 @@ import webapp2
 TEMPLATE = 'html/details.html'
 
 
-class MainHandler(base_handler.BaseHandler):
+class DetailsHandler(base_handler.BaseHandler):
     def get(self):
         season = seasons.Season.get_by_id(self.request.get('Season'))
         player = players.Player.get_by_id(self.request.get('Player'))
@@ -21,7 +21,7 @@ class MainHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/details/', MainHandler)],
+app = webapp2.WSGIApplication([(r'/details/', DetailsHandler)],
     debug=True,
     config=base_handler.CONFIG)
 

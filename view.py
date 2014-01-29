@@ -11,7 +11,7 @@ import webapp2
 TEMPLATE = 'html/view.html'
 
 
-class MainHandler(base_handler.BaseHandler):
+class ViewHandler(base_handler.BaseHandler):
     def get(self):
         season = seasons.Season.get_by_id('Spr14')
 
@@ -20,7 +20,7 @@ class MainHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/', MainHandler)],
+app = webapp2.WSGIApplication([(r'/', ViewHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
