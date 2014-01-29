@@ -1,0 +1,43 @@
+table.details {
+  border: 1px solid;
+}
+
+th.hdr {
+  background-color: #e0e0e0;
+  color: white;
+  text-align: center;
+  padding: 0 8px;
+}
+
+td {
+  padding: 0 8px;
+}
+
+td.left {
+  text-align: left;
+}
+
+td.center {
+  text-align: center;
+}
+
+td.right {
+  text-align: right;
+}
+
+tr.odd {
+  background-color: white;
+}
+
+tr.even {
+  background-color: lightgray;
+  background-color: #e0e0e0;
+}
+
+input {
+  text-align: center;
+}
+
+body {
+  background-color: #f0f0f0;
+}

@@ -1,0 +1,48 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {{ season.name }}{% endblock %}
+{% block content %}
+  <center>
+  <h1>American Straight Pool Association</h1>
+  {% if season %}
+  <h2>
+    {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
+  </h2>
+  {% endif %}
+
+  <table class="details">
+    <thead>
+      <tr>
+        <th class="hdr num">Seq</th>
+        <th class="hdr nocase">First</th>
+        <th class="hdr nocase">Last</th>
+        <th class="hdr num">H'cap</th>
+        <th class="hdr num">Won</th>
+        <th class="hdr num">Lon</th>
+        <th class="hdr num">Win %</th>
+        <th class="hdr num">Points</th>
+        <th class="hdr num">High Run</th>
+        <th class="hdr num">Target</th>
+        <th class="hdr num">% Goal</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in player_summaries %}
+      <tr class="{{ entry.alternate_class }}">
+        <td class="center"><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
+        <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
+        <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>
+        <td class="right">{{ entry.summary.handicap }}</td>
+        <td class="right">{{ entry.summary.wins }}</td>
+        <td class="right">{{ entry.summary.losses }}</td>
+        <td class="right">{{ '%.2f' % entry.summary.pct }}</td>
+        <td class="right">{{ entry.summary.points }}</td>
+        <td class="right">{{ entry.summary.highRun }}</td>
+        <td class="right">{{ '%.2f' % entry.summary.highRunTarget }}</td>
+        <td class="right">{{ '%.2f' % entry.summary.goal }}</td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+  </center>
+{% endblock %}
