@@ -11,46 +11,51 @@ handlers:
 
 - url: /js
   static_dir: js
-  
+
 - url: /results/
   static_dir: results
-  
+
+- url: /stylesheets
+  static_dir: stylesheets
+
 - url: /admin
   script: admin.app
-  
+
 - url: /admin/
   script: admin.app
-  
+
 - url: /admin/addClub/
   script: addClub.app
-  
+
 - url: /admin/addSeason/
   script: addSeason.app
-  
+
 - url: /admin/addPlayer/
   script: addPerson.app
-  
+
 - url: /admin/addMatch/
   script: addMatch.app
-  
+
 - url: /admin/suggestMatch/
   script: suggestMatch.app
-  
+
 - url: /admin/adjustHandicap/
   script: adjustHandicap.app
-  
+
 - url: /admin/destroy/
   script: destroy.app
-  
+
 - url: /admin/regenerate/
   script: fakeData.app
-  
+
 - url: /details/.*
   script: details.app
-  
+
 - url: /
-  script: main.app
+  script: view.app
 
 libraries:
 - name: webapp2
   version: "2.5.2"
+- name: jinja2
+  version: "2.6"

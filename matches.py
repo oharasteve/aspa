@@ -21,3 +21,30 @@ class Match(ndb.Model):
     scoreL = ndb.IntegerProperty()
     targetL = ndb.IntegerProperty()
     highRunL = ndb.IntegerProperty()
+
+
+def match_util(match):
+    if not isinstance(match, Match):
+        return None
+
+    return {
+        'date': match.date,
+        'season': match.season,
+        'club': match.club,
+        'winner': {
+            'player': match.playerW,
+            'player_id': match.playerW.id(),
+            'handicap': match.handicapW,
+            'score': match.scoreW,
+            'target': match.targetW,
+            'highRun': match.highRunW,
+            },
+        'loser': {
+            'player': match.playerL,
+            'player_id': match.playerL.id(),
+            'handicap': match.handicapL,
+            'score': match.scoreL,
+            'target': match.targetL,
+            'highRun': match.highRunL,
+            },
+        }

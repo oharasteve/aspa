@@ -1,0 +1,65 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {{ season.name }}{% endblock %}
+{% block content %}
+  <center>
+  <h1>American Straight Pool Association</h1>
+  {% if season %}
+  <h2>
+    {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
+  </h2>
+  {% endif %}
+
+  <h1>
+      {{ player.firstName }} {{ player.lastName }}
+  </h1>
+
+  <table class="details">
+    <thead>
+      <tr>
+        <th class="hdr num">#</th>
+        <th class="hdr num">Date</th>
+        <th class="hdr nocase">Result</th>
+        <th class="hdr num">H'cap</th>
+        <th class="hdr num">Points</th>
+        <th class="hdr num">Target</th>
+        <th class="hdr num">High Run</th>
+        <th class="hdr nocase">First</th>
+        <th class="hdr nocase">Last</th>
+        <th class="hdr num">H'cap</th>
+        <th class="hdr num">Points</th>
+        <th class="hdr num">Target</th>
+        <th class="hdr num">High Run</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in match_details %}
+      <tr class="{{ entry.alternate_class }}">
+        <td class="center">{{ entry.entry_index }}</td>
+        <td class="right"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
+        <td class="center">{{ entry.result }}</td>
+        <td class="right">{{ entry.player.handicap }}</td>
+        <td class="right">{{ entry.player.score }}</td>
+        <td class="right">{{ entry.player.target }}</td>
+        <td class="right">{{ entry.player.highRun }}</td>
+        <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
+        <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
+        <td class="right">{{ entry.opponent.handicap }}</td>
+        <td class="right">{{ entry.opponent.score }}</td>
+        <td class="right">{{ entry.opponent.target }}</td>
+        <td class="right">{{ entry.opponent.highRun }}</td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+
+  <p>
+    Wins: {{ summary.wins }}, Losses: {{ summary.losses }}
+    <br/>
+    High Run: {{ summary.highRun }}, Target: {{ summary.highRunTarget }}
+    <br/>
+    <a href="/">Home</a>
+  </p>
+  </center>
+  </div>
+{% endblock %}
