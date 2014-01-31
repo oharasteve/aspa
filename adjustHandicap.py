@@ -19,21 +19,21 @@ import webapp2
 import stats
 
 class AdjustHandicapHandler(webapp2.RequestHandler):
-  def get(self):
+    def get(self):
 
-    self.response.write('<html>\n')
-    self.response.write('<head>\n')
-    self.response.write('<title>ASPA</title>\n')
-    self.response.write('</head>\n')
-    self.response.write('<body>\n')
-    self.response.write('<h3>Adjust a Handicap</h3>\n')
+        self.response.write('<html>\n')
+        self.response.write('<head>\n')
+        self.response.write('<title>ASPA</title>\n')
+        self.response.write('</head>\n')
+        self.response.write('<body>\n')
+        self.response.write('<h3>Adjust a Handicap</h3>\n')
 
-    self.response.write('<h3><i>Not yet implemented.</i></h3>\n')
-    self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
-    
-    self.response.write('</body>\n')
-    self.response.write('</html>\n')
-      
+        self.response.write('<h3><i>Not yet implemented.</i></h3>\n')
+        self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
+
+        self.response.write('</body>\n')
+        self.response.write('</html>\n')
+
 app = webapp2.WSGIApplication([
   (r'/.*', AdjustHandicapHandler)
 ], debug=True)

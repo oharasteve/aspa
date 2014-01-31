@@ -27,241 +27,241 @@ import seasons
 import stats
 
 class FakeHandler(webapp2.RequestHandler):
-  def get(self):
-    w1 = datetime.date(2014, 1, 7)
-    w2 = datetime.date(2014, 1, 14)
-    w3 = datetime.date(2014, 1, 21)
+    def get(self):
+        w1 = datetime.date(2014, 1, 7)
+        w2 = datetime.date(2014, 1, 14)
+        w3 = datetime.date(2014, 1, 21)
 
-    f = FakeData()
-    f.createHighRuns()
-    luckyShot = f.createLuckyShot()
-    spr14 = f.createSeason()
-    f.createPlayers(spr14)
-    f.createWeek1(spr14, luckyShot, w1)
-    f.createWeek2(spr14, luckyShot, w2)
-    f.adjustHandicap(spr14, 'Henry', 14)
-    f.adjustHandicap(spr14, 'Raj', 25)
-    f.adjustHandicap(spr14, 'Chris', -10)
-    f.adjustHandicap(spr14, 'Eve', -10)
-    f.createWeek3(spr14, luckyShot, w3)
+        f = FakeData()
+        f.createHighRuns()
+        luckyShot = f.createLuckyShot()
+        spr14 = f.createSeason()
+        f.createPlayers(spr14)
+        f.createWeek1(spr14, luckyShot, w1)
+        f.createWeek2(spr14, luckyShot, w2)
+        f.adjustHandicap(spr14, 'Henry', 14)
+        f.adjustHandicap(spr14, 'Raj', 25)
+        f.adjustHandicap(spr14, 'Chris', -10)
+        f.adjustHandicap(spr14, 'Eve', -10)
+        f.createWeek3(spr14, luckyShot, w3)
 
-    self.response.write('<html>\n')
-    self.response.write('<head>\n')
-    self.response.write('</head>\n')
-    self.response.write('<body>\n')
-    self.response.write('<p>Data has been generated. Click <a href="/">here</a> to go back to the main page.</p>\n')
-    self.response.write('</body>\n')
-    self.response.write('</html>\n')
+        self.response.write('<html>\n')
+        self.response.write('<head>\n')
+        self.response.write('</head>\n')
+        self.response.write('<body>\n')
+        self.response.write('<p>Data has been generated. Click <a href="/">here</a> to go back to the main page.</p>\n')
+        self.response.write('</body>\n')
+        self.response.write('</html>\n')
 
 class FakeData:
-  def createHighRuns(self):
-    # Create all the handicaps
-    self.createHighRun(400, 18)
-    self.createHighRun(450, 20)
-    self.createHighRun(500, 22)
-    self.createHighRun(550, 26)
-    self.createHighRun(600, 32)
-    self.createHighRun(650, 44)
-    self.createHighRun(700, 58)
-    self.createHighRun(725, 72)
-    self.createHighRun(750, 86)
-    self.createHighRun(775, 100)
-    self.createHighRun(800, 114)
-    self.createHighRun(825, 128)
-    self.createHighRun(850, 144)
+    def createHighRuns(self):
+        # Create all the handicaps
+        self.createHighRun(400, 18)
+        self.createHighRun(450, 20)
+        self.createHighRun(500, 22)
+        self.createHighRun(550, 26)
+        self.createHighRun(600, 32)
+        self.createHighRun(650, 44)
+        self.createHighRun(700, 58)
+        self.createHighRun(725, 72)
+        self.createHighRun(750, 86)
+        self.createHighRun(775, 100)
+        self.createHighRun(800, 114)
+        self.createHighRun(825, 128)
+        self.createHighRun(850, 144)
 
-  def createHighRun(self, hcap, tgt):
-    hrun = highRun.HighRun()
-    hrun.handicap = hcap
-    hrun.target = tgt
-    hrun.put()
+    def createHighRun(self, hcap, tgt):
+        hrun = highRun.HighRun()
+        hrun.handicap = hcap
+        hrun.target = tgt
+        hrun.put()
 
-  # Create a Club
-  def createLuckyShot(self):
-    luckyShot = clubs.Club(key=ndb.Key(clubs.Club,'LS'))
-    luckyShot.name = 'Lucky Shot'
-    luckyShot.phone = '408-739-7665'
-    luckyShot.put()
-    return luckyShot
-    
-  # Create a Season
-  def createSeason(self):
-    spr14 = seasons.Season(key=ndb.Key(seasons.Season,'Spr14'))
-    spr14.name = 'Spring 2014'
-    spr14.startDate = datetime.date(2014, 1, 7)
-    spr14.endDate = datetime.date(2014, 4, 30)
-    spr14.put()
-    return spr14
-      
-  # Create all the players
-  def createPlayers(self, season):
-    self.addPlayer(season, 'BenW', 'Ben', 'Wong', '', 718, 68.08)
-    self.addPlayer(season, 'BobJ', 'Bob', 'Jewett', '', 760, 91.6)
-    self.addPlayer(season, 'Brad', 'Brad', 'Jacobs', '', 609, 34.16)
-    self.addPlayer(season, 'Chris', 'Chris', 'Koyama', '', 680, 49.6)
-    self.addPlayer(season, 'CJ', 'CJ', 'Robinson', '', 717, 67.52)
-    self.addPlayer(season, 'DPham', 'David', 'Pham', '', 549, 25.92)
-    self.addPlayer(season, 'Eric', 'Eric', 'Harada', '', 770, 97.2)
-    self.addPlayer(season, 'Eve', 'Eve', 'Noonan', '', 500, 21.6)
-    self.addPlayer(season, 'Henry', 'Henry', 'Lin', '', 586, 32.0)
-    self.addPlayer(season, 'Horia', 'Horia', 'Udrea', '', 739, 79.84)
-    self.addPlayer(season, 'Johonny', 'Johonny', 'Donoho', '', 695, 56.32)
-    self.addPlayer(season, 'JoshR', 'Josh', 'Rousseau', '', 662, 47.36)
-    self.addPlayer(season, 'Jud', 'Jud', 'Fitzmaurice', '', 674, 50.72)
-    self.addPlayer(season, 'KimM', 'Kim', 'Merrill', '', 674, 50.72)
-    self.addPlayer(season, 'Mark', 'Mark', 'Davidson', '', 727, 73.12)
-    self.addPlayer(season, 'Noah', 'Noah', 'Zimmerman', '', 618, 36.32)
-    self.addPlayer(season, 'Raj', 'Rajesh', 'Parvatheneni', '', 535, 27.2)
-    self.addPlayer(season, 'Reid', 'Reid', 'Stensrud', '', 731, 75.36)
-    self.addPlayer(season, 'Richard', 'Richard', 'Dweck', '', 577, 29.24)
-    self.addPlayer(season, 'Shelby', 'Shelby', 'Noonan', '', 570, 28.4)
-    self.addPlayer(season, 'Srivats', 'Srivats', 'Balachandran', '', 642, 42.08)
-    self.addPlayer(season, 'SteveO', 'Steve', 'O\'Hara', '512-565-8626', 634, 40.16)
-    self.addPlayer(season, 'Tony', 'Tony', 'Sugimoto', '', 485, 21.4)
-    
-  def addPlayer(self, season, key, first, last, phone, handicap, highrun):
-    player = players.Player(key=ndb.Key(players.Player,key))
-    player.firstName = first
-    player.lastName = last
-    player.phone = phone
-    player.put()
+    # Create a Club
+    def createLuckyShot(self):
+        luckyShot = clubs.Club(key=ndb.Key(clubs.Club,'LS'))
+        luckyShot.name = 'Lucky Shot'
+        luckyShot.phone = '408-739-7665'
+        luckyShot.put()
+        return luckyShot
 
-    stat = stats.PlayerSummary()
-    stat.player = player.key
-    stat.season = season.key
-    stat.handicap = handicap
-    stat.highRunTarget = highrun
-    stat.highRun = 0
-    stat.wins = 0
-    stat.losses = 0
-    stat.put()
+    # Create a Season
+    def createSeason(self):
+        spr14 = seasons.Season(key=ndb.Key(seasons.Season,'Spr14'))
+        spr14.name = 'Spring 2014'
+        spr14.startDate = datetime.date(2014, 1, 7)
+        spr14.endDate = datetime.date(2014, 4, 30)
+        spr14.put()
+        return spr14
 
-    return player
+    # Create all the players
+    def createPlayers(self, season):
+        self.addPlayer(season, 'BenW', 'Ben', 'Wong', '', 718, 68.08)
+        self.addPlayer(season, 'BobJ', 'Bob', 'Jewett', '', 760, 91.6)
+        self.addPlayer(season, 'Brad', 'Brad', 'Jacobs', '', 609, 34.16)
+        self.addPlayer(season, 'Chris', 'Chris', 'Koyama', '', 680, 49.6)
+        self.addPlayer(season, 'CJ', 'CJ', 'Robinson', '', 717, 67.52)
+        self.addPlayer(season, 'DPham', 'David', 'Pham', '', 549, 25.92)
+        self.addPlayer(season, 'Eric', 'Eric', 'Harada', '', 770, 97.2)
+        self.addPlayer(season, 'Eve', 'Eve', 'Noonan', '', 500, 21.6)
+        self.addPlayer(season, 'Henry', 'Henry', 'Lin', '', 586, 32.0)
+        self.addPlayer(season, 'Horia', 'Horia', 'Udrea', '', 739, 79.84)
+        self.addPlayer(season, 'Johonny', 'Johonny', 'Donoho', '', 695, 56.32)
+        self.addPlayer(season, 'JoshR', 'Josh', 'Rousseau', '', 662, 47.36)
+        self.addPlayer(season, 'Jud', 'Jud', 'Fitzmaurice', '', 674, 50.72)
+        self.addPlayer(season, 'KimM', 'Kim', 'Merrill', '', 674, 50.72)
+        self.addPlayer(season, 'Mark', 'Mark', 'Davidson', '', 727, 73.12)
+        self.addPlayer(season, 'Noah', 'Noah', 'Zimmerman', '', 618, 36.32)
+        self.addPlayer(season, 'Raj', 'Rajesh', 'Parvatheneni', '', 535, 27.2)
+        self.addPlayer(season, 'Reid', 'Reid', 'Stensrud', '', 731, 75.36)
+        self.addPlayer(season, 'Richard', 'Richard', 'Dweck', '', 577, 29.24)
+        self.addPlayer(season, 'Shelby', 'Shelby', 'Noonan', '', 570, 28.4)
+        self.addPlayer(season, 'Srivats', 'Srivats', 'Balachandran', '', 642, 42.08)
+        self.addPlayer(season, 'SteveO', 'Steve', 'O\'Hara', '512-565-8626', 634, 40.16)
+        self.addPlayer(season, 'Tony', 'Tony', 'Sugimoto', '', 485, 21.4)
 
-  # Jan 7, 2014 results
-  def createWeek1(self, season, club, week):  
-    self.addMatch(season, club, week, 'BenW', 718, 90, 35, 0, 'Reid', 731, 100, 100, 0)
-    self.addMatch(season, club, week, 'SteveO', 634, 65, 55, 12, 'JoshR', 662, 80, 80, 15)
-    self.addMatch(season, club, week, 'Richard', 577, 30, 30, 12, 'Mark', 727, 90, 49, 0)
-    self.addMatch(season, club, week, 'Johonny', 695, 100, 49, 0, 'Tony', 485, 25, 25, 0)
-    self.addMatch(season, club, week, 'Noah', 618, 50, 30, 0, 'Chris', 680, 80, 80, 13)
-    self.addMatch(season, club, week, 'Horia', 739, 100, 100, 0, 'Johonny', 692, 70, 40, 0)
-    self.addMatch(season, club, week, 'Tony', 488, 20, 16, 0, 'Mark', 724, 100, 100, 0)
-    self.addMatch(season, club, week, 'Richard', 580, 50, 47, 0, 'Srivats', 642, 80, 80, 0)
-    self.addMatch(season, club, week, 'BenW', 715, 100, 100, 20, 'SteveO', 634, 55, 50, 0)
-    self.addMatch(season, club, week, 'KimM', 674, 90, 90, 0, 'JoshR', 665, 85, 55, 0)
-    self.addMatch(season, club, week, 'DPham', 549, 55, 34, 0, 'Henry', 586, 70, 70, 0)
-    self.addMatch(season, club, week, 'CJ', 717, 100, 100, 0, 'Chris', 690, 85, 40, 0)
-    self.addMatch(season, club, week, 'Horia', 742, 100, 31, 0, 'Henry', 589, 35, 35, 0)
-    self.addMatch(season, club, week, 'KimM', 677, 90, 77, 0, 'JoshR', 662, 85, 85, 0)
+    def addPlayer(self, season, key, first, last, phone, handicap, highrun):
+        player = players.Player(key=ndb.Key(players.Player,key))
+        player.firstName = first
+        player.lastName = last
+        player.phone = phone
+        player.put()
 
-  # Jan 14, 2014 results
-  def createWeek2(self, season, club, week):  
-    self.addMatch(season, club, week, 'Reid', 731, 90, 59, 0, 'Eric', 770, 120, 120, 0)
-    self.addMatch(season, club, week, 'Mark', 727, 90, 40, 0, 'Johonny', 694, 70, 70, 18)
-    self.addMatch(season, club, week, 'JoshR', 662, 80, 0, 0, 'Brad', 609, 55, 55, 0)
-    self.addMatch(season, club, week, 'Richard', 577, 45, 45, 0, 'Jud', 674, 90, 52, 0)
-    self.addMatch(season, club, week, 'BobJ', 760, 120, 120, 0, 'BenW', 718, 90, 13, 0)
-    self.addMatch(season, club, week, 'SteveO', 634, 55, 48, 0, 'Chris', 675, 80, 80, 14)
-    self.addMatch(season, club, week, 'Shelby', 570, 70, 70, 0, 'Tony', 485, 40, 30, 0)
-    self.addMatch(season, club, week, 'Mark', 724, 90, 90, 0, 'Jud', 671, 60, 58, 0)
-    self.addMatch(season, club, week, 'BenW', 715, 100, 100, 0, 'Richard', 580, 40, 37, 0)
-    self.addMatch(season, club, week, 'CJ', 720, 90, 90, 0, 'BobJ', 763, 120, 98, 0)
-    self.addMatch(season, club, week, 'KimM', 674, 100, 48, 0, 'Henry', 586, 55, 55, 0)
-    self.addMatch(season, club, week, 'JoshR', 662, 90, 90, 14, 'Shelby', 570, 50, 26, 0)
-    self.addMatch(season, club, week, 'SteveO', 634, 90, 59, 0, 'Raj', 535, 45, 45, 10)
-    self.addMatch(season, club, week, 'CJ', 720, 90, 65, 0, 'Henry', 589, 35, 35, 0)
-    
-  # Jan 21, 2014 results
-  def createWeek3(self, season, club, week):  
-    self.addMatch(season, club, week, 'Richard', 0, 40, 40, 0, 'Johonny', 0, 90, 66, 0)
-    self.addMatch(season, club, week, 'Mark', 0, 90, 45, 0, 'JoshR', 0, 60, 60, 18)
-    self.addMatch(season, club, week, 'Jud', 0, 80, 52, 0, 'SteveO', 0, 60, 60, 0)
-    self.addMatch(season, club, week, 'BobJ', 0, 120, 52, 0, 'Shelby', 0, 30, 30, 8)
-    self.addMatch(season, club, week, 'Eve', 500, 40, 30, 0, 'Richard', 597, 70, 70, 0)
-    self.addMatch(season, club, week, 'Horia', 0, 100, 97, 0, 'Mark', 0, 90, 90, 0)
-    self.addMatch(season, club, week, 'JoshR', 0, 70, 20, 0, 'CJ', 0, 100, 100, 34)
-    self.addMatch(season, club, week, 'Raj', 0, 35, 35, 0, 'KimM', 671, 90, 74, 0)
-    self.addMatch(season, club, week, 'SteveO', 0, 80, 80, 0, 'Shelby', 0, 55, 32, 0)
-    self.addMatch(season, club, week, 'Eric', 0, 120, 80, 0, 'Henry', 0, 35, 35, 0)
-    self.addMatch(season, club, week, 'JoshR', 0, 60, 58, 0, 'Horia', 0, 100, 100, 27)
-    self.addMatch(season, club, week, 'KimM', 0, 90, 90, 14, 'Henry', 0, 50, 40, 0)
-    
-  def addMatch(self, season, club, dat, p1, hc1, t1, s1, hr1, p2, hc2, t2, s2, hr2):
-    match = matches.Match()
-    match.date = dat
-    match.season = season.key
-    match.club = club.key
-    player1 = players.Player.get_by_id(p1)
-    player2 = players.Player.get_by_id(p2)
-    
-    if hc1 == 0:
-      stats1 = stats.PlayerSummary.query(stats.PlayerSummary.player == player1.key).fetch(1)[0]
-      hc1 = stats1.handicap
-    
-    if hc2 == 0:
-      stats2 = stats.PlayerSummary.query(stats.PlayerSummary.player == player2.key).fetch(1)[0]
-      hc2 = stats2.handicap
-    
-    if t1 == s1 and t2 > s2:
-      logging.info('********************* W = %s, L = %s' % (player1.firstName, player2.firstName))
-      match.playerW = player1.key
-      match.handicapW = hc1
-      match.scoreW = s1
-      match.targetW = t1
-      match.highRunW = hr1
-      
-      match.playerL = player2.key
-      match.handicapL = hc2
-      match.scoreL = s2
-      match.targetL = t2
-      match.highRunL = hr2
-    elif t2 == s2 and t1 > s1:
-      logging.info('********************* W = %s, L = %s' % (player2.firstName, player1.firstName))
-      match.playerW = player2.key
-      match.handicapW = hc2
-      match.scoreW = s2
-      match.targetW = t2
-      match.highRunW = hr2
-      
-      match.playerL = player1.key
-      match.handicapL = hc1
-      match.scoreL = s1
-      match.targetL = t1
-      match.highRunL = hr1
-    else:
-      logging.error('********** Nobody won between %s and %s' % (player1.firstName, player2.firstName))
-      return
+        stat = stats.PlayerSummary()
+        stat.player = player.key
+        stat.season = season.key
+        stat.handicap = handicap
+        stat.highRunTarget = highrun
+        stat.highRun = 0
+        stat.wins = 0
+        stat.losses = 0
+        stat.put()
 
-    # Save new match result
-    match.put()
-    
-    # Update statistics for the winner and loser
-    winner = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerW).fetch(1)[0]
-    loser = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerL).fetch(1)[0]
-    
-    # Update win / loss totals
-    winner.wins = winner.wins + 1
-    loser.losses = loser.losses + 1
+        return player
 
-    # Update handicaps
-    winner.handicap = winner.handicap + 3
-    loser.handicap = loser.handicap - 3
+    # Jan 7, 2014 results
+    def createWeek1(self, season, club, week):
+        self.addMatch(season, club, week, 'BenW', 718, 90, 35, 0, 'Reid', 731, 100, 100, 0)
+        self.addMatch(season, club, week, 'SteveO', 634, 65, 55, 12, 'JoshR', 662, 80, 80, 15)
+        self.addMatch(season, club, week, 'Richard', 577, 30, 30, 12, 'Mark', 727, 90, 49, 0)
+        self.addMatch(season, club, week, 'Johonny', 695, 100, 49, 0, 'Tony', 485, 25, 25, 0)
+        self.addMatch(season, club, week, 'Noah', 618, 50, 30, 0, 'Chris', 680, 80, 80, 13)
+        self.addMatch(season, club, week, 'Horia', 739, 100, 100, 0, 'Johonny', 692, 70, 40, 0)
+        self.addMatch(season, club, week, 'Tony', 488, 20, 16, 0, 'Mark', 724, 100, 100, 0)
+        self.addMatch(season, club, week, 'Richard', 580, 50, 47, 0, 'Srivats', 642, 80, 80, 0)
+        self.addMatch(season, club, week, 'BenW', 715, 100, 100, 20, 'SteveO', 634, 55, 50, 0)
+        self.addMatch(season, club, week, 'KimM', 674, 90, 90, 0, 'JoshR', 665, 85, 55, 0)
+        self.addMatch(season, club, week, 'DPham', 549, 55, 34, 0, 'Henry', 586, 70, 70, 0)
+        self.addMatch(season, club, week, 'CJ', 717, 100, 100, 0, 'Chris', 690, 85, 40, 0)
+        self.addMatch(season, club, week, 'Horia', 742, 100, 31, 0, 'Henry', 589, 35, 35, 0)
+        self.addMatch(season, club, week, 'KimM', 677, 90, 77, 0, 'JoshR', 662, 85, 85, 0)
 
-    # Update high runs
-    if match.highRunW > winner.highRun:
-      winner.highRun = match.highRunW
-    if match.highRunL > loser.highRun:
-      loser.highRun = match.highRunL
-    
-    winner.put()
-    loser.put()
+    # Jan 14, 2014 results
+    def createWeek2(self, season, club, week):
+        self.addMatch(season, club, week, 'Reid', 731, 90, 59, 0, 'Eric', 770, 120, 120, 0)
+        self.addMatch(season, club, week, 'Mark', 727, 90, 40, 0, 'Johonny', 694, 70, 70, 18)
+        self.addMatch(season, club, week, 'JoshR', 662, 80, 0, 0, 'Brad', 609, 55, 55, 0)
+        self.addMatch(season, club, week, 'Richard', 577, 45, 45, 0, 'Jud', 674, 90, 52, 0)
+        self.addMatch(season, club, week, 'BobJ', 760, 120, 120, 0, 'BenW', 718, 90, 13, 0)
+        self.addMatch(season, club, week, 'SteveO', 634, 55, 48, 0, 'Chris', 675, 80, 80, 14)
+        self.addMatch(season, club, week, 'Shelby', 570, 70, 70, 0, 'Tony', 485, 40, 30, 0)
+        self.addMatch(season, club, week, 'Mark', 724, 90, 90, 0, 'Jud', 671, 60, 58, 0)
+        self.addMatch(season, club, week, 'BenW', 715, 100, 100, 0, 'Richard', 580, 40, 37, 0)
+        self.addMatch(season, club, week, 'CJ', 720, 90, 90, 0, 'BobJ', 763, 120, 98, 0)
+        self.addMatch(season, club, week, 'KimM', 674, 100, 48, 0, 'Henry', 586, 55, 55, 0)
+        self.addMatch(season, club, week, 'JoshR', 662, 90, 90, 14, 'Shelby', 570, 50, 26, 0)
+        self.addMatch(season, club, week, 'SteveO', 634, 90, 59, 0, 'Raj', 535, 45, 45, 10)
+        self.addMatch(season, club, week, 'CJ', 720, 90, 65, 0, 'Henry', 589, 35, 35, 0)
 
-  def adjustHandicap(self, season, name, delta):
-    player = players.Player.get_by_id(name)
-    stat = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
-    stat.handicap = stat.handicap + delta
-    stat.put()
+    # Jan 21, 2014 results
+    def createWeek3(self, season, club, week):
+        self.addMatch(season, club, week, 'Richard', 0, 40, 40, 0, 'Johonny', 0, 90, 66, 0)
+        self.addMatch(season, club, week, 'Mark', 0, 90, 45, 0, 'JoshR', 0, 60, 60, 18)
+        self.addMatch(season, club, week, 'Jud', 0, 80, 52, 0, 'SteveO', 0, 60, 60, 0)
+        self.addMatch(season, club, week, 'BobJ', 0, 120, 52, 0, 'Shelby', 0, 30, 30, 8)
+        self.addMatch(season, club, week, 'Eve', 500, 40, 30, 0, 'Richard', 597, 70, 70, 0)
+        self.addMatch(season, club, week, 'Horia', 0, 100, 97, 0, 'Mark', 0, 90, 90, 0)
+        self.addMatch(season, club, week, 'JoshR', 0, 70, 20, 0, 'CJ', 0, 100, 100, 34)
+        self.addMatch(season, club, week, 'Raj', 0, 35, 35, 0, 'KimM', 671, 90, 74, 0)
+        self.addMatch(season, club, week, 'SteveO', 0, 80, 80, 0, 'Shelby', 0, 55, 32, 0)
+        self.addMatch(season, club, week, 'Eric', 0, 120, 80, 0, 'Henry', 0, 35, 35, 0)
+        self.addMatch(season, club, week, 'JoshR', 0, 60, 58, 0, 'Horia', 0, 100, 100, 27)
+        self.addMatch(season, club, week, 'KimM', 0, 90, 90, 14, 'Henry', 0, 50, 40, 0)
+
+    def addMatch(self, season, club, dat, p1, hc1, t1, s1, hr1, p2, hc2, t2, s2, hr2):
+        match = matches.Match()
+        match.date = dat
+        match.season = season.key
+        match.club = club.key
+        player1 = players.Player.get_by_id(p1)
+        player2 = players.Player.get_by_id(p2)
+
+        if hc1 == 0:
+            stats1 = stats.PlayerSummary.query(stats.PlayerSummary.player == player1.key).fetch(1)[0]
+            hc1 = stats1.handicap
+
+        if hc2 == 0:
+            stats2 = stats.PlayerSummary.query(stats.PlayerSummary.player == player2.key).fetch(1)[0]
+            hc2 = stats2.handicap
+
+        if t1 == s1 and t2 > s2:
+            logging.info('********************* W = %s, L = %s' % (player1.firstName, player2.firstName))
+            match.playerW = player1.key
+            match.handicapW = hc1
+            match.scoreW = s1
+            match.targetW = t1
+            match.highRunW = hr1
+
+            match.playerL = player2.key
+            match.handicapL = hc2
+            match.scoreL = s2
+            match.targetL = t2
+            match.highRunL = hr2
+        elif t2 == s2 and t1 > s1:
+            logging.info('********************* W = %s, L = %s' % (player2.firstName, player1.firstName))
+            match.playerW = player2.key
+            match.handicapW = hc2
+            match.scoreW = s2
+            match.targetW = t2
+            match.highRunW = hr2
+
+            match.playerL = player1.key
+            match.handicapL = hc1
+            match.scoreL = s1
+            match.targetL = t1
+            match.highRunL = hr1
+        else:
+            logging.error('********** Nobody won between %s and %s' % (player1.firstName, player2.firstName))
+            return
+
+        # Save new match result
+        match.put()
+
+        # Update statistics for the winner and loser
+        winner = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerW).fetch(1)[0]
+        loser = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerL).fetch(1)[0]
+
+        # Update win / loss totals
+        winner.wins = winner.wins + 1
+        loser.losses = loser.losses + 1
+
+        # Update handicaps
+        winner.handicap = winner.handicap + 3
+        loser.handicap = loser.handicap - 3
+
+        # Update high runs
+        if match.highRunW > winner.highRun:
+            winner.highRun = match.highRunW
+        if match.highRunL > loser.highRun:
+            loser.highRun = match.highRunL
+
+        winner.put()
+        loser.put()
+
+    def adjustHandicap(self, season, name, delta):
+        player = players.Player.get_by_id(name)
+        stat = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
+        stat.handicap = stat.handicap + delta
+        stat.put()
 
 app = webapp2.WSGIApplication([
    (r'/.*', FakeHandler)

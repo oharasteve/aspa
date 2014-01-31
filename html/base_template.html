@@ -1,0 +1,25 @@
+{% autoescape true %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <link type="text/css" rel="stylesheet" href="/stylesheets/shared.css" />
+  <title>{% block title %}{% endblock %}</title>
+  <script language="JavaScript1.2" src="/js/tablesort.js"></script>
+  {% endblock %}
+</head>
+<body>
+<div id="content">{% block content %}{% endblock %}</div>
+<div id="footer">
+  {% block footer %}
+  <hr/>
+  <font size=-1>
+    <i>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a> </i>
+    <br/>
+    <i>Web Issues: <a href="mailto:steve@oharasteve.com">steve@oharasteve.com</a></i>
+  </font>
+  {% endblock %}
+</div>
+</body>
+</html>
+{% endautoescape %}
