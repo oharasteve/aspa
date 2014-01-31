@@ -51,7 +51,6 @@ class Details():
                     opponent['player'].id())
             entry = {
                     'entry_index': seq,
-                    'alternate_class': 'even' if seq % 2 == 0 else 'odd',
                     'results_pdf_url': '/results/LSB_{0}.pdf'.format(
                         match.date),
                     'date': match.date,

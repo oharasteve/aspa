@@ -1,5 +1,16 @@
 {% extends "/html/base_template.html" %}
 {% block title %}ASPA {{ season.name }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $("#details").tablesorter({
+      sortList:[[0,0]],  // sort by first column, asc.
+      widgets: ['zebra']
+    });
+  });
+  </script>
+{% endblock %}
 {% block content %}
   <center>
   <h1>American Straight Pool Association</h1>
@@ -9,7 +20,7 @@
   </h2>
   {% endif %}
 
-  <table class="details">
+  <table class="tablesorter details" id="details">
     <thead>
       <tr>
         <th class="hdr num">Seq</th>
@@ -17,7 +28,7 @@
         <th class="hdr nocase">Last</th>
         <th class="hdr num">H'cap</th>
         <th class="hdr num">Won</th>
-        <th class="hdr num">Lon</th>
+        <th class="hdr num">Lost</th>
         <th class="hdr num">Win %</th>
         <th class="hdr num">Points</th>
         <th class="hdr num">High Run</th>
@@ -27,7 +38,7 @@
     </thead>
     <tbody>
     {% for entry in player_summaries %}
-      <tr class="{{ entry.alternate_class }}">
+      <tr>
         <td class="center"><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
         <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
         <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>

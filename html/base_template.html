@@ -4,8 +4,10 @@
 <head>
   {% block head %}
   <link type="text/css" rel="stylesheet" href="/stylesheets/shared.css" />
+  <link type="text/css" rel="stylesheet" href="/stylesheets/blue/style.css" media="print, projection, screen" />
   <title>{% block title %}{% endblock %}</title>
-  <script language="JavaScript1.2" src="/js/tablesort.js"></script>
+  <script type="text/javascript" language="javascript" src="/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
   {% endblock %}
 </head>
 <body>

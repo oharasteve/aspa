@@ -1,5 +1,17 @@
 {% extends "/html/base_template.html" %}
 {% block title %}ASPA {{ season.name }}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $("#details").tablesorter({
+      sortList:[[0,0]],  // sort by first column, asc.
+      widgets: ['zebra']
+    });
+  });
+  </script>
+{% endblock %}
+
 {% block content %}
   <center>
   <h1>American Straight Pool Association</h1>
@@ -13,7 +25,7 @@
       {{ player.firstName }} {{ player.lastName }}
   </h1>
 
-  <table class="details">
+  <table class="tablesorter details" id="details">
     <thead>
       <tr>
         <th class="hdr num">#</th>
