@@ -170,13 +170,14 @@ class AddMatchHandler(webapp2.RequestHandler):
       loserStats.put()
 
       self.response.write('<h3>Successfully added new Match: %s beat %s</h3><hr/>\n' % (cgi.escape(winner.firstName), cgi.escape(loser.firstName)))
-      self.shared(self.response, when, "", "", "", "", "", "", "", "", "", "")
+      self.shared(self.response, when.strftime("%Y-%m-%d"), "", "", "", "", "", "", "", "", "", "")
     self.footer(self.response)
   
   def get(self):
     season = seasons.Season.get_by_id('Spr14')
     self.header(self.response, season)
-    self.shared(self.response, datetime.strftime("%Y-%m-%d"), "", "", "", "", "", "", "", "", "", "")
+    today = datetime.date.today()
+    self.shared(self.response, today.strftime("%Y-%m-%d"), "", "", "", "", "", "", "", "", "", "")
     self.footer(self.response)
     
   def header(self, response, season):
@@ -212,7 +213,7 @@ class AddMatchHandler(webapp2.RequestHandler):
     response.write('    var playerCode = selectElement.options[selectElement.selectedIndex].value;\n')
     response.write('    inputElement.value = findHandicap(playerCode);\n')
     response.write('  }\n')
-
+    
   def shared(self, response, when, winner, loser, hcapW, hcapL, targetW, targetL, scoreW, scoreL, hrunW, hrunL):
     response.write('<h3>Add a match result</h3>\n')
     response.write('<form action="." method="post">\n')
@@ -226,7 +227,8 @@ class AddMatchHandler(webapp2.RequestHandler):
     self.showNames(response, "nameL", "handicapL", loser)
     response.write('    <tr><td>Handicap: <input id="handicapW" name="handicapW" value="%s" size="5"/>\n' % cgi.escape(hcapW))
     response.write('      <td>Handicap: <input id="handicapL" name="handicapL" value="%s" size="5"/>\n' % cgi.escape(hcapL))
-    response.write('    <tr><td>Target: <input name="targetW" value="%s" size="5"/>\n' % cgi.escape(targetW))
+    onChangeTargetW = "onchange=\"scoreW.value = this.value;\""
+    response.write('    <tr><td>Target: <input name="targetW" value="%s" size="5" %s/>\n' % (cgi.escape(targetW), onChangeTargetW))
     response.write('      <td>Target: <input name="targetL" value="%s" size="5"/>\n' % cgi.escape(targetL))
     response.write('    <tr><td>Score: <input name="scoreW" value="%s" size="5"/>\n' % cgi.escape(scoreW))
     response.write('      <td>Score: <input name="scoreL" value="%s" size="5"/>\n' % cgi.escape(scoreL))
