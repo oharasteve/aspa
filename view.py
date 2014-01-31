@@ -47,7 +47,6 @@ class View():
                         cgi.escape(season.key.id()),
                         cgi.escape(summary.player.id())),
                     'season': season,
-                    'alternate_class': 'even' if seq % 2 == 0 else 'odd',
                     }
                 player_summaries.append(player_summary)
         logging.debug('Found %d player summary records.' % (
