@@ -1,0 +1,11 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA{% endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+  <p>
+  {%- if message %}
+  {{ message|safe }}
+  {%- endif %}
+  </p>
+  </ul>
+{%- endblock %}

@@ -14,17 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import webapp2
 from google.appengine.ext import ndb
 
+import base_handler
 import clubs
 import highRun
 import matches
 import players
 import seasons
 import stats
+import webapp2
 
-class DestroyHandler(webapp2.RequestHandler):
+
+TEMPLATE = 'html/generic_message.html'
+
+class DestroyHandler(base_handler.BaseHandler):
     def get(self):
         # Delete all old data
         ndb.delete_multi(stats.PlayerSummary.query().fetch(keys_only=True))
@@ -34,14 +38,13 @@ class DestroyHandler(webapp2.RequestHandler):
         ndb.delete_multi(matches.Match.query().fetch(keys_only=True))
         ndb.delete_multi(highRun.HighRun.query().fetch(keys_only=True))
 
-        self.response.write('<html>\n')
-        self.response.write('<head>\n')
-        self.response.write('</head>\n')
-        self.response.write('<body>\n')
-        self.response.write('<p>Data has been destroyed. Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
-        self.response.write('</body>\n')
-        self.response.write('</html>\n')
+        context = {
+                'message': 'Data has been destroyed. Click <a href="/admin">here</a> to go back to the admin page.',
+                }
 
-app = webapp2.WSGIApplication([
-   (r'/.*', DestroyHandler)
-], debug=True)
+        self.render_response(TEMPLATE, **context)
+
+
+app = webapp2.WSGIApplication([(r'/.*', DestroyHandler)],
+    debug=True,
+    config=base_handler.CONFIG)

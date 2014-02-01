@@ -14,28 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import webapp2
 
 import adjustments
+import base_handler
 import players
 import stats
+import webapp2
 
-class AdjustHandicapHandler(webapp2.RequestHandler):
+TEMPLATE = 'html/not_implemented.html'
+
+class AdjustHandicapHandler(base_handler.BaseHandler):
     def get(self):
+        context = {
+                'page_title': 'Adjust a Handicap',
+                'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
+                }
+        self.render_response(TEMPLATE, **context)
 
-        self.response.write('<html>\n')
-        self.response.write('<head>\n')
-        self.response.write('<title>ASPA</title>\n')
-        self.response.write('</head>\n')
-        self.response.write('<body>\n')
-        self.response.write('<h3>Adjust a Handicap</h3>\n')
 
-        self.response.write('<h3><i>Not yet implemented.</i></h3>\n')
-        self.response.write('<p>Click <a href="/admin">here</a> to go back to the admin page.</p>\n')
-
-        self.response.write('</body>\n')
-        self.response.write('</html>\n')
-
-app = webapp2.WSGIApplication([
-  (r'/.*', AdjustHandicapHandler)
-], debug=True)
+app = webapp2.WSGIApplication([(r'/.*', AdjustHandicapHandler)],
+    debug=True,
+    config=base_handler.CONFIG)

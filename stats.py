@@ -18,10 +18,12 @@ class PlayerSummary(ndb.Model):
     goal = ndb.ComputedProperty(lambda self: self.highRun * 100.0 / self.highRunTarget if self.highRunTarget and self.highRun else 0.0)
     pct = ndb.ComputedProperty(lambda self: self.wins * 100.0 /(self.wins + self.losses + self.forfeits) if self.wins else 0.0)
 
-
-def insertJavascript(response):
-    response.write('  function findHandicap(key) {\n')
-    for stat in PlayerSummary.query():
-        response.write('    if (key == "{0}") return {1};\n'.format(stat.player.id(), stat.handicap))
-    response.write('    return 0;\n')
-    response.write('  }\n')
+    @classmethod
+    def getPlayerSummaries(self):
+        ret_list = []
+        for item in self.query().order(PlayerSummary.season, PlayerSummary.player, PlayerSummary.handicap):
+            my_dict = item.to_dict()
+            my_dict['player'] = { 'id': my_dict['player'].id(), }
+            my_dict['season'] = { 'id': my_dict['season'].id(), }
+            ret_list.append(my_dict)
+        return ret_list

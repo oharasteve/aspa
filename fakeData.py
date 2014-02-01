@@ -14,19 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import webapp2
 from google.appengine.ext import ndb
-import datetime
-import logging
-
+import base_handler
 import clubs
+import datetime
 import highRun
+import logging
 import matches
 import players
 import seasons
 import stats
+import webapp2
 
-class FakeHandler(webapp2.RequestHandler):
+TEMPLATE = 'html/generic_message.html'
+
+class FakeHandler(base_handler.BaseHandler):
     def get(self):
         w1 = datetime.date(2014, 1, 7)
         w2 = datetime.date(2014, 1, 14)
@@ -45,13 +47,11 @@ class FakeHandler(webapp2.RequestHandler):
         f.adjustHandicap(spr14, 'Eve', -10)
         f.createWeek3(spr14, luckyShot, w3)
 
-        self.response.write('<html>\n')
-        self.response.write('<head>\n')
-        self.response.write('</head>\n')
-        self.response.write('<body>\n')
-        self.response.write('<p>Data has been generated. Click <a href="/">here</a> to go back to the main page.</p>\n')
-        self.response.write('</body>\n')
-        self.response.write('</html>\n')
+        context = {
+                'message': 'Data has been generated. Click <a href="/admin">here</a> to go back to the admin page.',
+                }
+
+        self.render_response(TEMPLATE, **context)
 
 class FakeData:
     def createHighRuns(self):
@@ -263,6 +263,6 @@ class FakeData:
         stat.handicap = stat.handicap + delta
         stat.put()
 
-app = webapp2.WSGIApplication([
-   (r'/.*', FakeHandler)
-], debug=True)
+app = webapp2.WSGIApplication([(r'/.*', FakeHandler)],
+    debug=True,
+    config=base_handler.CONFIG)

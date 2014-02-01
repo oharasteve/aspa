@@ -32,4 +32,5 @@ class BaseHandler(webapp2.RequestHandler):
     def render_response(self, _template, **context):
         # Renders a template and writes the result to the response.
         rendered_output = self.jinja2.render_template(_template, **context)
+        self.response.headers['Content-Type'] = 'text/html'
         self.response.write(rendered_output)
