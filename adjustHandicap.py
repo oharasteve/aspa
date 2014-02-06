@@ -16,6 +16,8 @@
 #
 import webapp2
 
+import adjustments
+import players
 import stats
 
 class AdjustHandicapHandler(webapp2.RequestHandler):

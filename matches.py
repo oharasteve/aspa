@@ -9,6 +9,7 @@ class Match(ndb.Model):
     date = ndb.DateProperty()
     season = ndb.KeyProperty(kind=seasons.Season)
     club = ndb.KeyProperty(kind=clubs.Club)
+    forfeited = ndb.BooleanProperty(default=False)
 
     playerW = ndb.KeyProperty(kind=players.Player)
     handicapW = ndb.IntegerProperty()

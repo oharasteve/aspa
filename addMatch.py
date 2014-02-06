@@ -41,6 +41,7 @@ class AddMatchHandler(webapp2.RequestHandler):
         xscoreL = self.request.get('scoreL')
         xhrunW = self.request.get('highRunW')
         xhrunL = self.request.get('highRunL')
+        xforfeited = False
 
         errmsg = ""
         try:
