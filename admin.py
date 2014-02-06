@@ -14,33 +14,54 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import base_handler
+import seasons
 import webapp2
 
-import seasons
+TEMPLATE = 'html/admin.html'
 
-class AdminHandler(webapp2.RequestHandler):
+class AdminHandler(base_handler.BaseHandler):
     def get(self):
-        season = seasons.Season.get_by_id('Spr14')
-        self.response.write('<html>\n')
-        self.response.write('<head>\n')
-        self.response.write('<title>ASPA {0}</title>\n'.format(season.name if season else ''))
-        self.response.write('</head>\n')
-        self.response.write('<body>\n')
+        context = {
+                'season': seasons.Season.get_by_id('Spr14'),
+                'choices': [
+                    {
+                        'url': '/admin/suggestMatch/',
+                        'description': 'Suggest Match Targets',
+                        },
+                    {
+                        'url': '/admin/addMatch/',
+                        'description': 'Add Match Result',
+                        },
+                    {
+                        'url': '/admin/addPlayer/',
+                        'description': 'Add New Player',
+                        },
+                    {
+                        'url': '/admin/addSeason/',
+                        'description': 'Add New Season',
+                        },
+                    {
+                        'url': '/admin/addClub/',
+                        'description': 'Add New Club',
+                        },
+                    {
+                        'url': '/admin/adjustHandicap/',
+                        'description': 'Adjust Player Handicap',
+                        },
+                    {
+                        'url': '/admin/destroy/',
+                        'description': 'Delete All Data (careful!!!)',
+                        },
+                    {
+                        'url': '/admin/regenerate/',
+                        'description': 'Generate Three Weeks (once only)',
+                        },
+                    ],
+                }
+        self.render_response(TEMPLATE, **context)
 
-        self.response.write('<p>Choices:<ul>\n')
-        self.response.write('<li><a href="/">Home</a>\n')
-        self.response.write('<li><a href="/admin/suggestMatch/">Suggest Match Targets</a>\n')
-        self.response.write('<li><a href="/admin/addMatch/">Add Match Result</a>\n')
-        self.response.write('<li><a href="/admin/addPlayer/">Add New Player</a>\n')
-        self.response.write('<li><a href="/admin/addSeason/">Add New Season</a>\n')
-        self.response.write('<li><a href="/admin/addClub/">Add New Club</a>\n')
-        self.response.write('<li><a href="/admin/adjustHandicap/">Adjust Player Handicap</a>\n')
-        self.response.write('<li><a href="/admin/destroy/">Delete All Data (careful!!!)</a>\n')
-        self.response.write('<li><a href="/admin/regenerate/">Generate Three Weeks (once only)</a>\n')
 
-        self.response.write('</body>\n')
-        self.response.write('</html>\n')
-
-app = webapp2.WSGIApplication([
-  (r'/.*', AdminHandler)
-], debug=True)
+app = webapp2.WSGIApplication([(r'/.*', AdminHandler)],
+    debug=True,
+    config=base_handler.CONFIG)

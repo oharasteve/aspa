@@ -1,27 +1,34 @@
-{% autoescape true %}
+{%- autoescape true %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block head %}
+  {%- block head %}
   <link type="text/css" rel="stylesheet" href="/stylesheets/shared.css" />
   <link type="text/css" rel="stylesheet" href="/stylesheets/blue/style.css" media="print, projection, screen" />
-  <title>{% block title %}{% endblock %}</title>
-  <script type="text/javascript" language="javascript" src="/js/jquery-1.11.0.min.js"></script>
-  <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
-  {% endblock %}
+  <link type="text/css" rel="stylesheet" href="/js/libs/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+  <title>{%- block title %}{%- endblock %}</title>
+  <script type='text/javascript' src='/js/libs/jquery-1.11.0.min.js'></script>
+  <script type='text/javascript' src='/js/libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js'></script>
+  <script type='text/javascript' src='/js/libs/jquery-validation-1.11.1/dist/jquery.validate.min.js'></script>
+  <script type='text/javascript' src='/js/libs/jquery-validation-1.11.1/dist/additional-methods.min.js'></script>
+  <script type="text/javascript" src="/js/libs/jquery.tablesorter.min.js"></script>
+  <script type='text/javascript' src='/js/libs/knockout-3.0.0.js'></script>
+  {%- endblock %}
 </head>
 <body>
-<div id="content">{% block content %}{% endblock %}</div>
+<div id="content">
+  {%- block content %}{%- endblock %}
+</div>
 <div id="footer">
-  {% block footer %}
+  {%- block footer %}
   <hr/>
   <font size=-1>
     <i>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a> </i>
     <br/>
     <i>Web Issues: <a href="mailto:steve@oharasteve.com">steve@oharasteve.com</a></i>
   </font>
-  {% endblock %}
+  {%- endblock %}
 </div>
 </body>
 </html>
-{% endautoescape %}
+{%- endautoescape %}

@@ -1,0 +1,73 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  $().ready(function() {
+    $("#addSeasonForm").validate({
+      rules: {
+        code: "required",
+        name: "required",
+        start: {
+          required: true,
+          dateISO: true
+        },
+        end: {
+          required: true,
+          dateISO: true
+        }
+      }
+    });
+
+    $(function() { $( "#start" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+    $(function() { $( "#end" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+  });
+  </script>
+{%- endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+
+  {%- if display_form %}
+  <h3>Add a New Season</h3>
+  <hr/>
+  <form id="addSeasonForm" action="/admin/addSeason/" method="post">
+  <table>
+    <tr>
+      <td align="right">Code:</td>
+      <td align="left"><input name="code" id="code" size="5" type="text" value="{{ season_code }}"/></td>
+    </tr>
+    <tr>
+      <td align="right">Name:</td>
+      <td align="left"><input name="name" id="name" type="text" value="{{ season_name }}"/></td>
+    </tr>
+    <tr>
+      <td align="right">Start Date:<br/>(yyyy-mm-dd)</td>
+      <td align="left"><input name="start" id="start" type="text" value="{{ season_start }}"/></td>
+    <tr/>
+    <tr>
+      <td align="right">End Date:<br/>(yyyy-mm-dd)</td>
+      <td align="left"><input name="end" id="end" type="text" value="{{ season_end }}"/></td>
+    <tr/>
+
+  </table>
+  <p>
+    <input type="button" value="Cancel" onclick="window.location.href='/admin'"/>
+    <input type="submit" value="Submit"/>
+  </p>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to add new season:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully added new season: {{ season_name }} ({{ season_code }})</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  {%- endif %}
+  </div>
+{%- endblock %}

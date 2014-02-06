@@ -32,6 +32,17 @@ indexes:
   - name: season
   - name: date
 
+- kind: Player
+  properties:
+  - name: firstName
+  - name: lastName
+
+- kind: PlayerSummary
+  properties:
+  - name: season
+  - name: player
+  - name: handicap
+
 - kind: PlayerSummary
   properties:
   - name: season

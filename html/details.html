@@ -15,11 +15,11 @@
 {% block content %}
   <center>
   <h1>American Straight Pool Association</h1>
-  {% if season %}
+  {%- if season %}
   <h2>
     {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
   </h2>
-  {% endif %}
+  {%- endif %}
 
   <h1>
       {{ player.firstName }} {{ player.lastName }}
@@ -44,7 +44,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for entry in match_details %}
+    {%- for entry in match_details %}
       <tr class="{{ entry.alternate_class }}">
         <td class="center">{{ entry.entry_index }}</td>
         <td class="right"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
@@ -60,7 +60,7 @@
         <td class="right">{{ entry.opponent.target }}</td>
         <td class="right">{{ entry.opponent.highRun }}</td>
       </tr>
-    {% endfor %}
+    {%- endfor %}
 
     </tbody>
   </table>
@@ -74,4 +74,4 @@
   </p>
   </center>
   </div>
-{% endblock %}
+{%- endblock %}

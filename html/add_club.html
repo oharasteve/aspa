@@ -1,0 +1,59 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  $().ready(function() {
+    $("#addClubForm").validate({
+      rules: {
+        code: "required",
+        name: "required",
+        phone: {
+          phoneUS: true
+        },
+      }
+    });
+  });
+  </script>
+{%- endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+
+  {%- if display_form %}
+  <h3>Add a New Club</h3>
+  <hr/>
+  <form id="addClubForm" action="/admin/addClub/" method="post">
+  <table>
+    <tr>
+      <td align="right">Code:</td>
+      <td align="left"><input name="code" id="code" size="5" type="text" value="{{ club_code }}"/></td>
+    </tr>
+    <tr>
+      <td align="right">Name:</td>
+      <td align="left"><input name="name" id="name" type="text" value="{{ club_name }}"/></td>
+    </tr>
+    <tr>
+      <td align="right">Phone:</td>
+      <td align="left"><input name="phone" id="phone" type="text" value="{{ club_phone }}"/></td>
+    </tr>
+  </table>
+  <p>
+    <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
+    <input type="submit" value="Submit"/>
+  </p>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to add new club:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully added new club: {{ club_name }} ({{ club_code }})</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  {%- endif %}
+{%- endblock %}
