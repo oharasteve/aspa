@@ -18,8 +18,9 @@ from google.appengine.ext import ndb
 import base_handler
 import cgi
 import datetime
-import seasons
 import webapp2
+
+from data import seasons
 
 TEMPLATE = 'html/add_season.html'
 

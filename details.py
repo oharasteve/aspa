@@ -2,14 +2,14 @@ from google.appengine.ext import ndb
 
 import base_handler
 import cgi
-import matches
-import players
-import seasons
-import stats
 import webapp2
 
-TEMPLATE = 'html/details.html'
+from data import matches
+from data import players
+from data import seasons
+from data import stats
 
+TEMPLATE = 'html/details.html'
 
 class DetailsHandler(base_handler.BaseHandler):
     def get(self):

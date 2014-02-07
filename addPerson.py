@@ -17,18 +17,18 @@
 from google.appengine.ext import ndb
 import base_handler
 import cgi
-import highRun
-import players
-import seasons
-import stats
 import webapp2
+
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/add_player.html'
 
 class AddPersonHandler(base_handler.BaseHandler):
     def post(self):
         context = {
-            'season': seasons.Season.get_by_id('Spr14'),
+            'seasons': seasons.Season.getSeasons(),
             'player': {
                 'code': self.request.get('code'),
                 'firstName': self.request.get('firstName'),
@@ -37,8 +37,7 @@ class AddPersonHandler(base_handler.BaseHandler):
                 'highRunTarget': self.request.get('highRunTarget'),
                 'phone': self.request.get('phone'),
                 'email': self.request.get('email'),
-                },
-            'highRuns': highRun.HighRun.getHighRuns(),
+            },
         }
 
         error_messages = []
@@ -76,7 +75,7 @@ class AddPersonHandler(base_handler.BaseHandler):
 
     def get(self):
         context = {
-            'season': seasons.Season.get_by_id('Spr14'),
+            'seasons': seasons.Season.getSeasons(),
             'player': {
                 'code': '',
                 'firstName': '',
@@ -87,8 +86,7 @@ class AddPersonHandler(base_handler.BaseHandler):
                 'email': '',
                 },
             'display_form': True,
-            'highRuns': highRun.HighRun.getHighRuns(),
-            }
+        }
         self.render_response(TEMPLATE, **context)
 
 

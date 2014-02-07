@@ -3,10 +3,11 @@
 import base_handler
 import cgi
 import logging
-import players
-import seasons
-import stats
 import webapp2
+
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/view.html'
 

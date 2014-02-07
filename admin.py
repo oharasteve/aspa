@@ -15,8 +15,9 @@
 # limitations under the License.
 #
 import base_handler
-import seasons
 import webapp2
+
+from data import seasons
 
 TEMPLATE = 'html/admin.html'
 

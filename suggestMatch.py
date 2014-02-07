@@ -14,20 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import base_handler
-import clubs
-import players
-import seasons
-import stats
 import webapp2
+
+from data import clubs
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/suggest_match.html'
 
 class SuggestMatchHandler(base_handler.BaseHandler):
     def get(self):
-        season = seasons.Season.get_by_id('Spr14')
         context = {
-          'season': seasons.Season.get_by_id('Spr14'),
+          'seasons': seasons.Season.getSeasons(),
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
           'clubs': clubs.Club.getClubs(),

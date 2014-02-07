@@ -1,5 +1,9 @@
 from google.appengine.ext import ndb
 
+#
+# One row per player, regardless of how many seasons they play
+#
+
 class Player(ndb.Model):
     """Models a player."""
     firstName = ndb.StringProperty()

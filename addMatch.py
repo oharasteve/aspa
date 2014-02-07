@@ -17,22 +17,22 @@
 from google.appengine.ext import ndb
 import base_handler
 import cgi
-import clubs
 import datetime
-import matches
-import players
-import seasons
-import stats
+import logging
 import webapp2
+
+from data import clubs
+from data import matches
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/add_match.html'
 
 class AddMatchHandler(base_handler.BaseHandler):
     def post(self):
-        season = seasons.Season.get_by_id('Spr14')
-
-        club =  clubs.Club.get_by_id('LS')
-
+        xseason = self.request.get('season_select')
+        xclub = self.request.get('club_select')
         xwhen = self.request.get('todays_date')
         nameW = self.request.get('winner_select')
         nameL = self.request.get('loser_select')
@@ -60,6 +60,14 @@ class AddMatchHandler(base_handler.BaseHandler):
         if not loser:
             error_messages.append("<li>Loser is required")
 
+        season = seasons.Season.get_by_id(xseason)
+        if not season:
+            error_messages.append("<li>Season is required")
+        
+        club = clubs.Club.get_by_id(xclub)
+        if not club:
+            error_messages.append("<li>Club is required")
+            
         hcapW = int(xhcapW)
         hcapL = int(xhcapL)
         targetW = int(xtargetW)
@@ -116,7 +124,7 @@ class AddMatchHandler(base_handler.BaseHandler):
             loserStats.put()
 
         context = {
-          'season': season,
+          'seasons': seasons.Season.getSeasons(),
           'todays_date': xwhen,
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
@@ -140,6 +148,8 @@ class AddMatchHandler(base_handler.BaseHandler):
               'highrun': xhrunL,
               'score': xscoreL,
               },
+          'season_selectedIndex': season,
+          'club_selectedIndex': club,
           'winner_selectedIndex': nameW,
           'loser_selectedIndex': nameL,
           'display_form': False,  # Do not display the form, just the errors/result.
@@ -150,7 +160,7 @@ class AddMatchHandler(base_handler.BaseHandler):
 
     def get(self):
         context = {
-          'season': seasons.Season.get_by_id('Spr14'),
+          'seasons': seasons.Season.getSeasons(),
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
@@ -169,6 +179,8 @@ class AddMatchHandler(base_handler.BaseHandler):
               'highrun': 0,
               'score': '',
               },
+          'season_selectedIndex': 0,
+          'club_selectedIndex': 0,
           'winner_selectedIndex': -1,
           'loser_selectedIndex': -1,
           'display_form': True,

@@ -1,5 +1,5 @@
 {%- extends "/html/base_template.html" %}
-{%- block title %}ASPA {{ season.name }}{%- endblock %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
 {%- block head %}
   {{ super() }}
 
@@ -66,6 +66,7 @@
   $().ready(function() {
     $("#addPlayerForm").validate({
       rules: {
+        season_select: "required",
         club_select: "required",
         playerA_select: "required",
         playerB_select: "required",
@@ -92,6 +93,14 @@
 
   <h3>Suggested Race:</h3>
   <hr/>
+
+  <p>Season: <select name="{{ season_select }}" id="{{ season_select }}">
+    {%- for season in seasons %}
+    <option value="{{ season.id }}">{{ season.name }}</option>
+    {%- endfor %}
+    </select>
+  </p>
+
   <table border>
     <tr>
       <td align="right">Player 1:

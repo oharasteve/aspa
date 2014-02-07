@@ -15,11 +15,12 @@
 # limitations under the License.
 #
 
-import adjustments
 import base_handler
-import players
-import stats
 import webapp2
+
+from data import adjustments
+from data import players
+from data import stats
 
 TEMPLATE = 'html/not_implemented.html'
 

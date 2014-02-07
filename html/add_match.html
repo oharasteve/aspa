@@ -1,5 +1,5 @@
 {%- extends "/html/base_template.html" %}
-{%- block title %}ASPA {{ season.name }}{%- endblock %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
 {%- block head %}
   {{ super() }}
 
@@ -31,6 +31,7 @@
   $().ready(function() {
     $("#addPlayerForm").validate({
       rules: {
+        season_select: "required",
         club_select: "required",
         winner_select: "required",
         loser_select: "required",
@@ -82,6 +83,8 @@
   {%- if display_form %}
     $(function() { $( "#todays_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
 
+    $('#season_select').prop('selectedIndex', {{ season_selectedIndex }})
+    $('#club_select').prop('selectedIndex', {{ club_selectedIndex }})
     $('#winner_select').prop('selectedIndex', {{ winner_selectedIndex }})
     $('#loser_select').prop('selectedIndex', {{ loser_selectedIndex }})
   {%- endif %}
@@ -95,12 +98,20 @@
   <h3>Add a match result</h3>
   <hr/>
   <form id="addMatchForm" action="/admin/addMatch/" method="post">
-      <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
-    <p>Club: <select name="{{ club_select }}" id="{{ club_select }}">
-    {%- for club in clubs %}
-    <option value="{{ club.id }}">{{ club.name }}</option>
-    {%- endfor %}
-    </select>
+    <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
+    
+    <p>Season: <select name="season_select" id="season_select" value=-1>
+      {%- for season in seasons %}
+      <option value="{{ season.id }}">{{ season.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+    <p>Club: <select name="club_select" id="club_select" value=-1>
+      {%- for club in clubs %}
+      <option value="{{ club.id }}">{{ club.name }}</option>
+      {%- endfor %}
+      </select>
     </p>
 
   <table border>
@@ -127,8 +138,8 @@
       </td>
     </tr>
     <tr>
-        <td>Handicap: <input id="winner_handicap" name="winner_handicap" value="{{ winner.handicap }}" size="5"/></td>
-        <td>Handicap: <input id="loser_handicap" name="loser_handicap" value="{{ loser.handicap }}" size="5"/></td>
+      <td>Handicap: <input id="winner_handicap" name="winner_handicap" value="{{ winner.handicap }}" size="5"/></td>
+      <td>Handicap: <input id="loser_handicap" name="loser_handicap" value="{{ loser.handicap }}" size="5"/></td>
     </tr>
     <tr>
         <td>Target: <input id="winner_target" name="winner_target" value="{{ winner.target }}" size="5"

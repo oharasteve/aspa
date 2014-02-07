@@ -1,5 +1,11 @@
 from google.appengine.ext import ndb
 
+#
+# One row per match. Each match has two players, a winner and a loser.
+# The match takes place at a club, in a season. This data is only for
+# that one event, there are no statistics updated here.
+#
+
 import clubs
 import players
 import seasons

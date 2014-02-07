@@ -16,15 +16,15 @@
 #
 from google.appengine.ext import ndb
 import base_handler
-import clubs
 import datetime
-import highRun
 import logging
-import matches
-import players
-import seasons
-import stats
 import webapp2
+
+from data import clubs
+from data import matches
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/generic_message.html'
 
@@ -54,28 +54,6 @@ class FakeHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 class FakeData:
-    def createHighRuns(self):
-        # Create all the handicaps
-        self.createHighRun(400, 18)
-        self.createHighRun(450, 20)
-        self.createHighRun(500, 22)
-        self.createHighRun(550, 26)
-        self.createHighRun(600, 32)
-        self.createHighRun(650, 44)
-        self.createHighRun(700, 58)
-        self.createHighRun(725, 72)
-        self.createHighRun(750, 86)
-        self.createHighRun(775, 100)
-        self.createHighRun(800, 114)
-        self.createHighRun(825, 128)
-        self.createHighRun(850, 144)
-
-    def createHighRun(self, hcap, tgt):
-        hrun = highRun.HighRun()
-        hrun.handicap = hcap
-        hrun.target = tgt
-        hrun.put()
-
     # Create a Club
     def createLuckyShot(self):
         luckyShot = clubs.Club(key=ndb.Key(clubs.Club,'LS'))

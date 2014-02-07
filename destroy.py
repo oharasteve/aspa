@@ -15,16 +15,15 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
-
 import base_handler
-import clubs
 import highRun
-import matches
-import players
-import seasons
-import stats
 import webapp2
 
+from data import clubs
+from data import matches
+from data import players
+from data import seasons
+from data import stats
 
 TEMPLATE = 'html/generic_message.html'
 

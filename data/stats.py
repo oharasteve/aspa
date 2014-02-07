@@ -1,8 +1,12 @@
 from google.appengine.ext import ndb
 
+#
+# Current statistics for each player, per season. These do not have history.
+# They only have the current values for handicaps, etc.
+#
+
 import players
 import seasons
-
 
 class PlayerSummary(ndb.Model):
     """Models a players statistics for the season."""
