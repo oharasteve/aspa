@@ -99,7 +99,7 @@
   <hr/>
   <form id="addMatchForm" action="/admin/addMatch/" method="post">
     <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
-    
+
     <p>Season: <select name="season_select" id="season_select" value=-1>
       {%- for season in seasons %}
       <option value="{{ season.id }}">{{ season.name }}</option>
@@ -174,5 +174,4 @@
   <h3>Successfully added match result: {{ winner.firstName }} beat {{ loser.firstName }}</h3>
   <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
-  </div>
 {%- endblock %}

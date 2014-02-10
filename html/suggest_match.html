@@ -5,63 +5,48 @@
 
   <script>
   {%- autoescape false %}
-  var playerSummaries = {{ player_summaries }};
-  var playerA_selectedIndex = {{ playerA_selectedIndex}};
-  var playerB_selectedIndex = {{ playerB_selectedIndex}};
-
-  var ViewModel = {
-    races: ko.observableArray([]),
+  var ViewModel = new function() {
+    var self = this;
+    this.players =  ko.observableArray({{players}});
+    this.playerA_selected = ko.observable();
+    this.playerB_selected = ko.observable();
+    this.playerA_handicap = ko.computed(function() {
+            return this.playerA_selected() ? this.playerA_selected().handicap : '';
+            }, this);
+    this.playerB_handicap = ko.computed(function() {
+            return this.playerB_selected() ? this.playerB_selected().handicap : '';
+            }, this);
+    this.races = ko.observableArray([]);
+    this.generateRaces = function() {
+        var generated_races = [];
+        // Admin might have edited the text box to quickly check races between
+        // arbitrary handicaps. So use value of input instead of viewmodel.
+        var handicapA = parseInt($('#playerA_handicap').val(), 10);
+        var handicapB = parseInt($('#playerB_handicap').val(), 10);
+        if (handicapA >= 100 && handicapA < 1000) {
+            if (handicapB >= 100 && handicapB < 1000) {
+                var delta = Math.abs(handicapA - handicapB);
+                for (var x=50; x<=140; x+=10) {
+                    var lower = Math.round(x / Math.pow(2, delta/100.0) / 5) * 5;
+                    var playerA = '';
+                    var playerB = '';
+                    if (lower > 5) {
+                        if (handicapA > handicapB) {
+                            playerA = x;
+                            playerB = lower;
+                        } else {
+                            playerA = lower;
+                            playerB = x;
+                        }
+                    }
+                    generated_races.push({ 'playerA': playerA, 'playerB': playerB, });
+                }
+            }
+        }
+        self.races(generated_races);
+    };
   };
   {%- endautoescape %}
-
-  function findHandicap(playerId) {
-    for (var i in playerSummaries) {
-      var playerSummary = playerSummaries[i];
-      if (playerSummary.player.id == playerId) {
-        return playerSummary.handicap;
-      }
-    }
-    return 0;
-  }
-
-  function setHandicap(selectName, inputName) {
-    var inputElement = document.getElementById(inputName);
-    var selectElement = document.getElementById(selectName);
-    if (!inputElement || !selectElement) {
-      inputElement.value = "";
-      return;
-    }
-    inputElement.value = findHandicap(selectElement.value);
-    generateRaces();
-  }
-
-  function generateRaces() {
-    var handicapA = document.getElementById("playerA_handicap").value;
-    var handicapB = document.getElementById("playerB_handicap").value;
-    var races = [];
-    if (handicapA >= 100 && handicapA < 1000) {
-      if (handicapB >= 100 && handicapB < 1000) {
-        var delta = Math.abs(handicapA - handicapB);
-        for (var x=50; x<=140; x+=10) {
-          var lower = Math.round(x / Math.pow(2, delta/100.0) / 5) * 5;
-          var playerA = '';
-          var playerB = '';
-          if (lower > 5) {
-            if (handicapA > handicapB) {
-              playerA = x;
-              playerB = lower;
-            } else {
-              playerA = lower;
-              playerB = x;
-            }
-          }
-          races.push({ 'playerA': playerA, 'playerB': playerB, });
-        }
-      }
-    }
-
-    ViewModel.races(races);
-  }
 
   $().ready(function() {
     $("#addPlayerForm").validate({
@@ -80,9 +65,6 @@
         },
       }
     });
-
-    $('#playerA_select').prop('selectedIndex', -1)
-    $('#playerB_select').prop('selectedIndex', -1)
 
     ko.applyBindings(ViewModel);
   });
@@ -105,28 +87,32 @@
     <tr>
       <td align="right">Player 1:
         <select name="playerA_select" id="playerA_select" value=-1
-            onchange='setHandicap("playerA_select", "playerA_handicap")'>
-          {%- for player in players %}
-          <option value="{{ player.id }}">
-          {{ player.firstName }} {{ player.lastName }}
-          </option>
-          {%- endfor %}
-        </select>
+            data-bind="options: players,
+                       optionsText: 'fullName',
+                       optionsCaption: 'Choose ...',
+                       value: playerA_selected,
+                       event: { change: generateRaces }"
+                       ></select>
       </td>
       <td align="right">Player 2:
-        <select name="playerB_select" id="playerB_select"
-            onchange='setHandicap("playerB_select", "playerB_handicap")'>
-          {%- for player in players %}
-          <option value="{{ player.id }}">
-          {{ player.firstName }} {{ player.lastName }}
-          </option>
-          {%- endfor %}
-        </select>
+        <select name="playerB_select" id="playerB_select" value=-1
+            data-bind="options: players,
+                       optionsText: 'fullName',
+                       optionsCaption: 'Choose ...',
+                       value: playerB_selected,
+                       event: { change: generateRaces }"
+            ></select>
       </td>
     </tr>
     <tr>
-        <td>Handicap: <input id="playerA_handicap" name="playerA_handicap" size="5" onchange="generateRaces()"/></td>
-        <td>Handicap: <input id="playerB_handicap" name="playerB_handicap" size="5" onchange="generateRaces()"/></td>
+        <td>Handicap: <input id="playerA_handicap" name="playerA_handicap" size="5"
+            data-bind="value: playerA_handicap,
+                       event: {change: generateRaces }"
+            /></td>
+        <td>Handicap: <input id="playerB_handicap" name="playerB_handicap" size="5"
+            data-bind="value: playerB_handicap,
+                       event: {change: generateRaces }"
+            /></td>
     </tr>
   <!-- ko foreach: races -->
       <tr>
@@ -138,5 +124,4 @@
   <p>
     <input type="button" value="Done" onclick="window.location.href='/admin/'"/>
   </p>
-  </div>
 {%- endblock %}

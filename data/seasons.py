@@ -19,4 +19,4 @@ class Season(ndb.Model):
             my_dict['id'] = item.key.id()
             ret_list.append(my_dict)
         return ret_list
-    
+

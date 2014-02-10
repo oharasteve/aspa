@@ -54,20 +54,20 @@ class AddMatchHandler(base_handler.BaseHandler):
 
         winner = players.Player.get_by_id(nameW)
         if not winner:
-            error_messages.append("<li>Winner is required")
+            error_messages.append("Winner is required")
 
         loser = players.Player.get_by_id(nameL)
         if not loser:
-            error_messages.append("<li>Loser is required")
+            error_messages.append("Loser is required")
 
         season = seasons.Season.get_by_id(xseason)
         if not season:
-            error_messages.append("<li>Season is required")
-        
+            error_messages.append("Season is required")
+
         club = clubs.Club.get_by_id(xclub)
         if not club:
-            error_messages.append("<li>Club is required")
-            
+            error_messages.append("Club is required")
+
         hcapW = int(xhcapW)
         hcapL = int(xhcapL)
         targetW = int(xtargetW)
@@ -78,9 +78,9 @@ class AddMatchHandler(base_handler.BaseHandler):
         hrunL = int(xhrunL)
 
         if scoreW != targetW:
-          error_messages.append("<li>Winner score (%s) does not match target (%s)\n" % (scoreW, targetW))
+          error_messages.append("Winner score (%s) does not match target (%s)\n" % (scoreW, targetW))
         if scoreL >= targetL:
-          error_messages.append("<li>Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
+          error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
 
         if not len(error_messages):
             match = matches.Match()

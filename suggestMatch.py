@@ -23,17 +23,27 @@ from data import players
 from data import seasons
 from data import stats
 
+
 TEMPLATE = 'html/suggest_match.html'
 
 class SuggestMatchHandler(base_handler.BaseHandler):
     def get(self):
+        players_data = []
+        for player in players.Player.query():
+            # TODO: Get stats from user provided season.
+            player_summary = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
+            players_data.append({
+                'playerId': player.key.id(),
+                'firstName': str(player.firstName),
+                'lastName': str(player.lastName),
+                'fullName': str('%s %s' % (player.firstName, player.lastName)),
+                'handicap': player_summary.handicap,
+                })
+
         context = {
           'seasons': seasons.Season.getSeasons(),
-          'players': players.Player.getPlayers(),
-          'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
+          'players': players_data,
           'clubs': clubs.Club.getClubs(),
-          'playerA_selectedIndex': -1,
-          'playerB_selectedIndex': -1,
           'display_form': True,
         }
         self.render_response(TEMPLATE, **context)
