@@ -30,6 +30,7 @@ class AddPersonHandler(base_handler.BaseHandler):
         context = {
             'seasons': seasons.Season.getSeasons(),
             'player': {
+                'seasonName': self.request.get('season_select'),
                 'code': self.request.get('code'),
                 'firstName': self.request.get('firstName'),
                 'lastName': self.request.get('lastName'),
@@ -42,6 +43,7 @@ class AddPersonHandler(base_handler.BaseHandler):
 
         error_messages = []
         context_player = context['player']
+        season = seasons.Season.get_by_id(context_player['seasonName'])
         player = players.Player.get_by_id(context_player['code'])
         if player:
             error_messages.append("Duplicate player (%s)" % cgi.escape(
@@ -63,7 +65,7 @@ class AddPersonHandler(base_handler.BaseHandler):
             stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,
                 context_player['code']))
             stat.player = player.key
-            stat.season = context['season'].key
+            stat.season = season.key
             stat.handicap = int(context_player['handicap'])
             stat.highRunTarget = float(context_player['highRunTarget'])
             stat.highRun = 0
@@ -77,6 +79,7 @@ class AddPersonHandler(base_handler.BaseHandler):
         context = {
             'seasons': seasons.Season.getSeasons(),
             'player': {
+                'season': '',
                 'code': '',
                 'firstName': '',
                 'lastName': '',

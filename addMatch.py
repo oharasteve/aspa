@@ -44,7 +44,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         xscoreL = self.request.get('loser_score')
         xhrunW = self.request.get('winner_highrun')
         xhrunL = self.request.get('loser_highrun')
-        xforfeited = False
+        forfeit = self.request.get('forfeit')
 
         error_messages = []
         try:
@@ -77,7 +77,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         hrunW = int(xhrunW)
         hrunL = int(xhrunL)
 
-        if scoreW != targetW:
+        if not forfeit and scoreW != targetW:
           error_messages.append("Winner score (%s) does not match target (%s)\n" % (scoreW, targetW))
         if scoreL >= targetL:
           error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
@@ -87,6 +87,7 @@ class AddMatchHandler(base_handler.BaseHandler):
             match.date = when
             match.season = season.key
             match.club = club.key
+            match.forfeited = forfeit
 
             match.playerW = winner.key
             match.handicapW = hcapW
@@ -108,7 +109,10 @@ class AddMatchHandler(base_handler.BaseHandler):
 
             # Update win / loss totals
             winnerStats.wins = winnerStats.wins + 1
-            loserStats.losses = loserStats.losses + 1
+            if forfeit:
+              loserStats.forfeits = loserStats.forfeits + 1
+            else:
+              loserStats.losses = loserStats.losses + 1
 
             # Update handicaps
             winnerStats.handicap = winnerStats.handicap + 3
@@ -148,6 +152,7 @@ class AddMatchHandler(base_handler.BaseHandler):
               'highrun': xhrunL,
               'score': xscoreL,
               },
+          'forfeit': forfeit,
           'season_selectedIndex': season,
           'club_selectedIndex': club,
           'winner_selectedIndex': nameW,
@@ -179,6 +184,7 @@ class AddMatchHandler(base_handler.BaseHandler):
               'highrun': 0,
               'score': '',
               },
+          'forfeit': False,
           'season_selectedIndex': 0,
           'club_selectedIndex': 0,
           'winner_selectedIndex': -1,

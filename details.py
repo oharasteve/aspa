@@ -43,7 +43,10 @@ class Details():
             else:
                 participant = match_data['loser']
                 opponent = match_data['winner']
-                result = 'Lost'
+                if match_data['forfeited']:
+                    result = 'Forfeit'
+                else:
+                    result = 'Lost'
 
             participant['player_obj'] = players.Player.get_by_id(
                     participant['player'].id())

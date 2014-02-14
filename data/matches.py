@@ -38,6 +38,7 @@ def match_util(match):
         'date': match.date,
         'season': match.season,
         'club': match.club,
+        'forfeited': match.forfeited,
         'winner': {
             'player': match.playerW,
             'player_id': match.playerW.id(),
