@@ -44,7 +44,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         xscoreL = self.request.get('loser_score')
         xhrunW = self.request.get('winner_highrun')
         xhrunL = self.request.get('loser_highrun')
-        forfeit = self.request.get('forfeit')
+        forfeit = self.request.get('forfeit') != ''
 
         error_messages = []
         try:
