@@ -16,20 +16,82 @@
 #
 
 import base_handler
+import datetime
 import webapp2
 
 from data import adjustments
 from data import players
+from data import seasons
 from data import stats
 
-TEMPLATE = 'html/not_implemented.html'
+TEMPLATE = 'html/adjust_handicap.html'
 
 class AdjustHandicapHandler(base_handler.BaseHandler):
+    def post(self):
+        xseason = self.request.get('season_select')
+        xwhen = self.request.get('todays_date')
+        xname = self.request.get('player_select')
+        xhcapOld = self.request.get('oldHandicap')
+        xhcapNew = self.request.get('newHandicap')
+        comment = self.request.get('comment')
+
+        error_messages = []
+        try:
+            when = datetime.datetime.strptime(xwhen, "%Y-%m-%d")
+        except ValueError as err:
+            error_messages.append("Invalid date: %s (%s)" % (cgi.escape(xwhen), err))
+
+        player = players.Player.get_by_id(xname)
+        if not player:
+            error_messages.append("Player is required")
+
+        season = seasons.Season.get_by_id(xseason)
+        if not season:
+            error_messages.append("Season is required")
+
+        hcapOld = int(xhcapOld)
+        hcapNew = int(xhcapNew)
+
+        if not len(error_messages):
+            adjustment = adjustments.Adjustment()
+            adjustment.date = when
+            adjustment.season = season.key
+            adjustment.player = player.key
+            adjustment.handicapOld = hcapOld
+            adjustment.handicapNew = hcapNew
+            adjustment.comment = comment
+            adjustment.put()
+            
+            # Update statistics for the player
+            playerStats = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
+            playerStats.handicap = hcapNew
+            playerStats.put()
+        
+        context = {
+          'page_title': 'Adjust a Handicap',
+          'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
+          'seasons': seasons.Season.getSeasons(),
+          'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
+          'players': players.Player.getPlayers(),
+          'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
+          'season_selectedIndex': 0,
+          'player_selectedIndex': -1,
+          'display_form': True,
+        }
+        self.render_response(TEMPLATE, **context)
+
     def get(self):
         context = {
-                'page_title': 'Adjust a Handicap',
-                'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-                }
+          'page_title': 'Adjust a Handicap',
+          'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
+          'seasons': seasons.Season.getSeasons(),
+          'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
+          'players': players.Player.getPlayers(),
+          'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
+          'season_selectedIndex': 0,
+          'player_selectedIndex': -1,
+          'display_form': True,
+        }
         self.render_response(TEMPLATE, **context)
 
 
