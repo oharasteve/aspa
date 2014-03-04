@@ -1,0 +1,123 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  {%- autoescape false %}
+  var playerSummaries = {{ player_summaries }};
+  {%- endautoescape %}
+
+  function findHandicap(playerId) {
+    for (var i in playerSummaries) {
+      var playerSummary = playerSummaries[i];
+      if (playerSummary.player.id == playerId) {
+        return playerSummary.handicap;
+      }
+    }
+    return 0;
+  }
+
+  function setHandicap(selectName, inputName1, inputName2) {
+    var inputElement1 = document.getElementById(inputName1);
+    var inputElement2 = document.getElementById(inputName2);
+    var selectElement = document.getElementById(selectName);
+    if (!inputElement1 || !inputElement2 || !selectElement) {
+      inputElement1.value = "";
+      inputElement2.value = "";
+      return;
+    }
+    inputElement1.value = findHandicap(selectElement.value);
+    inputElement2.value = findHandicap(selectElement.value);
+  }
+
+  $().ready(function() {
+    $("#adjustHandicapForm").validate({
+      rules: {
+        season: "required",
+        player: "required",
+        oldHandicap: {
+          required: true,
+          number: true,
+          range: [100, 1000]
+        },
+        newHandicap: {
+          required: true,
+          number: true,
+          range: [100, 1000]
+        },
+        comment: {
+          required: true
+        },
+        todays_date: {
+          required: true,
+          dateISO: true
+        }
+      }
+    });
+    
+  {%- if display_form %}
+    $(function() { $( "#todays_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+
+    $('#season_select').prop('selectedIndex', {{ season_selectedIndex }})
+    $('#player_select').prop('selectedIndex', {{ player_selectedIndex }})
+  {%- endif %}
+  });
+  </script>
+{%- endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+
+  {%- if display_form %}
+  <h3>Adjust a Player's Handicap</h3>
+  <hr/>
+  <form id="adjustHandicapForm" action="/admin/adjustHandicap/" method="post">
+    <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
+
+    <p>Season: <select name="season_select" id="season_select">
+      {%- for season in seasons %}
+      <option value="{{ season.id }}">{{ season.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+    <p>Player:
+      <select name="player_select" id="player_select" value="-1"
+          onchange='setHandicap("player_select", "oldHandicap", "newHandicap");'>
+        {%- for player in players %}
+        <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
+        {{ player.firstName }} {{ player.lastName }}
+        </option>
+        {%- endfor %}
+      </select>
+
+    <table>
+      <tr>
+        <td align="center">Old Handicap:
+        <td><input size="5" name="oldHandicap" id="oldHandicap" type="text" value="{{ '' }}"/>
+      <tr>
+        <td align="center">New Handicap:
+        <td><input size="5" name="newHandicap" id="newHandicap" type="text" value="{{ '' }}"/>
+    </table>
+    
+    <p>Explanation: <input style="text-align: left;" size="100" name="comment" id="comment" type="text" value="{{ '' }}"/>
+
+    <p>
+      <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
+      <input type="submit" value="Submit"/>
+    </p>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to adjust handicap:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully adjusted handicap: {{ 'player.firstName' }} {{ 'player.lastName' }} ({{ 'adjustments.newHandicap' }})</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  {%- endif %}
+{%- endblock %}
