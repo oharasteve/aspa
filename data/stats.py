@@ -19,8 +19,8 @@ class PlayerSummary(ndb.Model):
     losses = ndb.IntegerProperty()
     forfeits = ndb.IntegerProperty(default=0)
     points = ndb.ComputedProperty(lambda self: 3 * self.wins - 3 * self.forfeits - self.losses / 2.0 + (self.wins + self.forfeits + self.losses) / 1000000.0)
-    goal = ndb.ComputedProperty(lambda self: self.highRun * 100.0 / self.highRunTarget if self.highRunTarget and self.highRun else 0.0)
-    pct = ndb.ComputedProperty(lambda self: self.wins * 100.0 /(self.wins + self.losses + self.forfeits) if self.wins else 0.0)
+    goal = ndb.ComputedProperty(lambda self: self.highRun * 100.0 / self.highRunTarget if self.highRunTarget else 0.0)
+    pct = ndb.ComputedProperty(lambda self: self.wins * 100.0 / (self.wins + self.losses + self.forfeits) if self.wins else 0.0)
 
     @classmethod
     def getPlayerSummaries(self):
