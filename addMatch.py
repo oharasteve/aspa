@@ -46,6 +46,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         xhrunL = self.request.get('loser_highrun')
         forfeit = (self.request.get('forfeit') == 'on')
 
+        successfully_added_match = False
         error_messages = []
         try:
             when = datetime.datetime.strptime(xwhen, "%Y-%m-%d")
@@ -126,6 +127,7 @@ class AddMatchHandler(base_handler.BaseHandler):
 
             winnerStats.put()
             loserStats.put()
+            successfully_added_match = True
 
         context = {
           'seasons': seasons.Season.getSeasons(),
@@ -153,11 +155,12 @@ class AddMatchHandler(base_handler.BaseHandler):
               'score': xscoreL,
               },
           'forfeit': forfeit,
-          'season_selectedIndex': season,
-          'club_selectedIndex': club,
-          'winner_selectedIndex': nameW,
-          'loser_selectedIndex': nameL,
-          'display_form': False,  # Do not display the form, just the errors/result.
+          'season_selected': xseason,
+          'club_selected': xclub,
+          'winner_selected': nameW,
+          'loser_selected': nameL,
+          'display_form': True,
+          'successfully_added_match': successfully_added_match,
           'error_messages': error_messages,
         }
 
@@ -185,10 +188,10 @@ class AddMatchHandler(base_handler.BaseHandler):
               'score': '',
               },
           'forfeit': False,
-          'season_selectedIndex': 0,
-          'club_selectedIndex': 0,
-          'winner_selectedIndex': -1,
-          'loser_selectedIndex': -1,
+          'season_selected': 'Spr14',
+          'club_selected': 'LS',
+          'winner_selected': -1,
+          'loser_selected': -1,
           'display_form': True,
         }
         self.render_response(TEMPLATE, **context)
