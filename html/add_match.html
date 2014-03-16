@@ -100,6 +100,9 @@
   <form id="addMatchForm" action="/admin/addMatch/" method="post">
     <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
 
+    <p>Seq: <input id="seq" name="seq" value="{{ seq }}" size="5"/>
+    </p>
+    
     <p>Season: <select name="season_select" id="season_select" value=-1>
       {%- for season in seasons %}
       <option value="{{ season.id }}">{{ season.name }}</option>

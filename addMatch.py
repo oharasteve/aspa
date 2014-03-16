@@ -32,6 +32,7 @@ TEMPLATE = 'html/add_match.html'
 class AddMatchHandler(base_handler.BaseHandler):
     def post(self):
         xseason = self.request.get('season_select')
+        xseq = self.request.get('seq')
         xclub = self.request.get('club_select')
         xwhen = self.request.get('todays_date')
         nameW = self.request.get('winner_select')
@@ -69,6 +70,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         if not club:
             error_messages.append("Club is required")
 
+        seq = int(xseq)
         hcapW = int(xhcapW)
         hcapL = int(xhcapL)
         targetW = int(xtargetW)
@@ -86,6 +88,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         if not len(error_messages):
             match = matches.Match()
             match.date = when
+            match.seq = seq
             match.season = season.key
             match.club = club.key
             match.forfeited = forfeit
@@ -132,6 +135,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         context = {
           'seasons': seasons.Season.getSeasons(),
           'todays_date': xwhen,
+          'seq': seq+1,
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
           'clubs': clubs.Club.getClubs(),
@@ -170,6 +174,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         context = {
           'seasons': seasons.Season.getSeasons(),
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
+          'seq': 1,
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
           'clubs': clubs.Club.getClubs(),

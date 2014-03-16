@@ -57,8 +57,8 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             adjustment.date = when
             adjustment.season = season.key
             adjustment.player = player.key
-            adjustment.handicapOld = hcapOld
-            adjustment.handicapNew = hcapNew
+            adjustment.oldHandicap = hcapOld
+            adjustment.newHandicap = hcapNew
             adjustment.comment = comment
             adjustment.put()
             

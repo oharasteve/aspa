@@ -13,6 +13,7 @@ import seasons
 class Match(ndb.Model):
     """Models a match between two players."""
     date = ndb.DateProperty()
+    seq = ndb.IntegerProperty()
     season = ndb.KeyProperty(kind=seasons.Season)
     club = ndb.KeyProperty(kind=clubs.Club)
     forfeited = ndb.BooleanProperty(default=False)
@@ -36,6 +37,7 @@ def match_util(match):
 
     return {
         'date': match.date,
+        'seq': match.seq,
         'season': match.season,
         'club': match.club,
         'forfeited': match.forfeited,
