@@ -45,12 +45,6 @@ handlers:
 - url: /admin/adjustHandicap/
   script: adjustHandicap.app
 
-- url: /admin/destroy/
-  script: destroy.app
-
-- url: /admin/regenerate/
-  script: fakeData.app
-
 - url: /details/.*
   script: details.app
 
