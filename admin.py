@@ -50,14 +50,6 @@ class AdminHandler(base_handler.BaseHandler):
                         'url': '/admin/adjustHandicap/',
                         'description': 'Adjust Player Handicap',
                         },
-                    {
-                        'url': '/admin/destroy/',
-                        'description': 'Delete All Data (careful!!!)',
-                        },
-                    {
-                        'url': '/admin/regenerate/',
-                        'description': 'Generate Three Weeks (once only)',
-                        },
                     ],
                 }
         self.render_response(TEMPLATE, **context)
