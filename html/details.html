@@ -35,6 +35,8 @@
         <th class="hdr num">Points</th>
         <th class="hdr num">Target</th>
         <th class="hdr num">High Run</th>
+        <th class="hdr num">Win By</th>
+        <th class="hdr num">Lose By</th>
         <th class="hdr nocase">First</th>
         <th class="hdr nocase">Last</th>
         <th class="hdr num">H'cap</th>
@@ -53,6 +55,8 @@
         <td class="right">{{ entry.player.score }}</td>
         <td class="right">{{ entry.player.target }}</td>
         <td class="right">{{ entry.player.highRun }}</td>
+        <td class="right">{{ entry.win_mgn }}</td>
+        <td class="right">{{ entry.lose_mgn }}</td>
         <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
         <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
         <td class="right">{{ entry.opponent.handicap }}</td>

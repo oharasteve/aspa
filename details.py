@@ -40,9 +40,13 @@ class Details():
                 participant = match_data['winner']
                 opponent = match_data['loser']
                 result = 'Won'
+                win_mgn = opponent['target'] - opponent['score']
+                lose_mgn = ''
             else:
                 participant = match_data['loser']
                 opponent = match_data['winner']
+                lose_mgn = participant['target'] - participant['score']
+                win_mgn = ''
                 if match_data['forfeited']:
                     result = 'Forfeit'
                 else:
@@ -60,6 +64,8 @@ class Details():
                     'result': result,
                     'player': participant,
                     'opponent': opponent,
+                    'win_mgn': win_mgn,
+                    'lose_mgn': lose_mgn,
                     'opponent_details_page_url':
                     '/details/?Season={0}&Player={1}'.format(
                         cgi.escape(season.key.id()),
