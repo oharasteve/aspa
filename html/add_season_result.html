@@ -1,0 +1,155 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+
+  <script>
+  {%- autoescape false %}
+  var playerSummaries = {{ player_summaries }};
+  {%- endautoescape %}
+
+  function findHandicap(playerId) {
+    for (var i in playerSummaries) {
+      var playerSummary = playerSummaries[i];
+      if (playerSummary.player.id == playerId) {
+        return playerSummary.handicap;
+      }
+    }
+    return 0;
+  }
+
+  function setHandicap(selectName, inputName) {
+    var inputElement = document.getElementById(inputName);
+    var selectElement = document.getElementById(selectName);
+    if (!inputElement || !selectElement) {
+      inputElement.value = "";
+      return;
+    }
+    inputElement.value = findHandicap(selectElement.value);
+  }
+
+  $().ready(function() {
+    $("#addSeasonResultForm").validate({
+      rules: {
+        season_select: "required",
+        club_select: "required",
+        player_select: "required",
+        player_handicap: {
+          required: true,
+          number: true,
+          range: [100, 1000]
+        },
+        player_highRun: {
+          required: true,
+          number: true,
+          range: [1, 150]
+        },
+        player_highRunTarget: {
+          required: true,
+          number: true,
+          range: [1, 150]
+        },
+        player_wins: {
+          required: true,
+          number: true,
+          range: [0, 50]
+        },
+        player_losses: {
+          required: true,
+          number: true,
+          range: [0, 50]
+        },
+        player_forfeits: {
+          required: true,
+          number: true,
+          range: [0, 50]
+        }
+      }
+    });
+
+  {%- if display_form %}
+    $(function() { $( "#todays_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+
+    $('#season_select').val('{{ season_selected }}');
+    $('#club_select').val('{{ club_selected }}');
+    $('#player_select').val('{{ player_selected }}');
+  {%- endif %}
+  });
+  </script>
+{%- endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+
+  {%- if display_form %}
+  <h3>Add a season result</h3>
+  <hr/>
+  <form id="addSeasonResultForm" action="/admin/addSeasonResult/" method="post">
+    <p>Season: <select name="season_select" id="season_select" value=-1>
+      {%- for season in seasons %}
+      <option value="{{ season.id }}">{{ season.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+    <p>Club: <select name="club_select" id="club_select" value=-1>
+      {%- for club in clubs %}
+      <option value="{{ club.id }}">{{ club.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+  <table border>
+    <tr>
+      <td align="right">Player:
+        <select name="player_select" id="player_select" value=-1
+            onchange='setHandicap("player_select", "player_handicap")'>
+          {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
+          {{ player.firstName }} {{ player.lastName }}
+          </option>
+          {%- endfor %}
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Handicap: <input id="player_handicap" name="player_handicap" value="" size="5"/></td>
+    </tr>
+    <tr>
+        <td>Wins: <input id="player_wins" name="player_wins" value="" size="5"/></td>
+    </tr>
+    <tr>
+        <td>Losses: <input id="player_losses" name="player_losses" value="" size="5"/></td>
+    </tr>
+    <tr>
+        <td>Forfeits: <input id="player_forfeits" name="player_forfeits" value="0" size="5"/></td>
+    </tr>
+    <tr>
+        <td>High Run: <input id="player_highrun" name="player_highrun" value="0" size="5"/></td>
+    </tr>
+    <tr>
+        <td>High Run Target: <input id="player_highrun_target" name="player_highrun_target" value="" size="5"/></td>
+    </tr>
+  </table>
+  <p>
+    <input type="button" value="Reset" onclick="window.location.href='/admin/addSeasonResult/'"/>
+    <input type="submit" value="Submit"/>
+  </p>
+  </form>
+  {%- endif %}
+  <div name="add_season_result_notes">
+  {%- if successfully_added_season_result %}
+  <h3>Successfully added season result: {{ player.firstName }} {{ player.lastName }}</h3>
+  {%- endif %}
+  {%- if error_messages %}
+  <h3>
+    <font color=red>Encountered errors adding season result:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- endif %}
+  </div>
+{%- endblock %}

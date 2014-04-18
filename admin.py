@@ -43,6 +43,10 @@ class AdminHandler(base_handler.BaseHandler):
                         'description': 'Add New Season',
                         },
                     {
+                        'url': '/admin/addSeasonResult/',
+                        'description': 'Add Season Result',
+                        },
+                    {
                         'url': '/admin/addClub/',
                         'description': 'Add New Club',
                         },

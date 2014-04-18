@@ -45,8 +45,9 @@ class AddSeasonHandler(base_handler.BaseHandler):
             error_messages.append("Invalid start date: %s (%s)\n" %
                     (context['season_start'], err))
 
+        err = None
         try:
-            s_end = datetime.datetime.strptime(season_end, "%Y-%m-%d")
+            s_end = datetime.datetime.strptime(context['season_end'], "%Y-%m-%d")
         except ValueError as err:
             error_messages.append("Invalid end date: %s (%s)\n" %
                     (context['season_end'], err))
@@ -58,10 +59,10 @@ class AddSeasonHandler(base_handler.BaseHandler):
         if len(error_messages):
             context['error_messages'] = error_messages
         else:
-            season = seasons.Season(key=ndb.Key(seasons.Season,season_code))
-            season.name = season_name
-            season.startDate = sstart
-            season.endDate = send
+            season = seasons.Season(key=ndb.Key(seasons.Season,context['season_code']))
+            season.name = context['season_name']
+            season.startDate = datetime.datetime.strptime(context['season_start'], "%Y-%m-%d")
+            season.endDate = datetime.datetime.strptime(context['season_end'], "%Y-%m-%d")
             season.put()
         self.render_response(TEMPLATE, **context)
 
@@ -69,8 +70,6 @@ class AddSeasonHandler(base_handler.BaseHandler):
         context = {
                 'season_code': "",
                 'season_name': "",
-                'season_phone': "",
-
                 'display_form': True,
                 }
         self.render_response(TEMPLATE, **context)

@@ -63,7 +63,7 @@
         handicap: {
           required: true,
           number: true,
-          range: [100, 1000]
+          range: [0, 1000]
         },
         highRunTarget: {
           required: true,
@@ -98,35 +98,37 @@
   <table>
     <tr>
       <td align="right">Code:</td>
-      <td align="left"><input name="code" id="code" size="5" type="text" value="{{ player.code }}"/></td>
+      <td align="left"><input style="text-align:left" name="code" id="code" size="5" type="text" value="{{ player.code }}"/></td>
     </tr>
     <tr>
       <td align="right">First Name:</td>
-      <td align="left"><input name="firstName" id="firstName" type="text" value="{{ player.firstName }}"/></td>
+      <td align="left"><input style="text-align:left" name="firstName" id="firstName" type="text" value="{{ player.firstName }}"/></td>
     </tr>
     <tr>
       <td align="right">Last Name:</td>
-      <td align="left"><input name="lastName" id="lastName" type="text" value="{{ player.lastName }}"/></td>
+      <td align="left"><input style="text-align:left" name="lastName" id="lastName" type="text" value="{{ player.lastName }}"/></td>
     </tr>
     <tr>
       <td align="right">Handicap:</td>
       <td align="left"><input size="5" onchange='setHighRunTarget("handicap","highRunTarget")'
-          name="handicap" id="handicap" type="text" value="{{ player.handicap }}"/></td>
+          name="handicap" id="handicap" type="text" value="0"/></td>
     </tr>
     <tr>
       <td align="right">High Run Target:</td>
       <td align="left"><input size="5" name="highRunTarget" id="highRunTarget"
-          type="text" value="{{ player.highRunTarget }}"/></td>
+          type="text" value="0"/></td>
     </tr>
     <tr>
       <td align="right">Phone:</td>
-      <td align="left"><input name="phone" id="phone" type="text" value="{{ player.phone }}"/></td>
+      <td align="left"><input style="text-align:left" name="phone" id="phone" type="text" value="{{ player.phone }}"/></td>
     </tr>
     <tr>
       <td align="right">Email:</td>
-      <td align="left"><input name="email" id="email" type="text" value="{{ player.email }}"/></td>
+      <td align="left"><input style="text-align:left" name="email" id="email" type="text" value="{{ player.email }}"/></td>
     </tr>
   </table>
+  <p>
+    <input type="checkbox" id="noseason" name="noseason" {%- if noseason %} checked {%- endif %}/>Just add player for previous season(s). Ignores season, handicap and high run target.
   <p>
     <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
     <input type="submit" value="Submit"/>
@@ -144,6 +146,6 @@
   </h3>
   {%- else %}
   <h3>Successfully added new player: {{ player.firstName }} {{ player.lastName }} ({{ player.code }})</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/addPlayer/'">
   {%- endif %}
 {%- endblock %}

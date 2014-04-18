@@ -33,6 +33,9 @@ handlers:
 - url: /admin/addSeason/
   script: addSeason.app
 
+- url: /admin/addSeasonResult/
+  script: addSeasonResult.app
+
 - url: /admin/addPlayer/
   script: addPerson.app
 
@@ -56,3 +59,4 @@ libraries:
   version: "2.5.2"
 - name: jinja2
   version: "2.6"
+

@@ -39,6 +39,7 @@ class AddPersonHandler(base_handler.BaseHandler):
                 'phone': self.request.get('phone'),
                 'email': self.request.get('email'),
             },
+            'noseason': self.request.get('noseason'),
         }
 
         error_messages = []
@@ -50,6 +51,7 @@ class AddPersonHandler(base_handler.BaseHandler):
                 context_player['code']))
         handicap = int(context_player['handicap'])
         highRunTarget = float(context_player['highRunTarget'])
+        noseason = (self.request.get('noseason') == 'on')
 
         if len(error_messages) > 0:
             context['error_messages'] = error_messages
@@ -62,16 +64,17 @@ class AddPersonHandler(base_handler.BaseHandler):
             player.email = context_player['email']
             player.put()
 
-            stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,
-                context_player['code']))
-            stat.player = player.key
-            stat.season = season.key
-            stat.handicap = int(context_player['handicap'])
-            stat.highRunTarget = float(context_player['highRunTarget'])
-            stat.highRun = 0
-            stat.wins = 0
-            stat.losses = 0
-            stat.put()
+            if not noseason:
+                stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,
+                    context_player['code']))
+                stat.player = player.key
+                stat.season = season.key
+                stat.handicap = int(context_player['handicap'])
+                stat.highRunTarget = float(context_player['highRunTarget'])
+                stat.highRun = 0
+                stat.wins = 0
+                stat.losses = 0
+                stat.put()
 
         self.render_response(TEMPLATE, **context)
 
