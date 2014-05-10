@@ -1,0 +1,84 @@
+{%- extends "/html/base_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  function setHighRunTarget(handicapName, highRunTargetName) {
+    var handicapElement = document.getElementById(handicapName);
+    var highRunElement = document.getElementById(highRunTargetName);
+    target = getHighRunTarget(handicapElement.value);
+    if (target > 0) {
+      highRunElement.value = target;
+    } else {
+      highRunElement.value = "";
+    }
+  }
+
+  $().ready(function() {
+    $("#carryPlayerForm").validate({
+      rules: {
+        season: "required",
+        code: "required",
+        firstName: "required",
+        lastName: "required",
+        handicap: {
+          required: true,
+          number: true,
+          range: [0, 1000]
+        },
+        highRunTarget: {
+          required: true,
+          range: [0, 1000]
+        },
+        phone: {
+          phoneUS: true
+        },
+        email: {
+          email: true
+        }
+      }
+    });
+  });
+  </script>
+{%- endblock %}
+{%- block content %}
+  <h1>American Straight Pool Association</h1>
+
+  {%- if display_form %}
+  <h3>Carry a Player Forward</h3>
+  <hr/>
+  <form id="carryPlayerForm" action="/admin/addPlayer/" method="post">
+
+  <p>Season: <select name="season_select" id="season_select">
+    {%- for season in seasons %}
+    <option value="{{ season.id }}">{{ season.name }}</option>
+    {%- endfor %}
+    </select>
+  </p>
+
+  <p>Choose player(s) to carry forward:
+    {%- for player in players %}
+      <br>&nbsp;<input type="checkbox" name="TBD" value="{{ player.key }}">{{ player.firstName }} {{ player.lastName }}
+    {%- endfor %}
+  </p>
+  
+  <p>
+    <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
+    <input type="submit" value="Submit"/>
+  </p>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to carry player forward:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully carried player forward: {{ player.firstName }} {{ player.lastName }} ({{ player.code }})</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/addPlayer/'">
+  {%- endif %}
+{%- endblock %}

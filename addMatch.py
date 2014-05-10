@@ -171,6 +171,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
     def get(self):
+        season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'seasons': seasons.Season.getSeasons(),
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
@@ -193,7 +194,7 @@ class AddMatchHandler(base_handler.BaseHandler):
               'score': '',
               },
           'forfeit': False,
-          'season_selected': 'Spr14',
+          'season_selected': season.key,
           'club_selected': 'LS',
           'winner_selected': -1,
           'loser_selected': -1,

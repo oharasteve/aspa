@@ -14,7 +14,7 @@ TEMPLATE = 'html/view.html'
 
 class ViewHandler(base_handler.BaseHandler):
     def get(self):
-        season = seasons.Season.get_by_id('Spr14')
+        season = seasons.Season.query().order(-seasons.Season.endDate).get();
 
         # Show the webpage
         context = View().get_context(season)

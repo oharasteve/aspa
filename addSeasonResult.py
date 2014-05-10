@@ -89,11 +89,12 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
     def get(self):
+        season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'seasons': seasons.Season.getSeasons(),
           'players': players.Player.getPlayers(),
           'clubs': clubs.Club.getClubs(),
-          'season_selected': 'Spr14',
+          'season_selected': season.key,
           'club_selected': 'LS',
           'display_form': True,
         }

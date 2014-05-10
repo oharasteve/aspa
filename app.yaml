@@ -48,6 +48,9 @@ handlers:
 - url: /admin/adjustHandicap/
   script: adjustHandicap.app
 
+- url: /admin/carryPlayer/
+  script: carryPerson.app
+
 - url: /details/.*
   script: details.app
 
