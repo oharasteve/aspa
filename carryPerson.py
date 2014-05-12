@@ -30,52 +30,37 @@ class CarryPersonHandler(base_handler.BaseHandler):
         context = {
             'seasons': seasons.Season.getSeasons(),
             'players': players.Player.getPlayers(),
-            'player': {
-                'seasonName': self.request.get('season_select'),
-                'code': self.request.get('code'),
-                'firstName': self.request.get('firstName'),
-                'lastName': self.request.get('lastName'),
-                'handicap': self.request.get('handicap'),
-                'highRunTarget': self.request.get('highRunTarget'),
-                'phone': self.request.get('phone'),
-                'email': self.request.get('email'),
-            },
-            'noseason': self.request.get('noseason'),
+            'seasonName': self.request.get('season_select'),
         }
 
         error_messages = []
-        context_player = context['player']
-        season = seasons.Season.get_by_id(context_player['seasonName'])
-        player = players.Player.get_by_id(context_player['code'])
-        if player:
-            error_messages.append("Duplicate player (%s)" % cgi.escape(
-                context_player['code']))
-        handicap = int(context_player['handicap'])
-        highRunTarget = float(context_player['highRunTarget'])
-        noseason = (self.request.get('noseason') == 'on')
+        season = seasons.Season.get_by_id(context['seasonName'])
+        
+        for playerId in players.Player.getPlayers():
+            checkbox = self.request.get('Carry_' + playerId['id'])
+            if checkbox != '':
+                player = players.Player.get_by_id(checkbox)
+                dupStat = stats.PlayerSummary.query(
+                    ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).get()
+                if dupStat:
+                    error_messages.append("Duplicate player (%s) for season %s" % (cgi.escape(checkbox), season.name))
+                else:
+                    oldStat = stats.PlayerSummary.query(
+                        ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season != season.key)).order(-stats.PlayerSummary.season).fetch(1)[0]
+
+                    newStat = stats.PlayerSummary()
+                    newStat.player = oldStat.player
+                    newStat.season = season.key
+                    newStat.handicap = oldStat.handicap
+                    newStat.highRunTarget = oldStat.highRunTarget
+                    newStat.wins = 0
+                    newStat.forfeits = 0
+                    newStat.losses = 0
+                    newStat.highRun = 0
+                    newStat.put()
 
         if len(error_messages) > 0:
             context['error_messages'] = error_messages
-        else:
-            player = players.Player(key=ndb.Key(players.Player,
-                context_player['code']))
-            player.firstName = context_player['firstName']
-            player.lastName = context_player['lastName']
-            player.phone = context_player['phone']
-            player.email = context_player['email']
-            player.put()
-
-            if not noseason:
-                stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,
-                    context_player['code']))
-                stat.player = player.key
-                stat.season = season.key
-                stat.handicap = int(context_player['handicap'])
-                stat.highRunTarget = float(context_player['highRunTarget'])
-                stat.highRun = 0
-                stat.wins = 0
-                stat.losses = 0
-                stat.put()
 
         self.render_response(TEMPLATE, **context)
 
@@ -83,16 +68,6 @@ class CarryPersonHandler(base_handler.BaseHandler):
         context = {
             'seasons': seasons.Season.getSeasons(),
             'players': players.Player.getPlayers(),
-            'player': {
-                'season': '',
-                'code': '',
-                'firstName': '',
-                'lastName': '',
-                'handicap': '',
-                'highRunTarget': '',
-                'phone': '',
-                'email': '',
-                },
             'display_form': True,
         }
         self.render_response(TEMPLATE, **context)

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from google.appengine.ext import ndb
 import base_handler
 import webapp2
 
@@ -29,16 +29,19 @@ TEMPLATE = 'html/suggest_match.html'
 class SuggestMatchHandler(base_handler.BaseHandler):
     def get(self):
         players_data = []
+        season = seasons.Season.query().order(-seasons.Season.endDate).get();
         for player in players.Player.query():
             # TODO: Get stats from user provided season.
-            player_summary = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
-            players_data.append({
-                'playerId': player.key.id(),
-                'firstName': str(player.firstName),
-                'lastName': str(player.lastName),
-                'fullName': str('%s %s' % (player.firstName, player.lastName)),
-                'handicap': player_summary.handicap,
-                })
+            player_summary = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).get()
+            if player_summary:
+                players_data.append({
+                    'playerId': player.key.id(),
+                    'firstName': str(player.firstName),
+                    'lastName': str(player.lastName),
+                    'fullName': str('%s %s' % (player.firstName, player.lastName)),
+                    'handicap': player_summary.handicap,
+                    })
 
         context = {
           'seasons': seasons.Season.getSeasons(),

@@ -5,7 +5,7 @@
 
   <script>
   {%- autoescape false %}
-  var playerSummaries = {{ player_summaries }};
+  var playerSummaries = {{ playerStats }};
   {%- endautoescape %}
 
   function findHandicap(playerId) {
@@ -95,7 +95,7 @@
   <h1>American Straight Pool Association</h1>
 
   {%- if display_form %}
-  <h3>Add a match result</h3>
+  <h3>Add a match result {{ seasons[0].name }}</h3>
   <hr/>
   <form id="addMatchForm" action="/admin/addMatch/" method="post">
     <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
@@ -103,16 +103,16 @@
     <p>Seq: <input id="seq" name="seq" value="{{ seq }}" size="5"/>
     </p>
     
-    <p>Season: <select name="season_select" id="season_select" value=-1>
-      {%- for season in seasons %}
-      <option value="{{ season.id }}">{{ season.name }}</option>
+    <p>Season: <select name="season_select" id="season_select">
+      {%- for ssn in seasons %}
+        <option value="{{ ssn.id }}">{{ ssn.name }}</option>
       {%- endfor %}
       </select>
     </p>
 
     <p>Club: <select name="club_select" id="club_select" value=-1>
       {%- for club in clubs %}
-      <option value="{{ club.id }}">{{ club.name }}</option>
+        <option value="{{ club.id }}">{{ club.name }}</option>
       {%- endfor %}
       </select>
     </p>
@@ -122,9 +122,9 @@
       <td align="right">Winner:
         <select name="winner_select" id="winner_select" value=-1
             onchange='setHandicap("winner_select", "winner_handicap")'>
-          {%- for player in players %}
-          <option value="{{ player.id }}" {%- if player.id == winner.player_id %}selected{%- endif %}>
-          {{ player.firstName }} {{ player.lastName }}
+          {%- for stat in playerStats %}
+          <option value="{{ stat.player.id }}" {%- if stat.player.id == winner.player_id %}selected{%- endif %}>
+            {{ stat.player.firstName }} {{ stat.player.lastName }}
           </option>
           {%- endfor %}
         </select>
@@ -132,9 +132,9 @@
       <td align="right">Loser:
         <select name="loser_select" id="loser_select"
             onchange='setHandicap("loser_select", "loser_handicap")'>
-          {%- for player in players %}
-          <option value="{{ player.id }}" {%- if player.id == loser.player_id %}selected{%- endif %}>
-          {{ player.firstName }} {{ player.lastName }}
+          {%- for stat in playerStats %}
+          <option value="{{ stat.player.id }}" {%- if stat.player.id == loser.player_id %}selected{%- endif %}>
+            {{ stat.player.firstName }} {{ stat.player.lastName }}
           </option>
           {%- endfor %}
         </select>
@@ -175,7 +175,7 @@
     <font color=red>Encountered errors adding match result:
     <ul>
     {%- for message in error_messages %}
-    <li>{{ message }}</li>
+      <li>{{ message }}</li>
     {%- endfor %}
     </ul>
     </font>

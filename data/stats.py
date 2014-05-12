@@ -23,11 +23,15 @@ class PlayerSummary(ndb.Model):
     pct = ndb.ComputedProperty(lambda self: self.wins * 100.0 / (self.wins + self.losses + self.forfeits) if self.wins else 0.0)
 
     @classmethod
-    def getPlayerSummaries(self):
+    def getPlayerSummaries(self, ssn):
         ret_list = []
-        for item in self.query().order(PlayerSummary.season, PlayerSummary.player, PlayerSummary.handicap):
+        for item in self.query(PlayerSummary.season == ssn.key).order(PlayerSummary.player, PlayerSummary.handicap):
             my_dict = item.to_dict()
-            my_dict['player'] = { 'id': my_dict['player'].id(), }
-            my_dict['season'] = { 'id': my_dict['season'].id(), }
+            player = players.Player.get_by_id(item.player.id())
+            my_dict['player'] = {
+                'id': item.player.id(),
+                'firstName': player.firstName,
+                'lastName': player.lastName,
+                }
             ret_list.append(my_dict)
         return ret_list

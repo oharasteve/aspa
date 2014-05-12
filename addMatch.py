@@ -108,8 +108,10 @@ class AddMatchHandler(base_handler.BaseHandler):
             match.put()
 
             # Update statistics for the winner and loser
-            winnerStats = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerW).fetch(1)[0]
-            loserStats = stats.PlayerSummary.query(stats.PlayerSummary.player == match.playerL).fetch(1)[0]
+            winnerStats = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == match.playerW, stats.PlayerSummary.season == match.season)).fetch(1)[0]
+            loserStats = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == match.playerL, stats.PlayerSummary.season == match.season)).fetch(1)[0]
 
             # Update win / loss totals
             winnerStats.wins = winnerStats.wins + 1
@@ -137,7 +139,7 @@ class AddMatchHandler(base_handler.BaseHandler):
           'todays_date': xwhen,
           'seq': seq+1,
           'players': players.Player.getPlayers(),
-          'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
+          'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
           'clubs': clubs.Club.getClubs(),
           'club': club,
           'winner': {
@@ -177,7 +179,7 @@ class AddMatchHandler(base_handler.BaseHandler):
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'seq': 1,
           'players': players.Player.getPlayers(),
-          'player_summaries': stats.PlayerSummary.getPlayerSummaries(),
+          'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
           'clubs': clubs.Club.getClubs(),
           'winner': {
               'player_id': '',
@@ -200,6 +202,7 @@ class AddMatchHandler(base_handler.BaseHandler):
           'loser_selected': -1,
           'display_form': True,
         }
+        logging.info('playerStats size = %d for %s' % (len(stats.PlayerSummary.getPlayerSummaries(season)), season.name))
         self.render_response(TEMPLATE, **context)
 
 

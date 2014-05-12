@@ -65,8 +65,7 @@ class AddPersonHandler(base_handler.BaseHandler):
             player.put()
 
             if not noseason:
-                stat = stats.PlayerSummary(key=ndb.Key(stats.PlayerSummary,
-                    context_player['code']))
+                stat = stats.PlayerSummary()
                 stat.player = player.key
                 stat.season = season.key
                 stat.handicap = int(context_player['handicap'])
