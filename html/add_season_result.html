@@ -85,8 +85,8 @@
   <hr/>
   <form id="addSeasonResultForm" action="/admin/addSeasonResult/" method="post">
     <p>Season: <select name="season_select" id="season_select" value=-1>
-      {%- for season in seasons %}
-      <option value="{{ season.id }}">{{ season.name }}</option>
+      {%- for ssn in seasons %}
+      <option value="{{ ssn.id }}" {%- if ssn.id == season_selected %}selected{%- endif %}>{{ ssn.name }}</option>
       {%- endfor %}
       </select>
     </p>

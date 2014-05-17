@@ -60,12 +60,14 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
             # Create statistics for the player
             summary = stats.PlayerSummary()
             
-            summary.hcap = int(xhcap)
+            summary.player = player.key
+            summary.season = season.key
+            summary.handicap = int(xhcap)
             summary.wins = int(xwins)
             summary.losses = int(xlosses)
             summary.forfeits = int(xforfeits)
-            summary.highrun = int(xhighrun)
-            summary.highruntarget = float(xhighruntarget)
+            summary.highRun = int(xhighrun)
+            summary.highRunTarget = float(xhighruntarget)
 
             summary.put()
             successfully_added_season_result = True
@@ -92,6 +94,7 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'seasons': seasons.Season.getSeasons(),
+          'season_selected': season.key,
           'players': players.Player.getPlayers(),
           'clubs': clubs.Club.getClubs(),
           'season_selected': season.key,
