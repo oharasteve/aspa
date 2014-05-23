@@ -4,19 +4,10 @@
   {{ super() }}
 
   <script>
-  {%- autoescape false %}
-  var playerSummaries = {{ playerStats }};
-  {%- endautoescape %}
-
-  function findHandicap(playerId) {
-    for (var i in playerSummaries) {
-      var playerSummary = playerSummaries[i];
-      if (playerSummary.player.id == playerId) {
-        return playerSummary.handicap;
-      }
-    }
-    return 0;
-  }
+  var handicaps = [];
+  {%- for stat in playerStats %}
+    handicaps['{{ stat.player.id }}'] = {{ stat.handicap }};
+  {%- endfor %}
 
   function setHandicap(selectName, inputName) {
     var inputElement = document.getElementById(inputName);
@@ -25,7 +16,7 @@
       inputElement.value = "";
       return;
     }
-    inputElement.value = findHandicap(selectElement.value);
+    inputElement.value = handicaps[selectElement.value];
   }
 
   $().ready(function() {

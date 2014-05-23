@@ -1,5 +1,7 @@
 """Class to present the Player summary View."""
 
+from google.appengine.ext import ndb
+
 import base_handler
 import cgi
 import logging
@@ -14,7 +16,14 @@ TEMPLATE = 'html/view.html'
 
 class ViewHandler(base_handler.BaseHandler):
     def get(self):
-        season = seasons.Season.query().order(-seasons.Season.endDate).get();
+        seasonCode = self.request.GET.get('Season')
+        season = None
+        if seasonCode:
+            season = seasons.Season.query(seasons.Season.key == ndb.Key(seasons.Season, seasonCode)).get();
+        
+        if not season:
+            # Default to latest season
+            season = seasons.Season.query().order(-seasons.Season.endDate).get();
 
         # Show the webpage
         context = View().get_context(season)
@@ -27,7 +36,6 @@ app = webapp2.WSGIApplication([(r'/', ViewHandler)],
 
 
 class View():
-
     def get_context(self, season):
         player_summaries = []
         if season:
@@ -54,6 +62,7 @@ class View():
             len(player_summaries)))
 
         context = {
+                'seasonList': seasons.Season.getSeasons(),
                 'season': season,
                 'player_summaries': player_summaries,
                 }

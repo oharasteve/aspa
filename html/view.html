@@ -58,4 +58,12 @@
     </tbody>
   </table>
   </center>
+
+  <p>Change Season: <select name="season_select" id="season_select"
+        onchange="window.location=window.location.origin+'?Season='+season_select.value;">
+    {%- for ssn in seasonList %}
+      <option value="{{ ssn.id }}" {%- if ssn.id == season.key.id() %}selected{%- endif %}>{{ ssn.name }}</option>
+    {%- endfor %}
+    </select>
+  </p>
 {%- endblock %}

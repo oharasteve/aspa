@@ -32,7 +32,7 @@ class Details():
         season_matches = matches.Match.query( ndb.AND( ndb.OR(
             matches.Match.playerW == player.key, matches.Match.playerL ==
             player.key), stats.PlayerSummary.season == season.key
-            )).order(matches.Match.date)
+            )).order(matches.Match.date, matches.Match.seq)
         for match in season_matches:
             seq += 1
             match_data = matches.match_util(match)
