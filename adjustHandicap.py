@@ -74,20 +74,22 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(season),
-          'season_selectedIndex': 0,
+          'season_selected': season.key,
           'player_selectedIndex': -1,
           'display_form': True,
         }
         self.render_response(TEMPLATE, **context)
 
     def get(self):
+        season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'page_title': 'Adjust a Handicap',
           'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
           'seasons': seasons.Season.getSeasons(),
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'players': players.Player.getPlayers(),
-          'season_selectedIndex': 0,
+          'player_summaries': stats.PlayerSummary.getPlayerSummaries(season),
+          'season_selected': season.key,
           'player_selectedIndex': -1,
           'display_form': True,
         }

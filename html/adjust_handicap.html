@@ -3,19 +3,10 @@
 {%- block head %}
   {{ super() }}
   <script>
-  {%- autoescape false %}
-  var playerSummaries = {{ player_summaries }};
-  {%- endautoescape %}
-
-  function findHandicap(playerId) {
-    for (var i in playerSummaries) {
-      var playerSummary = playerSummaries[i];
-      if (playerSummary.player.id == playerId) {
-        return playerSummary.handicap;
-      }
-    }
-    return 0;
-  }
+  var handicaps = [];
+  {%- for stat in player_summaries %}
+    handicaps['{{ stat.player.id }}'] = {{ stat.handicap }};
+  {%- endfor %}
 
   function setHandicap(selectName, inputName1, inputName2) {
     var inputElement1 = document.getElementById(inputName1);
@@ -26,14 +17,14 @@
       inputElement2.value = "";
       return;
     }
-    inputElement1.value = findHandicap(selectElement.value);
-    inputElement2.value = findHandicap(selectElement.value);
+    inputElement1.value = handicaps[selectElement.value];
+    inputElement2.value = handicaps[selectElement.value];
   }
 
   $().ready(function() {
     $("#adjustHandicapForm").validate({
       rules: {
-        season: "required",
+        season_select: "required",
         player: "required",
         oldHandicap: {
           required: true,
@@ -58,7 +49,7 @@
   {%- if display_form %}
     $(function() { $( "#todays_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
 
-    $('#season_select').prop('selectedIndex', {{ season_selectedIndex }})
+    $('#season_select').val('{{ season_selected }}');
     $('#player_select').prop('selectedIndex', {{ player_selectedIndex }})
   {%- endif %}
   });

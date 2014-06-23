@@ -34,7 +34,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         xseason = self.request.get('season_select')
         xseq = self.request.get('seq')
         xclub = self.request.get('club_select')
-        xwhen = self.request.get('todays_date')
+        xwhen = self.request.get('match_date')
         nameW = self.request.get('winner_select')
         nameL = self.request.get('loser_select')
         xhcapW = self.request.get('winner_handicap')
@@ -133,10 +133,14 @@ class AddMatchHandler(base_handler.BaseHandler):
             winnerStats.put()
             loserStats.put()
             successfully_added_match = True
+            
+            # Clear high runs for the next match
+            xhrunW = 0
+            xhrunL = 0
 
         context = {
           'seasons': seasons.Season.getSeasons(),
-          'todays_date': xwhen,
+          'match_date': xwhen,
           'seq': seq+1,
           'players': players.Player.getPlayers(),
           'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
@@ -174,9 +178,13 @@ class AddMatchHandler(base_handler.BaseHandler):
 
     def get(self):
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
+        currDate = datetime.date.today()
+        weekDay = currDate.weekday()      # 0=Mon ... 6=Sun
+        adjustDays = (weekDay + 6) % 7    # 6=Mon ... 5=Sun
+        matchDate = currDate - datetime.timedelta(days=adjustDays)
         context = {
           'seasons': seasons.Season.getSeasons(),
-          'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
+          'match_date': matchDate.strftime('%Y-%m-%d'),
           'seq': 1,
           'players': players.Player.getPlayers(),
           'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
