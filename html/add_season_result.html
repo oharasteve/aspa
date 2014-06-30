@@ -1,4 +1,4 @@
-{%- extends "/html/base_template.html" %}
+{%- extends "/html/admin_template.html" %}
 {%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
 {%- block head %}
   {{ super() }}
@@ -77,9 +77,7 @@
   });
   </script>
 {%- endblock %}
-{%- block content %}
-  <h1>American Straight Pool Association</h1>
-
+{%- block admin_content %}
   {%- if display_form %}
   <h3>Add a season result</h3>
   <hr/>
