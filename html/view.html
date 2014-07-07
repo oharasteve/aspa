@@ -4,66 +4,71 @@
   {{ super() }}
   <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
-    $("#details").tablesorter({
-      sortList:[[8,1]],  // sort by Points descending
-      widgets: ['zebra']
+    $("#players-summary").tablesorter({
+      sortList:[[8, 1]],  // sort by points descending
+      headers: { 1: { sorter: false}, 2: {sorter: false} },  // not allow sorting by name
+      widgets: ['zebra'],
+      cssAsc: "header-sort-up",
+      cssDesc: "header-sort-down"
     });
   });
   </script>
 {% endblock %}
-{% block content %}
-  <center>
-  <h1>American Straight Pool Association</h1>
+
+{% block header %}
+  <h1 class="text-center">American Straight Pool Association</h1>
   {%- if season %}
-  <h2>
+  <h2 class="text-center">
     {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
   </h2>
   {%- endif %}
+{% endblock %}
 
-  <table class="tablesorter details" id="details">
+{% block content %}
+  <table id="players-summary" class="table table-hover table-condensed sortable-table">
     <thead>
       <tr>
-        <th class="hdr num">Seq</th>
-        <th class="hdr nocase">First</th>
-        <th class="hdr nocase">Last</th>
-        <th class="hdr num">H'cap</th>
-        <th class="hdr num">Won</th>
-        <th class="hdr num">Lost</th>
-        <th class="hdr num">Forfeits</th>
-        <th class="hdr num">Win %</th>
-        <th class="hdr num">Points</th>
-        <th class="hdr num">High Run</th>
-        <th class="hdr num">Target</th>
-        <th class="hdr num">% Goal</th>
+        <th class="sortable-header">Seq</th>
+        <th>First</th>
+        <th>Last</th>
+        <th class="sortable-header">H'cap</th>
+        <th class="sortable-header">Won</th>
+        <th class="sortable-header">Lost</th>
+        <th class="sortable-header">Forfeits</th>
+        <th class="sortable-header">Win %</th>
+        <th class="sortable-header">Points</th>
+        <th class="sortable-header">High Run</th>
+        <th class="sortable-header">Target</th>
+        <th class="sortable-header">% Goal</th>
       </tr>
     </thead>
     <tbody>
     {% for entry in player_summaries %}
       <tr>
-        <td class="center"><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
-        <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
-        <td class="left"><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>
-        <td class="right">{{ entry.summary.handicap }}</td>
-        <td class="right">{{ entry.summary.wins }}</td>
-        <td class="right">{{ entry.summary.losses }}</td>
-        <td class="right">{{ entry.summary.forfeits }}</td>
-        <td class="right">{{ '%.2f' % entry.summary.pct }}</td>
-        <td class="right">{{ '%.6f' % entry.summary.points }}</td>
-        <td class="right">{{ entry.summary.highRun }}</td>
-        <td class="right">{{ '%.2f' % entry.summary.highRunTarget }}</td>
-        <td class="right">{{ '%.2f' % entry.summary.goal }}</td>
+        <td><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
+        <td><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
+        <td><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>
+        <td>{{ entry.summary.handicap }}</td>
+        <td>{{ entry.summary.wins }}</td>
+        <td>{{ entry.summary.losses }}</td>
+        <td>{{ entry.summary.forfeits }}</td>
+        <td>{{ '%.2f' % entry.summary.pct }}</td>
+        <td>{{ '%.6f' % entry.summary.points }}</td>
+        <td>{{ entry.summary.highRun }}</td>
+        <td>{{ '%.2f' % entry.summary.highRunTarget }}</td>
+        <td>{{ '%.2f' % entry.summary.goal }}</td>
       </tr>
     {%- endfor %}
-
     </tbody>
   </table>
-  </center>
 
-  <p>Change Season: <select name="season_select" id="season_select"
+  <div>
+    Season:
+    <select name="season_select" id="season_select"
         onchange="window.location=window.location.origin+'?Season='+season_select.value;">
-    {%- for ssn in seasonList %}
-      <option value="{{ ssn.id }}" {%- if ssn.id == season.key.id() %}selected{%- endif %}>{{ ssn.name }}</option>
-    {%- endfor %}
+      {%- for ssn in seasonList %}
+        <option value="{{ ssn.id }}" {%- if ssn.id == season.key.id() %}selected{%- endif %}>{{ ssn.name }}</option>
+      {%- endfor %}
     </select>
-  </p>
+  </div>
 {%- endblock %}

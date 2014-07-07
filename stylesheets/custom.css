@@ -1,0 +1,32 @@
+#header {
+  margin-bottom: 2em;
+}
+
+#content {
+  margin: 2em 0 2em 0;
+}
+
+#footer {
+  margin-top: 2em;
+  padding-top: 0.5em;
+  border-top: 1px solid lightgrey;
+}
+
+table.sortable-table th {
+	background-repeat: no-repeat;
+	background-position: right;
+}
+
+table.sortable-table th.sortable-header:hover {
+  cursor: pointer;
+}
+
+table.sortable-table th.header-sort-up {
+	background-image: url(asc.gif);
+  color: green;
+}
+
+table.sortable-table th.header-sort-down {
+	background-image: url(desc.gif);
+  color: green;
+}

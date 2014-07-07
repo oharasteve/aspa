@@ -4,77 +4,109 @@
   {{ super() }}
   <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
-    $("#details").tablesorter({
-      sortList:[[0,0]],  // sort by first column, asc.
-      widgets: ['zebra']
+    $("#player-summary").tablesorter({
+      sortList:[[0,1]],  // sort by date ascending.
+      headers: { 8: { sorter: false}, 9: {sorter: false} },  // not allow sorting by name
+      widgets: ['zebra'],
+      cssAsc: "header-sort-up",
+      cssDesc: "header-sort-down"
     });
   });
   </script>
 {% endblock %}
 
-{% block content %}
-  <center>
-  <h1>American Straight Pool Association</h1>
+{% block header %}
+  <h1 class="text-center">American Straight Pool Association</h1>
   {%- if season %}
-  <h2>
+  <h2 class="text-center">
     {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
   </h2>
   {%- endif %}
 
-  <h1>
-      {{ player.firstName }} {{ player.lastName }}
-  </h1>
+{% endblock %}
 
-  <table class="tablesorter details" id="details">
-    <thead>
-      <tr>
-        <th class="hdr num">#</th>
-        <th class="hdr num">Date</th>
-        <th class="hdr nocase">Result</th>
-        <th class="hdr num">H'cap</th>
-        <th class="hdr num">Points</th>
-        <th class="hdr num">Target</th>
-        <th class="hdr num">High Run</th>
-        <th class="hdr num">Win By</th>
-        <th class="hdr num">Lose By</th>
-        <th class="hdr nocase">First</th>
-        <th class="hdr nocase">Last</th>
-        <th class="hdr num">H'cap</th>
-        <th class="hdr num">Points</th>
-        <th class="hdr num">Target</th>
-        <th class="hdr num">High Run</th>
-      </tr>
-    </thead>
-    <tbody>
-    {%- for entry in match_details %}
-      <tr class="{{ entry.alternate_class }}">
-        <td class="center">{{ entry.entry_index }}</td>
-        <td class="right"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
-        <td class="center">{{ entry.result }}</td>
-        <td class="right">{{ entry.player.handicap }}</td>
-        <td class="right">{{ entry.player.score }}</td>
-        <td class="right">{{ entry.player.target }}</td>
-        <td class="right">{{ entry.player.highRun }}</td>
-        <td class="right">{{ entry.win_mgn }}</td>
-        <td class="right">{{ entry.lose_mgn }}</td>
-        <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
-        <td class="left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
-        <td class="right">{{ entry.opponent.handicap }}</td>
-        <td class="right">{{ entry.opponent.score }}</td>
-        <td class="right">{{ entry.opponent.target }}</td>
-        <td class="right">{{ entry.opponent.highRun }}</td>
-      </tr>
-    {%- endfor %}
+{% block content %}
+  <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h1>
+  <div>
+    <h3>Overall</h3>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>First</th>
+          <th>Last</th>
+          <th>H'cap</th>
+          <th>Won</th>
+          <th>Lost</th>
+          <th>Forfeits</th>
+          <th>Win %</th>
+          <th>Points</th>
+          <th>High Run</th>
+          <th>Target</th>
+          <th>% Goal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ player.firstName }}</td>
+          <td>{{ player.lastName }}</td>
+          <td>{{ summary.handicap }}</td>
+          <td>{{ summary.wins }}</td>
+          <td>{{ summary.losses }}</td>
+          <td>{{ summary.forfeits }}</td>
+          <td>{{ summary.pct }}</td>
+          <td>{{ summary.points }}</td>
+          <td>{{ summary.highRun }}</td>
+          <td>{{ summary.highRunTarget }}</td>
+          <td>{{ summary.goal }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-    </tbody>
-  </table>
+    <h3>Game by Game</h3>
+    <table id="player-summary" class="table table-hover table-condensed sortable-table">
+      <thead>
+        <tr>
+          <th class="sortable-header">Date</th>
+          <th class="sortable-header">Result</th>
+          <th class="sortable-header">H'cap</th>
+          <th class="sortable-header">Points</th>
+          <th class="sortable-header">Target</th>
+          <th class="sortable-header">High Run</th>
+          <th class="sortable-header">Win By</th>
+          <th class="sortable-header">Lose By</th>
+          <th>First</th>
+          <th>Last</th>
+          <th class="sortable-header">H'cap</th>
+          <th class="sortable-header">Points</th>
+          <th class="sortable-header">Target</th>
+          <th class="sortable-header">High Run</th>
+        </tr>
+      </thead>
+      <tbody>
+      {%- for entry in match_details %}
+        <tr>
+          <!--
+          <td>{{ entry.entry_index }}</td>
+          -->
+          <td><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
+          <td>{{ entry.result }}</td>
+          <td>{{ entry.player.handicap }}</td>
+          <td>{{ entry.player.score }}</td>
+          <td>{{ entry.player.target }}</td>
+          <td>{{ entry.player.highRun }}</td>
+          <td>{{ entry.win_mgn }}</td>
+          <td>{{ entry.lose_mgn }}</td>
+          <td><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
+          <td><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
+          <td>{{ entry.opponent.handicap }}</td>
+          <td>{{ entry.opponent.score }}</td>
+          <td>{{ entry.opponent.target }}</td>
+          <td>{{ entry.opponent.highRun }}</td>
+        </tr>
+      {%- endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  <p>
-    Wins: {{ summary.wins }}, Losses: {{ summary.losses }}, Forfeits: {{ summary.forfeits }}
-    <br/>
-    High Run: {{ summary.highRun }}, Target: {{ summary.highRunTarget }}
-    <br/>
-    <a href="/">Home</a>
-  </p>
-  </center>
+  <a href="/">Home</a>
 {%- endblock %}

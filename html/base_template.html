@@ -3,31 +3,30 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   {%- block head %}
-  <link type="text/css" rel="stylesheet" href="/stylesheets/shared.css" />
-  <link type="text/css" rel="stylesheet" href="/stylesheets/blue/style.css" media="print, projection, screen" />
-  <link type="text/css" rel="stylesheet" href="/js/libs/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css" />
+  <link rel="stylesheet" href="/js/libs/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="/stylesheets/custom.css">
   <title>{%- block title %}{%- endblock %}</title>
-  <script type="text/javascript" src="/js/libs/jquery-1.11.0.min.js"></script>
-  <script type="text/javascript" src="/js/libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js"></script>
-  <script type="text/javascript" src="/js/libs/jquery-validation-1.11.1/dist/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="/js/libs/jquery-validation-1.11.1/dist/additional-methods.min.js"></script>
-  <script type="text/javascript" src="/js/libs/jquery.tablesorter.min.js"></script>
-  <script type="text/javascript" src="/js/libs/knockout-3.0.0.js"></script>
+  <script src="/js/libs/jquery-1.11.0.min.js"></script>
+  <script src="/js/libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js"></script>
+  <script src="/js/libs/jquery-validation-1.11.1/dist/jquery.validate.min.js"></script>
+  <script src="/js/libs/jquery-validation-1.11.1/dist/additional-methods.min.js"></script>
+  <script src="/js/libs/jquery.tablesorter.min.js"></script>
+  <script src="/js/libs/knockout-3.0.0.js"></script>
   {%- endblock %}
 </head>
 <body>
-<div id="content">
-  {%- block content %}{%- endblock %}
-</div>
-<div id="footer">
-  {%- block footer %}
-  <hr/>
-  <font size=-1>
-    <i>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a> </i>
-    <br/>
-    <i>Web Issues: <a href="mailto:steve@oharasteve.com">steve@oharasteve.com</a></i>
-  </font>
-  {%- endblock %}
+<div class="container">
+  <div id="header">
+    {%- block header %}{%- endblock %}
+  </div>
+  <div id="content">
+    {%- block content %}{%- endblock %}
+  </div>
+  <div id="footer">
+    <div>League Manager: <a href="mailto:steve@oharasteve.com">CJ Robinson</a></div>
+    <div>Web Issues: <a href="mailto:steve@oharasteve.com">Steve O'Hara</a></div>
+  </div>
 </div>
 </body>
 </html>
