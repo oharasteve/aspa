@@ -5,7 +5,7 @@
   <h3>Admin Choices:</h3>
   <ul>
   {%- for choice in choices %}
-  <li><a href="{{choice.url}}">{{choice.description}}</a> <i>({{choice.help}})</i></li>
+    <li><a href="{{choice.url}}">{{choice.description}}</a> <i>({{choice.help}})</i></li>
   {%- endfor %}
   </ul>
 {%- endblock %}

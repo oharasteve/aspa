@@ -84,54 +84,75 @@
   {%- if display_form %}
   <h3>Add a New Player</h3>
   <hr/>
-  <form id="addPlayerForm" action="/admin/addPlayer/" method="post">
 
-  <p>Season: <select name="season_select" id="season_select">
-    {%- for season in seasons %}
-    <option value="{{ season.id }}">{{ season.name }}</option>
-    {%- endfor %}
-    </select>
-  </p>
-
-  <table>
-    <tr>
-      <td align="right">Code:</td>
-      <td align="left"><input style="text-align:left" name="code" id="code" size="5" type="text" value="{{ player.code }}"/>
-          <i>(CJ or Horia for example)</i></td>
-    </tr>
-    <tr>
-      <td align="right">First Name:</td>
-      <td align="left"><input style="text-align:left" name="firstName" id="firstName" type="text" value="{{ player.firstName }}"/></td>
-    </tr>
-    <tr>
-      <td align="right">Last Name:</td>
-      <td align="left"><input style="text-align:left" name="lastName" id="lastName" type="text" value="{{ player.lastName }}"/></td>
-    </tr>
-    <tr>
-      <td align="right">Handicap:</td>
-      <td align="left"><input size="5" onchange='setHighRunTarget("handicap","highRunTarget")'
-          name="handicap" id="handicap" type="text" value="0"/></td>
-    </tr>
-    <tr>
-      <td align="right">High Run Target:</td>
-      <td align="left"><input size="5" name="highRunTarget" id="highRunTarget"
-          type="text" value="0"/></td>
-    </tr>
-    <tr>
-      <td align="right">Phone:</td>
-      <td align="left"><input style="text-align:left" name="phone" id="phone" type="text" value="{{ player.phone }}"/></td>
-    </tr>
-    <tr>
-      <td align="right">Email:</td>
-      <td align="left"><input style="text-align:left" name="email" id="email" type="text" value="{{ player.email }}"/></td>
-    </tr>
-  </table>
-  <p>
-    <input type="checkbox" id="noseason" name="noseason" {%- if noseason %} checked {%- endif %}/>Just add player for previous season(s). Ignores season, handicap and high run target.
-  <p>
-    <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
-    <input type="submit" value="Submit"/>
-  </p>
+  <form action="/admin/addPlayer/" method="post" id="addPlayerForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="season_select" class="col-sm-2 control-label">Season</label>
+      <div class="col-sm-7">
+        <select name="season_select" id="season_select" class="form-control">
+        {%- for season in seasons %}
+          <option value="{{ season.id }}">{{ season.name }}</option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="code" class="col-sm-2 control-label">Code</label>
+      <div class="col-sm-7">
+        <input type="text" name="code" id="code" class="form-control" value="{{ player.code }}" placeholder="CJ or Horia for example"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="firstName" class="col-sm-2 control-label">First Name</label>
+      <div class="col-sm-7">
+        <input type="text" name="firstName" id="firstName" class="form-control" value="{{ player.firstName }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+      <div class="col-sm-7">
+        <input type="text" name="lastName" id="lastName" class="form-control" value="{{ player.lastName }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="handicap" class="col-sm-2 control-label">Handicap</label>
+      <div class="col-sm-7">
+        <input type="text" onchange="setHighRunTarget('handicap','highRunTarget')" name="handicap" id="handicap" class="form-control" value="0"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="highRunTarget" class="col-sm-2 control-label">High Run Target</label>
+      <div class="col-sm-7">
+        <input type="text" name="highRunTarget" id="highRunTarget" class="form-control" value="0"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone" class="col-sm-2 control-label">Phone</label>
+      <div class="col-sm-7">
+        <input type="text" name="phone" id="phone" class="form-control" value="{{ player.phone }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-7">
+        <input type="text" name="email" id="email" class="form-control" value="{{ player.email }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="noseason" id="noseason" {%- if noseason %} checked {%- endif %}/>
+            Just add player for previous season(s). Ignores season, handicap and high run target.
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
   {%- elif error_messages %}
   <h3>
