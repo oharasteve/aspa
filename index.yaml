@@ -12,6 +12,11 @@ indexes:
 
 - kind: Match
   properties:
+  - name: date
+  - name: seq
+
+- kind: Match
+  properties:
   - name: playerL
   - name: date
 

@@ -54,6 +54,9 @@ handlers:
 - url: /details/.*
   script: details.app
 
+- url: /weekly/.*
+  script: weekly.app
+  
 - url: /
   script: view.app
 

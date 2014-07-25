@@ -1,0 +1,58 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {{ matchDate|datetimeformat('%b %d, %Y') }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <center>
+  <h1>American Straight Pool Association</h1>
+  <h2>
+    {{ matchDate|datetimeformat('%b %d, %Y') }}
+  </h2>
+
+  <table class="tablesorter weekly" id="weekly">
+    <thead>
+      <tr>
+        <th class="hdr num">#</th>
+        <th class="hdr">W/L</th>
+        <th class="hdr">Player</th>
+        <th class="hdr num">H'cap</th>
+        <th class="hdr num">Race</th>
+        <th class="hdr num">Score</th>
+        <th class="hdr num">High Run</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%- for entry in match_details %}
+      <tr class="{{ entry.alternate_class }}">
+        <td class="center" rowspan="2">{{ entry.seq }}</td>
+        
+        <td class="center">W</td>
+        <td class="left">{{ entry.playerW.firstName }} {{ entry.playerW.lastName }}</td>
+        <td class="right">{{ entry.handicapW }}</td>
+        <td class="right">{{ entry.targetW }}</td>
+        <td class="right">{{ entry.scoreW }}</td>
+        <td class="right">{{ entry.highRunW }}</td>
+      </tr>
+      
+      <tr class="{{ entry.alternate_class }}">
+        {%- if entry.forfeited %}
+          <td class="center">F</td>
+        {%- else %}
+          <td class="center">L</td>
+        {%- endif %}
+        <td class="left">{{ entry.playerL.firstName }} {{ entry.playerL.lastName }}</td>
+        <td class="right">{{ entry.handicapL }}</td>
+        <td class="right">{{ entry.targetL }}</td>
+        <td class="right">{{ entry.scoreL }}</td>
+        <td class="right">{{ entry.highRunL }}</td>
+      </tr>
+    {%- endfor %}
+
+    </tbody>
+  </table>
+  </center>
+  
+  <p>View scanned scoresheet <a href="{{ pdf_url }}">here</a>.
+{%- endblock %}
