@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+from google.appengine.ext import ndb
 import base_handler
 import datetime
 import webapp2
@@ -61,9 +61,10 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             adjustment.newHandicap = hcapNew
             adjustment.comment = comment
             adjustment.put()
-            
+
             # Update statistics for the player
-            playerStats = stats.PlayerSummary.query(stats.PlayerSummary.player == player.key).fetch(1)[0]
+            playerStats = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).fetch(1)[0]
             playerStats.handicap = hcapNew
             playerStats.put()
         
