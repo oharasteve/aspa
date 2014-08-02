@@ -42,6 +42,9 @@ handlers:
 - url: /admin/addMatch/
   script: addMatch.app
 
+- url: /admin/deleteMatch/
+  script: deleteMatch.app
+
 - url: /admin/suggestMatch/
   script: suggestMatch.app
 

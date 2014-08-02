@@ -63,6 +63,11 @@ class AdminHandler(base_handler.BaseHandler):
                         'help': 'League Manager only',
                         },
                     {
+                        'url': '/admin/deleteMatch/',
+                        'description': 'Delete Match Result',
+                        'help': 'Rarely needed (hopefully)',
+                        },
+                    {
                         'url': '/admin/carryPlayer/',
                         'description': 'Carry Player Forward',
                         'help': 'from previous season',

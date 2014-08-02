@@ -23,6 +23,15 @@ indexes:
 - kind: Match
   properties:
   - name: playerL
+  - name: playerW
+  - name: club
+  - name: season
+  - name: date
+  - name: seq
+
+- kind: Match
+  properties:
+  - name: playerL
   - name: season
   - name: date
 

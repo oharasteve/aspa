@@ -1,0 +1,102 @@
+{%- extends "/html/admin_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+
+  <script>
+  $().ready(function() {
+    $("#deleteMatchForm").validate({
+      rules: {
+        season_select: "required",
+        club_select: "required",
+        winner_select: "required",
+        loser_select: "required",
+        match_date: {
+          required: true,
+          dateISO: true
+        }
+      }
+    });
+
+  {%- if display_form %}
+    $(function() { $( "#match_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+
+    $('#season_select').val('{{ season_selected }}');
+    $('#club_select').val('{{ club_selected }}');
+    $('#winner_select').val('{{ winner_selected }}');
+    $('#loser_select').val('{{ loser_selected }}');
+  {%- endif %}
+  });
+  </script>
+{%- endblock %}
+{%- block admin_content %}
+  {%- if display_form %}
+  <h3>Delete a Match Result</h3>
+  <hr/>
+  <form id="deleteMatchForm" action="/admin/deleteMatch/" method="post">
+    <p>Match Date: <input name="match_date" id="match_date" value="{{ match_date }}" size="10"></input></p>
+
+    <p>Seq: <input id="seq" name="seq" value="{{ seq }}" size="5"/>
+    </p>
+    
+    <p>Season: <select name="season_select" id="season_select">
+      {%- for ssn in seasons %}
+        <option value="{{ ssn.id }}">{{ ssn.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+    <p>Club: <select name="club_select" id="club_select" value=-1>
+      {%- for club in clubs %}
+        <option value="{{ club.id }}">{{ club.name }}</option>
+      {%- endfor %}
+      </select>
+    </p>
+
+  <table border>
+    <tr>
+      <td align="right">Winner:
+        <select name="winner_select" id="winner_select" value=-1
+            onchange='setHandicap("winner_select", "winner_handicap")'>
+          {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == winner.player_id %}selected{%- endif %}>
+            {{ player.firstName }} {{ player.lastName }}
+          </option>
+          {%- endfor %}
+        </select>
+      </td>
+      <td align="right">Loser:
+        <select name="loser_select" id="loser_select"
+            onchange='setHandicap("loser_select", "loser_handicap")'>
+          {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == loser.player_id %}selected{%- endif %}>
+            {{ player.firstName }} {{ player.lastName }}
+          </option>
+          {%- endfor %}
+        </select>
+      </td>
+    </tr>
+  </table>
+  <p>
+    <input type="button" value="Clear" onclick="window.location.href='/admin/deleteMatch/'"/>
+    <input type="submit" value="Delete"/>
+  </p>
+  </form>
+  {%- endif %}
+  <div name="delete_match_notes">
+  {%- if successfully_deleted_match %}
+  <h3>Successfully deleted match result: {{ winner.firstName }} beat {{ loser.firstName }} </h3>
+  {%- endif %}
+  {%- if error_messages %}
+  <h3>
+    <font color=red>Encountered errors deleting match result:
+    <ul>
+    {%- for message in error_messages %}
+      <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- endif %}
+  </div>
+{%- endblock %}
