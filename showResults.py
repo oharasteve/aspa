@@ -13,8 +13,9 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
   def get(self, resource):
     resource = str(urllib.unquote(resource))
     blob_info = blobstore.BlobInfo.get(resource)
-    logging.info('******** Serving %s (%d bytes)', blob_info.filename, blob_info.size)
-    self.send_blob(blob_info)
+    if blob_info:
+      logging.info('******** Serving %s (%d bytes)', blob_info.filename, blob_info.size)
+      self.send_blob(blob_info)
 
 app = webapp2.WSGIApplication([('/showResults/([^/]+)?', ServeHandler)],
                               debug=True)

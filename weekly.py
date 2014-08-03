@@ -12,8 +12,9 @@ from data import matches
 from data import players
 from data import seasons
 
-TEMPLATE = 'html/weekly.html'
+from google.appengine.ext import blobstore
 
+TEMPLATE = 'html/weekly.html'
 
 class WeeklyHandler(base_handler.BaseHandler):
     def get(self):
@@ -23,17 +24,15 @@ class WeeklyHandler(base_handler.BaseHandler):
         matchDate = datetime.date(year, month, day)
 
         # Show the webpage
-        context = Weekly().get_context(matchDate)
+        context = Weekly().get_context(matchDate, month, day, year)
         self.render_response(TEMPLATE, **context)
-
 
 app = webapp2.WSGIApplication([(r'/weekly/', WeeklyHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
-
 class Weekly():
-    def get_context(self, matchDate):
+    def get_context(self, matchDate, month, day, year):
         match_details = []
         seq = 0
         weekly_matches = matches.Match.query(
@@ -56,13 +55,22 @@ class Weekly():
                 'scoreL': match.scoreL,
                 'targetL': match.targetL,
                 'highRunL': match.highRunL,
+                'margin': match.targetL - match.scoreL,
             }
             match_details.append(match_summary)
-        pdf_url = '/results/LSB_{0}.pdf'.format(matchDate)
 
+        # See if the pdf image is available
+        blob_query = blobstore.BlobInfo.all()
+        pdf_key = None
+        # Use CJ's naming convention
+        pdf_name = 'LSB Straight %d-%d-%d.pdf' % (month, day, (year > 2000 ? year - 2000 : year))
+        pdf_blob = blob_query.filter('filename =', pdf_name).get()
+        if pdf_blob:
+          pdf_key = pdf_blob.key()
+        
         context = {
                 'matchDate': matchDate,
                 'match_details': match_details,
-                'pdf_url': pdf_url,
+                'pdf_key': pdf_key,
                 }
         return context

@@ -20,19 +20,21 @@
         <th class="hdr num">H'cap</th>
         <th class="hdr num">Race</th>
         <th class="hdr num">Score</th>
+        <th class="hdr num">Margin</th>
         <th class="hdr num">High Run</th>
       </tr>
     </thead>
     <tbody>
     {%- for entry in match_details %}
       <tr class="{{ entry.alternate_class }}">
-        <td class="center" rowspan="2">{{ entry.seq }}</td>
+        <td style="vertical-align:middle" class="center" rowspan="2">{{ entry.seq }}</td>
         
         <td class="center">W</td>
         <td class="left">{{ entry.playerW.firstName }} {{ entry.playerW.lastName }}</td>
         <td class="right">{{ entry.handicapW }}</td>
         <td class="right">{{ entry.targetW }}</td>
         <td class="right">{{ entry.scoreW }}</td>
+        <td>&nbsp;</td>
         <td class="right">{{ entry.highRunW }}</td>
       </tr>
       
@@ -46,6 +48,7 @@
         <td class="right">{{ entry.handicapL }}</td>
         <td class="right">{{ entry.targetL }}</td>
         <td class="right">{{ entry.scoreL }}</td>
+        <td class="right">{{ entry.margin }}</td>
         <td class="right">{{ entry.highRunL }}</td>
       </tr>
     {%- endfor %}
@@ -54,5 +57,10 @@
   </table>
   </center>
   
-  <p>View scanned scoresheet <a href="{{ pdf_url }}">here</a>.
+  {%- if pdf_key %}
+    <hr/>
+    <h3>Original score sheet:</h3>
+    <embed width="100%" height="1000px" name="plugin" src="/showResults/{{ pdf_key }}" type="application/pdf">  
+  {%- endif %}
+  
 {%- endblock %}
