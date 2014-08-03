@@ -58,8 +58,8 @@ class Details():
                     opponent['player'].id())
             entry = {
                     'entry_index': seq,
-                    'results_pdf_url': '/results/LSB_{0}.pdf'.format(
-                        match.date),
+                    'results_pdf_url': '/weekly/?Y=%d&M=%d&D=%d' %
+                        (match.date.year, match.date.month, match.date.day),
                     'date': match.date,
                     'result': result,
                     'player': participant,

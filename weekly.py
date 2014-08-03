@@ -63,7 +63,7 @@ class Weekly():
         blob_query = blobstore.BlobInfo.all()
         pdf_key = None
         # Use CJ's naming convention
-        pdf_name = 'LSB Straight %d-%d-%d.pdf' % (month, day, (year > 2000 ? year - 2000 : year))
+        pdf_name = 'LSB Straight %d-%d-%d.pdf' % (month, day, (year if year < 2000 else year - 2000))
         pdf_blob = blob_query.filter('filename =', pdf_name).get()
         if pdf_blob:
           pdf_key = pdf_blob.key()
