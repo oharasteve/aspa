@@ -60,6 +60,15 @@ handlers:
 - url: /weekly/.*
   script: weekly.app
   
+- url: /admin/upload
+  script: saveResults.app
+  
+- url: /showResults/.*
+  script: showResults.app
+  
+- url: /admin/saveResults/
+  script: saveResults.app
+  
 - url: /
   script: view.app
 

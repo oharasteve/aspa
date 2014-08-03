@@ -34,7 +34,12 @@ class AdminHandler(base_handler.BaseHandler):
                         },
                     {
                         'url': '/admin/addMatch/',
-                        'description': 'Add Match Result',
+                        'description': 'Add Match Results',
+                        'help': 'once a week',
+                        },
+                    {
+                        'url': '/admin/saveResults/',
+                        'description': 'Upload Weekly Results',
                         'help': 'once a week',
                         },
                     {
