@@ -28,30 +28,37 @@
   {%- if display_form %}
   <h3>Add a New Season</h3>
   <hr/>
-  <form id="addSeasonForm" action="/admin/addSeason/" method="post">
-  <table>
-    <tr>
-      <td align="right">Code:</td>
-      <td align="left"><input name="code" id="code" size="5" type="text" value="{{ season_code }}"/></td>
-    </tr>
-    <tr>
-      <td align="right">Name:</td>
-      <td align="left"><input name="name" id="name" type="text" value="{{ season_name }}"/></td>
-    </tr>
-    <tr>
-      <td align="right">Start Date:<br/>(yyyy-mm-dd)</td>
-      <td align="left"><input name="start" id="start" type="text" value="{{ season_start }}"/></td>
-    <tr/>
-    <tr>
-      <td align="right">End Date:<br/>(yyyy-mm-dd)</td>
-      <td align="left"><input name="end" id="end" type="text" value="{{ season_end }}"/></td>
-    <tr/>
 
-  </table>
-  <p>
-    <input type="button" value="Cancel" onclick="window.location.href='/admin'"/>
-    <input type="submit" value="Submit"/>
-  </p>
+  <form action="/admin/addSeason/" method="post" id="addSeasonForm", class="form-horizontal" fole="form">
+    <div class="form-group">
+      <label for="code" class="col-sm-2 control-label">Code</label>
+      <div class="col-sm-7">
+        <input type="text" name="code" id="code" class="form-control" value="{{ season_code }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-7">
+        <input type="text" name="name" id="name" class="form-control" value="{{ season_name }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="start" class="col-sm-2 control-label">Start Date</label>
+      <div class="col-sm-7">
+        <input type="text" name="start" id="start" class="form-control" value="{{ season_start }}" placeholder="yyyy-mm-dd"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="end" class="col-sm-2 control-label">End Date</label>
+      <div class="col-sm-7">
+        <input type="text" name="end" id="end" class="form-control" value="{{ season_end }}" placeholder="yyyy-mm-dd"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
   {%- elif error_messages %}
   <h3>
