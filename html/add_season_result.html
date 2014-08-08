@@ -79,59 +79,84 @@
 {%- endblock %}
 {%- block admin_content %}
   {%- if display_form %}
-  <h3>Add a season result</h3>
+  <h3>Add a Season Result</h3>
   <hr/>
-  <form id="addSeasonResultForm" action="/admin/addSeasonResult/" method="post">
-    <p>Season: <select name="season_select" id="season_select" value=-1>
-      {%- for ssn in seasons %}
-      <option value="{{ ssn.id }}" {%- if ssn.id == season_selected %}selected{%- endif %}>{{ ssn.name }}</option>
-      {%- endfor %}
-      </select>
-    </p>
 
-    <p>Club: <select name="club_select" id="club_select" value=-1>
-      {%- for club in clubs %}
-      <option value="{{ club.id }}">{{ club.name }}</option>
-      {%- endfor %}
-      </select>
-    </p>
-
-  <table border>
-    <tr>
-      <td align="right">Player:
-        <select name="player_select" id="player_select" value=-1
-            onchange='setHandicap("player_select", "player_handicap")'>
-          {%- for player in players %}
-          <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
-          {{ player.firstName }} {{ player.lastName }}
-          </option>
-          {%- endfor %}
+  <form action="/admin/addSeasonResult/" method="post" id="addSeasonResultForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="season_select" class="col-sm-2 control-label">Season</label>
+      <div class="col-sm-7">
+        <select name="season_select" id="season_select" class="form-control" value="-1">
+        {%- for ssn in seasons %}
+          <option value="{{ ssn.id }}" {%- if ssn.id == season_selected %}selected{%- endif %}>{{ ssn.name }}</option>
+        {%- endfor %}
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td>Handicap: <input id="player_handicap" name="player_handicap" value="" size="5"/></td>
-    </tr>
-    <tr>
-        <td>Wins: <input id="player_wins" name="player_wins" value="" size="5"/></td>
-    </tr>
-    <tr>
-        <td>Losses: <input id="player_losses" name="player_losses" value="" size="5"/></td>
-    </tr>
-    <tr>
-        <td>Forfeits: <input id="player_forfeits" name="player_forfeits" value="0" size="5"/></td>
-    </tr>
-    <tr>
-        <td>High Run: <input id="player_highrun" name="player_highrun" value="0" size="5"/></td>
-    </tr>
-    <tr>
-        <td>High Run Target: <input id="player_highrun_target" name="player_highrun_target" value="" size="5"/></td>
-    </tr>
-  </table>
-  <p>
-    <input type="button" value="Reset" onclick="window.location.href='/admin/addSeasonResult/'"/>
-    <input type="submit" value="Submit"/>
-  </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="club_select" class="col-sm-2 control-label">Club</label>
+      <div class="col-sm-7">
+        <select name="club_select" id="club_select" class="form-control" value="-1">
+        {%- for club in clubs %}
+          <option value="{{ club.id }}">{{ club.name }}</option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_select" class="col-sm-2 control-label">Player</label>
+      <div class="col-sm-7">
+        <select name="player_select" id="player_select" class="form-control" value="-1"
+                onchange="setHandicap('player_select', 'player_handicap')">
+        {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
+        {{ player.firstName }} {{ player.lastName }}
+          </option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_handicap" class="col-sm-2 control-label">Handicap</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_handicap" id="player_handicap" class="form-control" value=""/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_wins" class="col-sm-2 control-label">Wins</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_wins" id="player_wins" class="form-control" value=""/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_losses" class="col-sm-2 control-label">Losses</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_losses" id="player_losses" class="form-control" value=""/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_forfeits" class="col-sm-2 control-label">Forfeits</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_forfeits" id="player_forfeits" class="form-control" value="0"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_highrun" class="col-sm-2 control-label">High Run</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_highrun" id="player_highrun" class="form-control" value="0"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_highrun_target" class="col-sm-2 control-label">High Run Target</label>
+      <div class="col-sm-7">
+        <input type="text" name="player_highrun_target" id="player_highrun_target" class="form-control" value=""/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
   {%- endif %}
   <div name="add_season_result_notes">
