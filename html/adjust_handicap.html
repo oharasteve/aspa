@@ -59,41 +59,60 @@
   {%- if display_form %}
   <h3>Adjust a Player's Handicap</h3>
   <hr/>
-  <form id="adjustHandicapForm" action="/admin/adjustHandicap/" method="post">
-    <p>Date: <input name="todays_date" id="todays_date" value="{{ todays_date }}" size="10"></input></p>
 
-    <p>Season: <select name="season_select" id="season_select">
-      {%- for season in seasons %}
-      <option value="{{ season.id }}">{{ season.name }}</option>
-      {%- endfor %}
-      </select>
-    </p>
-
-    <p>Player:
-      <select name="player_select" id="player_select" value="-1"
-          onchange='setHandicap("player_select", "oldHandicap", "newHandicap");'>
-        {%- for player in players %}
-        <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
-        {{ player.firstName }} {{ player.lastName }}
-        </option>
+  <form action="/admin/adjustHandicap/" method="post" id="adjustHandicapForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="end" class="col-sm-2 control-label">Date</label>
+      <div class="col-sm-7">
+        <input name="todays_date" id="todays_date" class="form-control" value="{{ todays_date }}"></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="season_select" class="col-sm-2 control-label">Season</label>
+      <div class="col-sm-7">
+        <select name="season_select" id="season_select" class="form-control">
+        {%- for season in seasons %}
+          <option value="{{ season.id }}">{{ season.name }}</option>
         {%- endfor %}
-      </select>
-
-    <table>
-      <tr>
-        <td align="center">Old Handicap:
-        <td><input size="5" name="oldHandicap" id="oldHandicap" type="text" value="{{ '' }}"/>
-      <tr>
-        <td align="center">New Handicap:
-        <td><input size="5" name="newHandicap" id="newHandicap" type="text" value="{{ '' }}"/>
-    </table>
-    
-    <p>Explanation: <input style="text-align: left;" size="100" name="comment" id="comment" type="text" value="{{ '' }}"/>
-
-    <p>
-      <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
-      <input type="submit" value="Submit"/>
-    </p>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="player_select" class="col-sm-2 control-label">Player</label>
+      <div class="col-sm-7">
+        <select name="player_select" id="player_select" class="form-control" value="-1"
+            onchange="setHandicap('player_select', 'oldHandicap', 'newHandicap');">
+        {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
+        {{ player.firstName }} {{ player.lastName }}
+          </option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="oldHandicap" class="col-sm-2 control-label">Old Handicap</label>
+      <div class="col-sm-7">
+        <input type="text" name="oldHandicap" id="oldHandicap" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="newHandicap" class="col-sm-2 control-label">New Handicap</label>
+      <div class="col-sm-7">
+        <input type="text" name="newHandicap" id="newHandicap" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="comment" class="col-sm-2 control-label">Explanation</label>
+      <div class="col-sm-7">
+        <input type="text" name="comment" id="comment" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
   {%- elif error_messages %}
   <h3>
