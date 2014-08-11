@@ -16,25 +16,35 @@
   {%- if display_form %}
   <h3>Carry Player(s) Forward</h3>
   <hr/>
-  <form id="carryPlayerForm" action="/admin/carryPlayer/" method="post">
 
-  <p>Season: <select name="season_select" id="season_select">
-    {%- for season in seasons %}
-    <option value="{{ season.id }}">{{ season.name }}</option>
-    {%- endfor %}
-    </select>
-  </p>
-
-  <p>Choose player(s) to carry forward:
-    {%- for player in players %}
-      <br>&nbsp;<input type="checkbox" name="Carry_{{ player.id  }}" value="{{ player.id }}">{{ player.firstName }} {{ player.lastName }}
-    {%- endfor %}
-  </p>
-  
-  <p>
-    <input type="button" value="Cancel" onclick="window.location.href='/admin/'"/>
-    <input type="submit" value="Submit"/>
-  </p>
+  <form action="/admin/carryPlayer/" method="post" id="carryPlayerForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="season_select" class="col-sm-2 control-label">Season</label>
+      <div class="col-sm-7">
+        <select name="season_select" id="season_select" class="form-control">
+        {%- for season in seasons %}
+          <option value="{{ season.id }}">{{ season.name }}</option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Players</label>
+      <div class="col-sm-7">
+        {%- for player in players %}
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="Carry_{{ player.id  }}" value="{{ player.id }}">{{ player.firstName }} {{ player.lastName }}
+          </label>
+        </div>
+        {%- endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
   </form>
   {%- elif error_messages %}
   <h3>
