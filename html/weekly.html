@@ -11,7 +11,7 @@
     {{ matchDate|datetimeformat('%b %d, %Y') }}
   </h2>
 
-  <table class="tablesorter weekly" id="weekly">
+  <table class="table table-hover table-condensed">
     <thead>
       <tr>
         <th class="hdr num">#</th>
@@ -27,7 +27,7 @@
     <tbody>
     {%- for entry in match_details %}
       <tr class="{{ entry.alternate_class }}">
-        <td style="vertical-align:middle" class="center" rowspan="2">{{ entry.seq }}</td>
+        <td style="vertical-align:middle" rowspan="2">{{ entry.seq }}</td>
         
         <td class="center">W</td>
         <td class="left">{{ entry.playerW.firstName }} {{ entry.playerW.lastName }}</td>
@@ -40,9 +40,9 @@
       
       <tr class="{{ entry.alternate_class }}">
         {%- if entry.forfeited %}
-          <td class="center">F</td>
+          <td>F</td>
         {%- else %}
-          <td class="center">L</td>
+          <td>L</td>
         {%- endif %}
         <td class="left">{{ entry.playerL.firstName }} {{ entry.playerL.lastName }}</td>
         <td class="right">{{ entry.handicapL }}</td>
