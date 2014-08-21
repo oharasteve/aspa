@@ -32,32 +32,32 @@
     <table class="table table-condensed">
       <thead>
         <tr>
-          <th>First</th>
-          <th>Last</th>
-          <th>H'cap</th>
-          <th>Won</th>
-          <th>Lost</th>
-          <th>Forfeits</th>
-          <th>Win %</th>
-          <th>Points</th>
-          <th>High Run</th>
-          <th>Target</th>
-          <th>% Goal</th>
+          <th class="text-left">First</th>
+          <th class="text-left">Last</th>
+          <th class="text-center">H'cap</th>
+          <th class="text-center">Won</th>
+          <th class="text-center">Lost</th>
+          <th class="text-center">Forfeits</th>
+          <th class="text-center">Win %</th>
+          <th class="text-center">Points</th>
+          <th class="text-center">High Run</th>
+          <th class="text-center">Target</th>
+          <th class="text-center">% Goal</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ player.firstName }}</td>
-          <td>{{ player.lastName }}</td>
-          <td>{{ summary.handicap }}</td>
-          <td>{{ summary.wins }}</td>
-          <td>{{ summary.losses }}</td>
-          <td>{{ summary.forfeits }}</td>
-          <td>{{ summary.pct }}</td>
-          <td>{{ summary.points }}</td>
-          <td>{{ summary.highRun }}</td>
-          <td>{{ summary.highRunTarget }}</td>
-          <td>{{ summary.goal }}</td>
+          <td class="text-left">{{ player.firstName }}</td>
+          <td class="text-left">{{ player.lastName }}</td>
+          <td class="text-center">{{ summary.handicap }}</td>
+          <td class="text-center">{{ summary.wins }}</td>
+          <td class="text-center">{{ summary.losses }}</td>
+          <td class="text-center">{{ summary.forfeits }}</td>
+          <td class="text-center">{{ summary.pct }}</td>
+          <td class="text-center">{{ summary.points }}</td>
+          <td class="text-center">{{ summary.highRun }}</td>
+          <td class="text-center">{{ summary.highRunTarget }}</td>
+          <td class="text-center">{{ summary.goal }}</td>
         </tr>
       </tbody>
     </table>
@@ -66,20 +66,20 @@
     <table id="player-summary" class="table table-hover table-condensed sortable-table">
       <thead>
         <tr>
-          <th class="sortable-header">Date</th>
-          <th class="sortable-header">Result</th>
-          <th class="sortable-header">H'cap</th>
-          <th class="sortable-header">Points</th>
-          <th class="sortable-header">Target</th>
-          <th class="sortable-header">High Run</th>
-          <th class="sortable-header">Win By</th>
-          <th class="sortable-header">Lose By</th>
-          <th>First</th>
-          <th>Last</th>
-          <th class="sortable-header">H'cap</th>
-          <th class="sortable-header">Points</th>
-          <th class="sortable-header">Target</th>
-          <th class="sortable-header">High Run</th>
+          <th class="sortable-header text-left">Date</th>
+          <th class="sortable-header text-left">Result</th>
+          <th class="sortable-header text-center">H'cap</th>
+          <th class="sortable-header text-center">Points</th>
+          <th class="sortable-header text-center">Target</th>
+          <th class="sortable-header text-center">High Run</th>
+          <th class="sortable-header text-center">Win By</th>
+          <th class="sortable-header text-center">Lose By</th>
+          <th class="text-left">First</th>
+          <th class="text-left">Last</th>
+          <th class="sortable-header text-center">H'cap</th>
+          <th class="sortable-header text-center">Points</th>
+          <th class="sortable-header text-center">Target</th>
+          <th class="sortable-header text-center">High Run</th>
         </tr>
       </thead>
       <tbody>
@@ -88,20 +88,20 @@
           <!--
           <td>{{ entry.entry_index }}</td>
           -->
-          <td><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
-          <td>{{ entry.result }}</td>
-          <td>{{ entry.player.handicap }}</td>
-          <td>{{ entry.player.score }}</td>
-          <td>{{ entry.player.target }}</td>
-          <td>{{ entry.player.highRun }}</td>
-          <td>{{ entry.win_mgn }}</td>
-          <td>{{ entry.lose_mgn }}</td>
-          <td><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
-          <td><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
-          <td>{{ entry.opponent.handicap }}</td>
-          <td>{{ entry.opponent.score }}</td>
-          <td>{{ entry.opponent.target }}</td>
-          <td>{{ entry.opponent.highRun }}</td>
+          <td class="text-left"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
+          <td class="text-left">{{ entry.result }}</td>
+          <td class="text-center">{{ entry.player.handicap }}</td>
+          <td class="text-center">{{ entry.player.score }}</td>
+          <td class="text-center">{{ entry.player.target }}</td>
+          <td class="text-center">{{ entry.player.highRun }}</td>
+          <td class="text-center">{{ entry.win_mgn }}</td>
+          <td class="text-center">{{ entry.lose_mgn }}</td>
+          <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
+          <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
+          <td class="text-center">{{ entry.opponent.handicap }}</td>
+          <td class="text-center">{{ entry.opponent.score }}</td>
+          <td class="text-center">{{ entry.opponent.target }}</td>
+          <td class="text-center">{{ entry.opponent.highRun }}</td>
         </tr>
       {%- endfor %}
       </tbody>

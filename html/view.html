@@ -28,35 +28,35 @@
   <table id="players-summary" class="table table-hover table-condensed sortable-table">
     <thead>
       <tr>
-        <th class="sortable-header">Seq</th>
-        <th>First</th>
-        <th>Last</th>
-        <th class="sortable-header">H'cap</th>
-        <th class="sortable-header">Won</th>
-        <th class="sortable-header">Lost</th>
-        <th class="sortable-header">Forfeits</th>
-        <th class="sortable-header">Win %</th>
-        <th class="sortable-header">Points</th>
-        <th class="sortable-header">High Run</th>
-        <th class="sortable-header">Target</th>
-        <th class="sortable-header">% Goal</th>
+        <th class="sortable-header text-center">Seq</th>
+        <th class="text-left">First</th>
+        <th class="text-left">Last</th>
+        <th class="sortable-header text-center">H'cap</th>
+        <th class="sortable-header text-center">Won</th>
+        <th class="sortable-header text-center">Lost</th>
+        <th class="sortable-header text-center">Forfeits</th>
+        <th class="sortable-header text-center">Win %</th>
+        <th class="sortable-header text-center">Points</th>
+        <th class="sortable-header text-center">High Run</th>
+        <th class="sortable-header text-center">Target</th>
+        <th class="sortable-header text-center">% Goal</th>
       </tr>
     </thead>
     <tbody>
     {% for entry in player_summaries %}
       <tr>
-        <td><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
-        <td><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
-        <td><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>
-        <td>{{ entry.summary.handicap }}</td>
-        <td>{{ entry.summary.wins }}</td>
-        <td>{{ entry.summary.losses }}</td>
-        <td>{{ entry.summary.forfeits }}</td>
-        <td>{{ '%.2f' % entry.summary.pct }}</td>
-        <td>{{ '%.6f' % entry.summary.points }}</td>
-        <td>{{ entry.summary.highRun }}</td>
-        <td>{{ '%.2f' % entry.summary.highRunTarget }}</td>
-        <td>{{ '%.2f' % entry.summary.goal }}</td>
+        <td class="text-center"><a href="{{ entry.details_page_url }}">{{ entry.entry_index }}</a></td>
+        <td class="text-left"><a href="{{ entry.details_page_url }}">{{ entry.player.firstName }}</a></td>
+        <td class="text-left"><a href="{{ entry.details_page_url }}">{{ entry.player.lastName }}</a></td>
+        <td class="text-center">{{ entry.summary.handicap }}</td>
+        <td class="text-center">{{ entry.summary.wins }}</td>
+        <td class="text-center">{{ entry.summary.losses }}</td>
+        <td class="text-center">{{ entry.summary.forfeits }}</td>
+        <td class="text-center">{{ '%.2f' % entry.summary.pct }}</td>
+        <td class="text-center">{{ '%.6f' % entry.summary.points }}</td>
+        <td class="text-center">{{ entry.summary.highRun }}</td>
+        <td class="text-center">{{ '%.2f' % entry.summary.highRunTarget }}</td>
+        <td class="text-center">{{ '%.2f' % entry.summary.goal }}</td>
       </tr>
     {%- endfor %}
     </tbody>
