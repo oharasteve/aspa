@@ -25,7 +25,7 @@ from data import stats
 
 TEMPLATE = 'html/carry_player.html'
 
-class CarryPersonHandler(base_handler.BaseHandler):
+class CarryPlayerHandler(base_handler.BaseHandler):
     def post(self):
         context = {
             'seasons': seasons.Season.getSeasons(),
@@ -73,6 +73,6 @@ class CarryPersonHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', CarryPersonHandler)],
+app = webapp2.WSGIApplication([(r'/.*', CarryPlayerHandler)],
     debug=True,
     config=base_handler.CONFIG)

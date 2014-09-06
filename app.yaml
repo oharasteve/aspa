@@ -22,37 +22,16 @@ handlers:
   static_dir: stylesheets
 
 - url: /admin
-  script: admin.app
+  script: admin.admin.app
 
 - url: /admin/
-  script: admin.app
+  script: admin.admin.app
 
-- url: /admin/addClub/
-  script: addClub.app
+- url: /admin/upload
+  script: admin.saveResults.app
 
-- url: /admin/addSeason/
-  script: addSeason.app
-
-- url: /admin/addSeasonResult/
-  script: addSeasonResult.app
-
-- url: /admin/addPlayer/
-  script: addPerson.app
-
-- url: /admin/addMatch/
-  script: addMatch.app
-
-- url: /admin/deleteMatch/
-  script: deleteMatch.app
-
-- url: /admin/suggestMatch/
-  script: suggestMatch.app
-
-- url: /admin/adjustHandicap/
-  script: adjustHandicap.app
-
-- url: /admin/carryPlayer/
-  script: carryPerson.app
+- url: /admin/(.*)/
+  script: admin.\1.app
 
 - url: /details/.*
   script: details.app
@@ -60,14 +39,8 @@ handlers:
 - url: /weekly/.*
   script: weekly.app
   
-- url: /admin/upload
-  script: saveResults.app
-  
 - url: /showResults/.*
   script: showResults.app
-  
-- url: /admin/saveResults/
-  script: saveResults.app
   
 - url: /
   script: view.app

@@ -25,7 +25,7 @@ from data import stats
 
 TEMPLATE = 'html/add_player.html'
 
-class AddPersonHandler(base_handler.BaseHandler):
+class AddPlayerHandler(base_handler.BaseHandler):
     def post(self):
         context = {
             'seasons': seasons.Season.getSeasons(),
@@ -95,6 +95,6 @@ class AddPersonHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AddPersonHandler)],
+app = webapp2.WSGIApplication([(r'/.*', AddPlayerHandler)],
     debug=True,
     config=base_handler.CONFIG)
