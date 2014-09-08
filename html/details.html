@@ -32,8 +32,7 @@
     <table class="table table-condensed">
       <thead>
         <tr>
-          <th class="text-left">First</th>
-          <th class="text-left">Last</th>
+          <th class="text-left">Name</th>
           <th class="text-center">H'cap</th>
           <th class="text-center">Won</th>
           <th class="text-center">Lost</th>
@@ -47,17 +46,16 @@
       </thead>
       <tbody>
         <tr>
-          <td class="text-left">{{ player.firstName }}</td>
-          <td class="text-left">{{ player.lastName }}</td>
+          <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
           <td class="text-center">{{ summary.handicap }}</td>
           <td class="text-center">{{ summary.wins }}</td>
           <td class="text-center">{{ summary.losses }}</td>
           <td class="text-center">{{ summary.forfeits }}</td>
-          <td class="text-center">{{ summary.pct }}</td>
-          <td class="text-center">{{ summary.points }}</td>
+          <td class="text-center">{{ '%.2f' % summary.pct }}</td>
+          <td class="text-center">{{ '%.6f' % summary.points }}</td>
           <td class="text-center">{{ summary.highRun }}</td>
-          <td class="text-center">{{ summary.highRunTarget }}</td>
-          <td class="text-center">{{ summary.goal }}</td>
+          <td class="text-center">{{ '%.2f' % summary.highRunTarget }}</td>
+          <td class="text-center">{{ '%.2f' % summary.goal }}</td>
         </tr>
       </tbody>
     </table>
@@ -67,18 +65,15 @@
       <thead>
         <tr>
           <th class="sortable-header text-left">Date</th>
-          <th class="sortable-header text-left">Result</th>
+          <th class="sortable-header text-center">Result</th>
           <th class="sortable-header text-center">H'cap</th>
-          <th class="sortable-header text-center">Points</th>
-          <th class="sortable-header text-center">Target</th>
+          <th class="sortable-header text-center">Score</th>
           <th class="sortable-header text-center">High Run</th>
           <th class="sortable-header text-center">Win By</th>
           <th class="sortable-header text-center">Lose By</th>
-          <th class="text-left">First</th>
-          <th class="text-left">Last</th>
+          <th class="text-left">Opponent</th>
           <th class="sortable-header text-center">H'cap</th>
-          <th class="sortable-header text-center">Points</th>
-          <th class="sortable-header text-center">Target</th>
+          <th class="sortable-header text-center">Score</th>
           <th class="sortable-header text-center">High Run</th>
         </tr>
       </thead>
@@ -89,18 +84,16 @@
           <td>{{ entry.entry_index }}</td>
           -->
           <td class="text-left"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
-          <td class="text-left">{{ entry.result }}</td>
+          <td class="text-center">{{ entry.result }}</td>
           <td class="text-center">{{ entry.player.handicap }}</td>
-          <td class="text-center">{{ entry.player.score }}</td>
-          <td class="text-center">{{ entry.player.target }}</td>
+          <td class="text-center">{{ entry.player.score }} / {{ entry.player.target }}</td>
           <td class="text-center">{{ entry.player.highRun }}</td>
           <td class="text-center">{{ entry.win_mgn }}</td>
           <td class="text-center">{{ entry.lose_mgn }}</td>
-          <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.firstName }}</a></td>
-          <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">{{ entry.opponent.player_obj.lastName }}</a></td>
+          <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">
+              {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}</a></td>
           <td class="text-center">{{ entry.opponent.handicap }}</td>
-          <td class="text-center">{{ entry.opponent.score }}</td>
-          <td class="text-center">{{ entry.opponent.target }}</td>
+          <td class="text-center">{{ entry.opponent.score }} /  {{ entry.opponent.target }}</td>
           <td class="text-center">{{ entry.opponent.highRun }}</td>
         </tr>
       {%- endfor %}

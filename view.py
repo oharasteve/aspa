@@ -8,6 +8,7 @@ import logging
 import webapp2
 
 from data import players
+from data import matches
 from data import seasons
 from data import stats
 
@@ -40,12 +41,13 @@ class View():
         player_summaries = []
         if season:
             seq = 0
+            matchCount = 0
             summaries = stats.PlayerSummary.query(stats.PlayerSummary.season
-                    == season.key).order( -stats.PlayerSummary.wins).order(
-                            stats.PlayerSummary.losses)
+                    == season.key).order( -stats.PlayerSummary.points)
             for summary in summaries:
                 player = players.Player.get_by_id(summary.player.id())
                 seq += 1
+                matchCount += summary.wins
 
                 player_summary = {
                     'entry_index': seq,
@@ -58,6 +60,10 @@ class View():
                     'season': season,
                     }
                 player_summaries.append(player_summary)
+
+            weekCount = matches.Match.query(
+                matches.Match.season == season.key, projection=["date"], distinct=True).count()
+            
         logging.debug('Found %d player summary records.' % (
             len(player_summaries)))
 
@@ -65,5 +71,7 @@ class View():
                 'seasonList': seasons.Season.getSeasons(),
                 'season': season,
                 'player_summaries': player_summaries,
+                'weeks': weekCount,
+                'matches': matchCount,
                 }
         return context

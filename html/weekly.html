@@ -14,42 +14,42 @@
   <table class="table table-hover table-condensed">
     <thead>
       <tr>
-        <th class="hdr num">#</th>
-        <th class="hdr">W/L</th>
-        <th class="hdr">Player</th>
-        <th class="hdr num">H'cap</th>
-        <th class="hdr num">Race</th>
-        <th class="hdr num">Score</th>
-        <th class="hdr num">Margin</th>
-        <th class="hdr num">High Run</th>
+        <th class="text-center">Match</th>
+        <th class="text-center">W/L</th>
+        <th class="text-left">Player</th>
+        <th class="text-center">H'cap</th>
+        <th class="text-center">Race</th>
+        <th class="text-center">Score</th>
+        <th class="text-center">Margin</th>
+        <th class="text-center">High Run</th>
       </tr>
     </thead>
     <tbody>
     {%- for entry in match_details %}
-      <tr class="{{ entry.alternate_class }}">
-        <td style="vertical-align:middle" rowspan="2">{{ entry.seq }}</td>
+      <tr>
+        <td class="text-center" style="vertical-align: middle" rowspan="2">{{ entry.seq }}</td>
         
-        <td class="center">W</td>
-        <td class="left">{{ entry.playerW.firstName }} {{ entry.playerW.lastName }}</td>
-        <td class="right">{{ entry.handicapW }}</td>
-        <td class="right">{{ entry.targetW }}</td>
-        <td class="right">{{ entry.scoreW }}</td>
+        <td class="text-center">W</td>
+        <td class="text-left">{{ entry.playerW.firstName }} {{ entry.playerW.lastName }}</td>
+        <td class="text-center">{{ entry.handicapW }}</td>
+        <td class="text-center">{{ entry.targetW }}</td>
+        <td class="text-center">{{ entry.scoreW }}</td>
         <td>&nbsp;</td>
-        <td class="right">{{ entry.highRunW }}</td>
+        <td class="text-center">{{ entry.highRunW }}</td>
       </tr>
       
-      <tr class="{{ entry.alternate_class }}">
+      <tr>
         {%- if entry.forfeited %}
-          <td>F</td>
+          <td class="text-center">F</td>
         {%- else %}
-          <td>L</td>
+          <td class="text-center">L</td>
         {%- endif %}
-        <td class="left">{{ entry.playerL.firstName }} {{ entry.playerL.lastName }}</td>
-        <td class="right">{{ entry.handicapL }}</td>
-        <td class="right">{{ entry.targetL }}</td>
-        <td class="right">{{ entry.scoreL }}</td>
-        <td class="right">{{ entry.margin }}</td>
-        <td class="right">{{ entry.highRunL }}</td>
+        <td class="text-left">{{ entry.playerL.firstName }} {{ entry.playerL.lastName }}</td>
+        <td class="text-center">{{ entry.handicapL }}</td>
+        <td class="text-center">{{ entry.targetL }}</td>
+        <td class="text-center">{{ entry.scoreL }}</td>
+        <td class="text-center">{{ entry.margin }}</td>
+        <td class="text-center">{{ entry.highRunL }}</td>
       </tr>
     {%- endfor %}
 
