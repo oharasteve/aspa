@@ -33,6 +33,8 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         xname = self.request.get('player_select')
         xhcapOld = self.request.get('oldHandicap')
         xhcapNew = self.request.get('newHandicap')
+        xhrtOld = self.request.get('oldHighRunTarget')
+        xhrtNew = self.request.get('newHighRunTarget')
         comment = self.request.get('comment')
 
         error_messages = []
@@ -51,6 +53,8 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
 
         hcapOld = int(xhcapOld)
         hcapNew = int(xhcapNew)
+        hrtOld = float(xhrtOld)
+        hrtNew = float(xhrtNew)
 
         if not len(error_messages):
             adjustment = adjustments.Adjustment()
@@ -59,6 +63,8 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             adjustment.player = player.key
             adjustment.oldHandicap = hcapOld
             adjustment.newHandicap = hcapNew
+            adjustment.oldHighRunTarget = hrtOld
+            adjustment.newHighRunTarget = hrtNew
             adjustment.comment = comment
             adjustment.put()
 
@@ -66,6 +72,7 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             playerStats = stats.PlayerSummary.query(
                 ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).fetch(1)[0]
             playerStats.handicap = hcapNew
+            playerStats.highRunTarget = hrtNew
             playerStats.put()
         
         context = {

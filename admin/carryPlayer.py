@@ -22,6 +22,7 @@ import webapp2
 from data import players
 from data import seasons
 from data import stats
+import highRun
 
 TEMPLATE = 'html/carry_player.html'
 
@@ -35,6 +36,7 @@ class CarryPlayerHandler(base_handler.BaseHandler):
 
         error_messages = []
         season = seasons.Season.get_by_id(context['seasonName'])
+        additions = []
         
         for playerId in players.Player.getPlayers():
             checkbox = self.request.get('Carry_' + playerId['id'])
@@ -52,15 +54,20 @@ class CarryPlayerHandler(base_handler.BaseHandler):
                     newStat.player = oldStat.player
                     newStat.season = season.key
                     newStat.handicap = oldStat.handicap
-                    newStat.highRunTarget = oldStat.highRunTarget
+                    newStat.highRunTarget = highRun.getHighRunTarget(oldStat.handicap)
                     newStat.wins = 0
                     newStat.forfeits = 0
                     newStat.losses = 0
                     newStat.highRun = 0
                     newStat.put()
+                    
+                    additions.append("%s %s (%d, %.2f)" %
+                        (player.firstName, player.lastName, newStat.handicap, newStat.highRunTarget))
 
         if len(error_messages) > 0:
             context['error_messages'] = error_messages
+        else:
+            context['additions'] = additions
 
         self.render_response(TEMPLATE, **context)
 

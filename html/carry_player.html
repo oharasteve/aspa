@@ -34,7 +34,8 @@
         {%- for player in players %}
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="Carry_{{ player.id  }}" value="{{ player.id }}">{{ player.firstName }} {{ player.lastName }}
+            <input type="checkbox" name="Carry_{{ player.id  }}" value="{{ player.id }}">
+              {{ player.firstName }} {{ player.lastName }}
           </label>
         </div>
         {%- endfor %}
@@ -58,6 +59,12 @@
   </h3>
   {%- else %}
   <h3>Successfully carried player(s) forward.</h3>
+    <p>Player (handicap, high run target)</p>
+    <ul>
+    {%- for addition in additions %}
+    <li>{{ addition }}</li>
+    {%- endfor %}
+    </ul>
   <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}

@@ -2,10 +2,13 @@
 {%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
 {%- block head %}
   {{ super() }}
+  <script src="/js/high_run.js"></script>
   <script>
   var handicaps = [];
+  var highruns = [];
   {%- for stat in player_summaries %}
     handicaps['{{ stat.player.id }}'] = {{ stat.handicap }};
+    highruns['{{ stat.player.id }}'] = {{ stat.highRunTarget }};
   {%- endfor %}
 
   function setHandicap(selectName, inputName1, inputName2) {
@@ -19,6 +22,19 @@
     }
     inputElement1.value = handicaps[selectElement.value];
     inputElement2.value = handicaps[selectElement.value];
+  }
+
+  function setHighRun(selectName, inputName1, inputName2) {
+    var inputElement1 = document.getElementById(inputName1);
+    var inputElement2 = document.getElementById(inputName2);
+    var selectElement = document.getElementById(selectName);
+    if (!inputElement1 || !inputElement2 || !selectElement) {
+      inputElement1.value = "";
+      inputElement2.value = "";
+      return;
+    }
+    inputElement1.value = highruns[selectElement.value];
+    inputElement2.value = highruns[selectElement.value];
   }
 
   $().ready(function() {
@@ -35,6 +51,16 @@
           required: true,
           number: true,
           range: [100, 1000]
+        },
+        oldHighRunTarget: {
+          required: true,
+          number: true,
+          range: [0, 150]
+        },
+        newHighRunTarget: {
+          required: true,
+          number: true,
+          range: [0, 150]
         },
         comment: {
           required: true
@@ -63,13 +89,11 @@
   <form action="/admin/adjustHandicap/" method="post" id="adjustHandicapForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="todays_date" class="col-sm-2 control-label">Date</label>
-      <div class="col-sm-7">
+      <div class="col-sm-2">
         <input name="todays_date" id="todays_date" class="form-control" value="{{ todays_date }}"></input>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="season_select" class="col-sm-2 control-label">Season</label>
-      <div class="col-sm-7">
+      <label for="season_select" class="col-sm-3 control-label">Season</label>
+      <div class="col-sm-2">
         <select name="season_select" id="season_select" class="form-control">
         {%- for season in seasons %}
           <option value="{{ season.id }}">{{ season.name }}</option>
@@ -81,7 +105,7 @@
       <label for="player_select" class="col-sm-2 control-label">Player</label>
       <div class="col-sm-7">
         <select name="player_select" id="player_select" class="form-control" value="-1"
-            onchange="setHandicap('player_select', 'oldHandicap', 'newHandicap');">
+            onchange="setHandicap('player_select', 'oldHandicap', 'newHandicap'); setHighRun('player_select', 'oldHighRunTarget', 'newHighRunTarget');">
         {%- for player in players %}
           <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
         {{ player.firstName }} {{ player.lastName }}
@@ -92,14 +116,23 @@
     </div>
     <div class="form-group">
       <label for="oldHandicap" class="col-sm-2 control-label">Old Handicap</label>
-      <div class="col-sm-7">
+      <div class="col-sm-2">
         <input type="text" name="oldHandicap" id="oldHandicap" class="form-control" value="{{ '' }}"/>
+      </div>
+      <label for="oldHighRunTarget" class="col-sm-3 control-label">Old High Run Target</label>
+      <div class="col-sm-2">
+        <input type="text" name="oldHighRunTarget" id="oldHighRunTarget" class="form-control" value="{{ '' }}"/>
       </div>
     </div>
     <div class="form-group">
       <label for="newHandicap" class="col-sm-2 control-label">New Handicap</label>
-      <div class="col-sm-7">
-        <input type="text" name="newHandicap" id="newHandicap" class="form-control" value="{{ '' }}"/>
+      <div class="col-sm-2">
+        <input type="text" name="newHandicap" id="newHandicap" class="form-control" value="{{ '' }}"
+            onchange="setHighRunTarget('newHandicap','newHighRunTarget');"/>
+      </div>
+      <label for="newHighRunTarget" class="col-sm-3 control-label">New High Run Target</label>
+      <div class="col-sm-2">
+        <input type="text" name="newHighRunTarget" id="newHighRunTarget" class="form-control" value="{{ '' }}"/>
       </div>
     </div>
     <div class="form-group">
@@ -125,7 +158,8 @@
     </font>
   </h3>
   {%- else %}
-  <h3>Successfully adjusted handicap: {{ 'player.firstName' }} {{ 'player.lastName' }} ({{ 'adjustments.newHandicap' }})</h3>
+  <h3>Successfully adjusted handicap: {{ 'player.firstName' }} {{ 'player.lastName' }}
+    ({{ 'adjustments.newHandicap' }}, {{ 'adjustments.newHighRunTarget' }})</h3>
   <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}
