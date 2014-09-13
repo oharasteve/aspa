@@ -33,7 +33,7 @@ function getHighRunTarget(handicap) {
     prev_handicap = highRuns[i-1][0];
     prev_target = highRuns[i-1][1];
   }
-  var scale = (highRuns[i][0] - prev_handicap) / (highRuns[i][1] - prev_target);
+  var scale = ((float)highRuns[i][0] - prev_handicap) / (highRuns[i][1] - prev_target);
   return Math.round(prev_target + (handicap - prev_handicap) / scale);
 }
 
