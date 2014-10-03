@@ -29,6 +29,9 @@ class Match(ndb.Model):
     scoreL = ndb.IntegerProperty()
     targetL = ndb.IntegerProperty()
     highRunL = ndb.IntegerProperty()
+    
+    video1 = ndb.StringProperty()
+    video2 = ndb.StringProperty()
 
 
 def match_util(match):
@@ -48,7 +51,7 @@ def match_util(match):
             'score': match.scoreW,
             'target': match.targetW,
             'highRun': match.highRunW,
-            },
+        },
         'loser': {
             'player': match.playerL,
             'player_id': match.playerL.id(),
@@ -56,5 +59,7 @@ def match_util(match):
             'score': match.scoreL,
             'target': match.targetL,
             'highRun': match.highRunL,
-            },
-        }
+        },
+        'video1': match.video1,
+        'video2': match.video2,
+    }

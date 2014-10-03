@@ -85,6 +85,7 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
           'season_selected': season.key,
           'player_selectedIndex': -1,
           'display_form': True,
+          'error_messages': error_messages,
         }
         self.render_response(TEMPLATE, **context)
 

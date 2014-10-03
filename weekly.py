@@ -34,16 +34,14 @@ app = webapp2.WSGIApplication([(r'/weekly/', WeeklyHandler)],
 class Weekly():
     def get_context(self, matchDate, month, day, year):
         match_details = []
-        seq = 0
         weekly_matches = matches.Match.query(
             matches.Match.date == matchDate).order(matches.Match.seq)
         for match in weekly_matches:
-            seq += 1
             playerW = players.Player.get_by_id(match.playerW.id())
             playerL = players.Player.get_by_id(match.playerL.id())
 
             match_summary = {
-                'seq': seq,
+                'seq': match.seq,
                 'playerW': playerW,
                 'handicapW': match.handicapW,
                 'scoreW': match.scoreW,
@@ -56,14 +54,16 @@ class Weekly():
                 'targetL': match.targetL,
                 'highRunL': match.highRunL,
                 'margin': match.targetL - match.scoreL,
+                'video1': match.video1,
+                'video2': match.video2,
             }
             match_details.append(match_summary)
 
         # See if the pdf image is available
         blob_query = blobstore.BlobInfo.all()
         pdf_key = None
-        # Use CJ's naming convention
-        pdf_name = 'LSB Straight %d-%d-%d.pdf' % (month, day, (year if year < 2000 else year - 2000))
+        # Use CJ's naming convention (two digit years, all data is 2010 or later)
+        pdf_name = 'LSB Straight %d-%d-%d.pdf' % (month, day, (year % 100))
         pdf_blob = blob_query.filter('filename =', pdf_name).get()
         if pdf_blob:
           pdf_key = pdf_blob.key()

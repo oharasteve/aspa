@@ -25,60 +25,65 @@ class AdminHandler(base_handler.BaseHandler):
     def get(self):
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
-                'season': season.key,
-                'choices': [
-                    {
-                        'url': '/admin/suggestMatch/',
-                        'description': 'Suggest Match Targets',
-                        'help': 'help choose race',
-                        },
-                    {
-                        'url': '/admin/addMatch/',
-                        'description': 'Add Match Results',
-                        'help': 'once a week',
-                        },
-                    {
-                        'url': '/admin/saveResults/',
-                        'description': 'Upload Weekly Results',
-                        'help': 'once a week',
-                        },
-                    {
-                        'url': '/admin/addPlayer/',
-                        'description': 'Add New Player',
-                        'help': 'brand new players only',
-                        },
-                    {
-                        'url': '/admin/addSeason/',
-                        'description': 'Add New Season',
-                        'help': 'once per season',
-                        },
-                    {
-                        'url': '/admin/addSeasonResult/',
-                        'description': 'Add Season Result',
-                        'help': 'season totals from a pre-2014 season',
-                        },
-                    {
-                        'url': '/admin/addClub/',
-                        'description': 'Add New Club',
-                        'help': 'not needed yet',
-                        },
-                    {
-                        'url': '/admin/adjustHandicap/',
-                        'description': 'Adjust Player Handicap',
-                        'help': 'League Manager only',
-                        },
-                    {
-                        'url': '/admin/deleteMatch/',
-                        'description': 'Delete Match Result',
-                        'help': 'Rarely needed (hopefully)',
-                        },
-                    {
-                        'url': '/admin/carryPlayer/',
-                        'description': 'Carry Player Forward',
-                        'help': 'from previous season',
-                        },
-                    ],
-                }
+            'season': season.key,
+            'choices': [
+                {
+                    'url': '/admin/suggestMatch/',
+                    'description': 'Suggest Match Targets',
+                    'help': 'help choose race',
+                },
+                {
+                    'url': '/admin/addMatch/',
+                    'description': 'Add Match Results',
+                    'help': 'once a week',
+                },
+                {
+                    'url': '/admin/saveResults/',
+                    'description': 'Upload Weekly Results',
+                    'help': 'once a week',
+                },
+                {
+                    'url': '/admin/addPlayer/',
+                    'description': 'Add New Player',
+                    'help': 'brand new players only',
+                },
+                {
+                    'url': '/admin/addVideo/',
+                    'description': 'Add a Video',
+                    'help': 'from YouTube',
+                },
+                {
+                    'url': '/admin/addSeason/',
+                    'description': 'Add New Season',
+                    'help': 'once per season',
+                },
+                {
+                    'url': '/admin/addSeasonResult/',
+                    'description': 'Add Season Result',
+                    'help': 'season totals from a previous season',
+                },
+                {
+                    'url': '/admin/addClub/',
+                    'description': 'Add New Club',
+                    'help': 'not needed yet',
+                },
+                {
+                    'url': '/admin/adjustHandicap/',
+                    'description': 'Adjust Player Handicap',
+                    'help': 'League Manager only',
+                },
+                {
+                    'url': '/admin/deleteMatch/',
+                    'description': 'Delete Match Result',
+                    'help': 'Rarely needed (hopefully)',
+                },
+                {
+                    'url': '/admin/carryPlayer/',
+                    'description': 'Carry Player Forward',
+                    'help': 'from previous season',
+                },
+            ],
+        }
         self.render_response(TEMPLATE, **context)
 
 

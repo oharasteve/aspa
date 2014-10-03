@@ -22,6 +22,7 @@
         <th class="text-center">Score</th>
         <th class="text-center">Margin</th>
         <th class="text-center">High Run</th>
+        <th class="text-center">Video</th>
       </tr>
     </thead>
     <tbody>
@@ -36,6 +37,18 @@
         <td class="text-center">{{ entry.scoreW }}</td>
         <td>&nbsp;</td>
         <td class="text-center">{{ entry.highRunW }}</td>
+
+        <td class="text-center" style="vertical-align: middle" rowspan="2">
+        {%- if entry.video1 %}
+          {%- if entry.video2 %}
+            <a href="{{ entry.video1 }}" target="video">Part 1</a><br/><a href="{{ entry.video2 }}" target="video">Part 2</a>
+          {%- else %}
+            <a href="{{ entry.video1 }}" target="video">Video</a>
+          {%- endif %}
+        {%- else %}
+          &nbsp;
+        {%- endif %}
+        </td>
       </tr>
       
       <tr>

@@ -6,7 +6,7 @@
   $(document).ready(function() {
     $("#players-summary").tablesorter({
       sortList:[[7, 1]],  // sort by points descending
-      headers: { 0: { sorter: false} },
+      headers: { },
       widgets: ['zebra'],
       cssAsc: "header-sort-up",
       cssDesc: "header-sort-down"
@@ -29,7 +29,7 @@
     <thead>
       <tr>
         <th class="sortable-header text-center">Seq</th>
-        <th class="text-left">Name</th>
+        <th class="sortable-header text-left">Name</th>
         <th class="sortable-header text-center">H'cap</th>
         <th class="sortable-header text-center">Won</th>
         <th class="sortable-header text-center">Lost</th>

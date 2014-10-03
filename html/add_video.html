@@ -1,0 +1,97 @@
+{%- extends "/html/admin_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  $().ready(function() {
+    $("#addVideoForm").validate({
+      rules: {
+        season_select: "required",
+        seq: {
+          required: true,
+          number: true,
+          range: [1, 50]
+        },
+        video1: {
+          required: false
+        },
+        video2: {
+          required: false
+        },
+        date: {
+          required: true,
+          dateISO: true
+        }
+      }
+    });
+    
+  {%- if display_form %}
+    $(function() { $( "#date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
+    $('#season_select').val('{{ season_selected }}');
+  {%- endif %}
+  });
+  </script>
+{%- endblock %}
+{%- block admin_content %}
+  {%- if display_form %}
+  <h3>Add a Video</h3>
+  <hr/>
+
+  <form action="/admin/addVideo/" method="post" id="addVideoForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="date" class="col-sm-2 control-label">Date</label>
+      <div class="col-sm-2">
+        <input name="date" id="date" class="form-control" value="{{ date }}"></input>
+      </div>
+      <label for="season_select" class="col-sm-3 control-label">Season</label>
+      <div class="col-sm-2">
+        <select name="season_select" id="season_select" class="form-control">
+        {%- for season in seasons %}
+          <option value="{{ season.id }}">{{ season.name }}</option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="seq" class="col-sm-2 control-label">Seq</label>
+      <div class="col-sm-7">
+        <input type="number" name="seq" id="seq" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="video1" class="col-sm-2 control-label">Video 1</label>
+      <div class="col-sm-7">
+        <input type="text" name="video1" id="video1" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="video2" class="col-sm-2 control-label">Video2</label>
+      <div class="col-sm-7">
+        <input type="text" name="video2" id="video2" class="form-control" value="{{ '' }}"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to add video:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully added video for match: {{ 'match.seq' }}</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  {%- endif %}
+{%- endblock %}
