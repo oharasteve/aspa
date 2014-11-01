@@ -70,7 +70,9 @@ class Details():
                     '/details/?Season={0}&Player={1}'.format(
                         cgi.escape(season.key.id()),
                         cgi.escape(opponent['player'].id())),
-                    }
+                    'video1': match.video1,
+                    'video2': match.video2,
+            }
             entries.append(entry)
         return entries
 

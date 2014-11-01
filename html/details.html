@@ -75,6 +75,7 @@
           <th class="sortable-header text-center">H'cap</th>
           <th class="sortable-header text-center">Score</th>
           <th class="sortable-header text-center">High Run</th>
+          <th class="sortable-header text-center">Video</th>
         </tr>
       </thead>
       <tbody>
@@ -93,8 +94,20 @@
           <td class="text-left"><a href="{{ entry.opponent_details_page_url }}">
               {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}</a></td>
           <td class="text-center">{{ entry.opponent.handicap }}</td>
-          <td class="text-center">{{ entry.opponent.score }} /  {{ entry.opponent.target }}</td>
+          <td class="text-center">{{ entry.opponent.score }} / {{ entry.opponent.target }}</td>
           <td class="text-center">{{ entry.opponent.highRun }}</td>
+          
+          <td class="text-center" style="vertical-align: middle">
+          {%- if entry.video1 %}
+            {%- if entry.video2 %}
+              <a href="{{ entry.video1 }}" target="video">Part 1</a><br/><a href="{{ entry.video2 }}" target="video">Part 2</a>
+            {%- else %}
+              <a href="{{ entry.video1 }}" target="video">Video</a>
+            {%- endif %}
+          {%- else %}
+            &nbsp;
+          {%- endif %}
+          </td>
         </tr>
       {%- endfor %}
       </tbody>
