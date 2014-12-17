@@ -33,7 +33,6 @@ class Match(ndb.Model):
     video1 = ndb.StringProperty()
     video2 = ndb.StringProperty()
 
-
 def match_util(match):
     if not isinstance(match, Match):
         return None

@@ -11,7 +11,6 @@ from google.appengine.ext.webapp import blobstore_handlers
 
 class SaveHandler(webapp2.RequestHandler):
   def get(self):
-    logging.info('***************************** HERE *******************************')
     upload_url = blobstore.create_upload_url('/admin/upload')
     self.response.out.write('<html><body>')
     self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)

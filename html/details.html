@@ -6,7 +6,7 @@
   $(document).ready(function() {
     $("#player-summary").tablesorter({
       sortList:[[0,1]],  // sort by date ascending.
-      headers: { 8: { sorter: false}, 9: {sorter: false} },  // not allow sorting by name
+      headers: { },
       widgets: ['zebra'],
       cssAsc: "header-sort-up",
       cssDesc: "header-sort-down"
@@ -26,7 +26,11 @@
 {% endblock %}
 
 {% block content %}
-  <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h1>
+  <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h2>
+  {%- if player.photo %}
+    <p><img height="200" src="{{ player.photo }}" title={{ player.firstName }} {{ player.lastName }}/></p>
+  {%- endif %}
+
   <div>
     <h3>Overall</h3>
     <table class="table table-condensed">
@@ -96,7 +100,7 @@
           <td class="text-center">{{ entry.opponent.handicap }}</td>
           <td class="text-center">{{ entry.opponent.score }} / {{ entry.opponent.target }}</td>
           <td class="text-center">{{ entry.opponent.highRun }}</td>
-          
+
           <td class="text-center" style="vertical-align: middle">
           {%- if entry.video1 %}
             {%- if entry.video2 %}

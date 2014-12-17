@@ -9,6 +9,7 @@ class Player(ndb.Model):
     firstName = ndb.StringProperty()
     lastName = ndb.StringProperty()
     phone = ndb.StringProperty()
+    photo = ndb.BlobProperty()
 
     @classmethod
     def getPlayers(self):

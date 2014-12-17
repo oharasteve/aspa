@@ -53,6 +53,11 @@ class AdminHandler(base_handler.BaseHandler):
                     'help': 'from YouTube',
                 },
                 {
+                    'url': '/admin/addPhoto/',
+                    'description': 'Add a Photo',
+                    'help': 'one photo per person',
+                },
+                {
                     'url': '/admin/addSeason/',
                     'description': 'Add New Season',
                     'help': 'once per season',
