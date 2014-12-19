@@ -23,15 +23,19 @@ handlers:
 
 - url: /admin
   script: admin.admin.app
+  login: admin
 
 - url: /admin/
   script: admin.admin.app
+  login: admin
 
 - url: /admin/upload
   script: admin.saveResults.app
+  login: admin
 
 - url: /admin/(.*)/
   script: admin.\1.app
+  login: admin
 
 - url: /details/.*
   script: details.app
