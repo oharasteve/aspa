@@ -14,30 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 
-import base_handler
-import datetime
-import webapp2
 
-from data import players
-
-TEMPLATE = 'html/add_photo.html'
-
-class AddPhotoHandler(base_handler.BaseHandler):
-    def get(self):
-        upload_url = blobstore.create_upload_url('/admin/uploadPhoto/')
-        context = {
-          'page_title': 'Add a Photo',
-          'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-          'players': players.Player.getPlayers(),
-          'upload_url': upload_url,
-          'display_form': True,
-        }
-        self.render_response(TEMPLATE, **context)
-
+class ShowPhotoHandler(blobstore_handlers.BlobstoreDownloadHandler):
+  def get(self, resource):
+    resource = str(urllib.unquote(resource))
+    blob_info = blobstore.BlobInfo.get(resource)
+    self.send_blob(blob_info)
 
 app = webapp2.WSGIApplication([(r'/.*', AddPhotoHandler)],
     debug=True,

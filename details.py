@@ -3,6 +3,7 @@ from google.appengine.ext import ndb
 import base_handler
 import cgi
 import webapp2
+import base64
 
 from data import matches
 from data import players

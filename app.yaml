@@ -49,6 +49,9 @@ handlers:
 - url: /showResults/.*
   script: showResults.app
   
+- url: /showPhoto/.*
+  script: showPhoto.app
+  
 - url: /
   script: view.app
 

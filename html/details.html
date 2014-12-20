@@ -29,7 +29,8 @@
   <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h2>
   {%- if player.photo %}
     <center><p>
-      <img height="100" src="http://www.oharasteven.com/thumb_Ghostbusters4.jpg" title={{ player.firstName }} {{ player.lastName }}/>
+    <p>
+      <img height="100" src="{{player.photo}}" title="{{ player.firstName }} {{ player.lastName }}"/>
     </p></center>
   {%- endif %}
 
