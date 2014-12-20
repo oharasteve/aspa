@@ -40,6 +40,9 @@ handlers:
 - url: /details/.*
   script: details.app
 
+- url: /charts/.*
+  script: charts.app
+
 - url: /weekly/.*
   script: weekly.app
   

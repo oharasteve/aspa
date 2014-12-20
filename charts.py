@@ -6,33 +6,30 @@ import webapp2
 
 from data import matches
 from data import players
-from data import seasons
 from data import stats
 
-TEMPLATE = 'html/details.html'
+TEMPLATE = 'html/charts.html'
 
-class DetailsHandler(base_handler.BaseHandler):
+class ChartsHandler(base_handler.BaseHandler):
     def get(self):
-        season = seasons.Season.get_by_id(self.request.get('Season'))
         player = players.Player.get_by_id(self.request.get('Player'))
 
         # Show the webpage
-        context = Details().get_context(season, player)
+        context = Charts().get_context(player)
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/details/', DetailsHandler)],
+app = webapp2.WSGIApplication([(r'/charts/', ChartsHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
-class Details():
-    def get_match_details(self, season, player):
+class Charts():
+    def get_match_details(self, player):
         entries = []
         seq = 0
-        season_matches = matches.Match.query( ndb.AND( ndb.OR(
+        season_matches = matches.Match.query( ndb.OR(
             matches.Match.playerW == player.key, matches.Match.playerL ==
-            player.key), stats.PlayerSummary.season == season.key
-            )).order(matches.Match.date, matches.Match.seq)
+            player.key))
         for match in season_matches:
             seq += 1
             match_data = matches.match_util(match)
@@ -66,34 +63,25 @@ class Details():
                     'opponent': opponent,
                     'win_mgn': win_mgn,
                     'lose_mgn': lose_mgn,
-                    'opponent_details_page_url':
-                    '/details/?Season={0}&Player={1}'.format(
-                        cgi.escape(season.key.id()),
-                        cgi.escape(opponent['player'].id())),
                     'video1': match.video1,
                     'video2': match.video2,
             }
             entries.append(entry)
         return entries
 
-    def get_summary(self, season, player):
-        stat = stats.PlayerSummary.query( ndb.AND(
-            stats.PlayerSummary.player == player.key,
-            stats.PlayerSummary.season == season.key)
+    def get_summary(self, player):
+        stat = stats.PlayerSummary.query( 
+            stats.PlayerSummary.player == player.key
             ).fetch(1)[0]
         return stat
 
 
-    def get_context(self, season, player):
-        match_details = self.get_match_details(season, player)
-        summary = self.get_summary(season, player)
+    def get_context(self, player):
+        match_details = self.get_match_details(player)
+        summary = self.get_summary(player)
         context = {
-                'season': season,
                 'match_details': match_details,
                 'player': player,
                 'summary': summary,
-                'charts_page_url':
-                '/charts/?Player={0}'.format(
-                    player.key.id(),),
                 }
         return context

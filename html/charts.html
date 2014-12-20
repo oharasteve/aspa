@@ -1,0 +1,70 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
+
+  <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $("#player-summary").tablesorter({
+      sortList:[[0,1]],  // sort by date ascending.
+      headers: { },
+      widgets: ['zebra'],
+      cssAsc: "header-sort-up",
+      cssDesc: "header-sort-down"
+    });
+  });
+  </script>
+  <script type="text/javascript" charset="utf-8">
+ google.setOnLoadCallback(drawChart);
+ function drawChart() {
+   var data = google.visualization.arrayToDataTable([
+     ['Skill', 'Margin'],
+      {%- for entry in match_details %}
+          [{{ entry.opponent.handicap }},
+          {%- if entry.win_mgn %}
+          {{ entry.win_mgn }}
+          {%- else %}
+          -{{ entry.lose_mgn }}
+          {%- endif %}
+          ]
+          {%- if not loop.last %}
+            ,
+          {%- endif %}
+      {%- endfor %}
+   ]);
+
+   var options = {
+     title: 'Skill vs. Margin comparison',
+     legend: 'none',
+     crosshair: { trigger: 'both', orientation: 'both' },
+     trendlines: {
+       0: {
+         type: 'polynomial',
+         degree: 1,
+         visibleInLegend: true,
+       }
+     }
+   };
+
+   var chart = new google.visualization.ScatterChart(document.getElementById('polynomial2_div'));
+   chart.draw(data, options);
+}
+  </script>
+{% endblock %}
+
+{% block header %}
+  <h1 class="text-center">American Straight Pool Association</h1>
+
+{% endblock %}
+
+{% block content %}
+  <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h2>
+  {%- if player.photo %}
+    <p><img height="200" src="{{ player.photo }}" title={{ player.firstName }} {{ player.lastName }}/></p>
+  {%- endif %}
+
+  <div id='polynomial2_div' style='width: 900px; height: 500px;'></div>
+
+  <a href="/">Home</a>
+{%- endblock %}
