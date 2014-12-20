@@ -19,7 +19,7 @@
  google.setOnLoadCallback(drawChart);
  function drawChart() {
    var data = google.visualization.arrayToDataTable([
-     ['Skill', 'Margin'],
+     ['Skill', 'Margin', {id: null, role: 'tooltip'}],
       {%- for entry in match_details %}
           [{{ entry.opponent.handicap }},
           {%- if entry.win_mgn %}
@@ -27,6 +27,7 @@
           {%- else %}
           -{{ entry.lose_mgn }}
           {%- endif %}
+          ,"{{ entry.date|datetimeformat('%Y-%m-%d') }} {{ entry.player.score }} vs {{ entry.opponent.score }} {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}"
           ]
           {%- if not loop.last %}
             ,
@@ -35,9 +36,11 @@
    ]);
 
    var options = {
-     title: 'Skill vs. Margin comparison',
+     title: 'Opponent vs. Margin comparison',
      legend: 'none',
      crosshair: { trigger: 'both', orientation: 'both' },
+     hAxis: { title: 'Opponent handicap' },
+     vAxis: { title: 'Win/loss gap' },
      trendlines: {
        0: {
          type: 'polynomial',
@@ -56,6 +59,7 @@
 {% block header %}
   <h1 class="text-center">American Straight Pool Association</h1>
 
+  <h2 class="text-center">All Seasons</h2>
 {% endblock %}
 
 {% block content %}
