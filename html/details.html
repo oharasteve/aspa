@@ -28,7 +28,9 @@
 {% block content %}
   <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h2>
   {%- if player.photo %}
-    <p><img height="200" src="{{ player.photo }}" title={{ player.firstName }} {{ player.lastName }}/></p>
+    <center><p>
+      <img height="100" src="http://www.oharasteven.com/thumb_Ghostbusters4.jpg" title={{ player.firstName }} {{ player.lastName }}/>
+    </p></center>
   {%- endif %}
 
   <div>
