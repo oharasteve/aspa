@@ -79,6 +79,12 @@ indexes:
 - kind: PlayerSummary
   properties:
   - name: season
+  - name: pct
+    direction: desc
+
+- kind: PlayerSummary
+  properties:
+  - name: season
   - name: player
   - name: handicap
 

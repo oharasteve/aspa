@@ -45,6 +45,7 @@ class AddPlayerHandler(base_handler.BaseHandler):
         error_messages = []
         context_player = context['player']
         season = seasons.Season.get_by_id(context_player['seasonName'])
+        lifetime = seasons.Season.get_by_id('lifetime')
         player = players.Player.get_by_id(context_player['code'])
         if player:
             error_messages.append("Duplicate player (%s)" % cgi.escape(
@@ -68,6 +69,16 @@ class AddPlayerHandler(base_handler.BaseHandler):
                 stat = stats.PlayerSummary()
                 stat.player = player.key
                 stat.season = season.key
+                stat.handicap = int(context_player['handicap'])
+                stat.highRunTarget = float(context_player['highRunTarget'])
+                stat.highRun = 0
+                stat.wins = 0
+                stat.losses = 0
+                stat.put()
+
+                stat = stats.PlayerSummary()
+                stat.player = player.key
+                stat.season = lifetime.key
                 stat.handicap = int(context_player['handicap'])
                 stat.highRunTarget = float(context_player['highRunTarget'])
                 stat.highRun = 0

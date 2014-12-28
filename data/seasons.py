@@ -14,7 +14,7 @@ class Season(ndb.Model):
     @classmethod
     def getSeasons(self):
         ret_list = []
-        for item in self.query().order(-Season.endDate):
+        for item in self.query().order(-Season.startDate):
             my_dict = item.to_dict()
             my_dict['id'] = item.key.id()
             ret_list.append(my_dict)

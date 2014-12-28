@@ -88,11 +88,14 @@ class Details():
     def get_context(self, season, player):
         match_details = self.get_match_details(season, player)
         summary = self.get_summary(season, player)
+        lifetime = seasons.Season.get_by_id('lifetime')
+        lifesummary = self.get_summary(lifetime, player)
         context = {
                 'season': season,
                 'match_details': match_details,
                 'player': player,
                 'summary': summary,
+                'lifesummary': lifesummary,
                 'charts_page_url':
                 '/charts/?Player={0}'.format(
                     player.key.id(),),

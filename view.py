@@ -24,7 +24,7 @@ class ViewHandler(base_handler.BaseHandler):
         
         if not season:
             # Default to latest season
-            season = seasons.Season.query().order(-seasons.Season.endDate).get();
+            season = seasons.Season.query().order(-seasons.Season.startDate).get();
 
         # Show the webpage
         context = View().get_context(season)
@@ -42,7 +42,11 @@ class View():
         if season:
             seq = 0
             matchCount = 0
-            summaries = stats.PlayerSummary.query(stats.PlayerSummary.season
+            if season.key.id() == 'lifetime':
+                summaries = stats.PlayerSummary.query(stats.PlayerSummary.season
+                    == season.key).order( -stats.PlayerSummary.pct)
+            else:
+                summaries = stats.PlayerSummary.query(stats.PlayerSummary.season
                     == season.key).order( -stats.PlayerSummary.points)
             for summary in summaries:
                 player = players.Player.get_by_id(summary.player.id())

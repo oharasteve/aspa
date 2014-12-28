@@ -66,6 +66,8 @@ class AddMatchHandler(base_handler.BaseHandler):
         if not season:
             error_messages.append("Season is required")
 
+        lifetime = seasons.Season.get_by_id('lifetime')
+
         club = clubs.Club.get_by_id(xclub)
         if not club:
             error_messages.append("Club is required")
@@ -112,26 +114,41 @@ class AddMatchHandler(base_handler.BaseHandler):
                 ndb.AND(stats.PlayerSummary.player == match.playerW, stats.PlayerSummary.season == match.season)).fetch(1)[0]
             loserStats = stats.PlayerSummary.query(
                 ndb.AND(stats.PlayerSummary.player == match.playerL, stats.PlayerSummary.season == match.season)).fetch(1)[0]
+            winnerLifetime = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == match.playerW, stats.PlayerSummary.season == lifetime.key)).fetch(1)[0]
+            loserLifetime = stats.PlayerSummary.query(
+                ndb.AND(stats.PlayerSummary.player == match.playerL, stats.PlayerSummary.season == lifetime.key)).fetch(1)[0]
 
             # Update win / loss totals
             winnerStats.wins = winnerStats.wins + 1
+            winnerLifetime.wins = winnerLifetime.wins + 1
             if forfeit:
               loserStats.forfeits = loserStats.forfeits + 1
+              loserLifetime.forfeits = loserLifetime.forfeits + 1
             else:
               loserStats.losses = loserStats.losses + 1
+              loserLifetime.losses = loserLifetime.losses + 1
 
             # Update handicaps
             winnerStats.handicap = winnerStats.handicap + 3
+            winnerLifetime.handicap = winnerStats.handicap
             loserStats.handicap = loserStats.handicap - 3
+            loserLifetime.handicap = loserStats.handicap
 
             # Update high runs
             if hrunW > winnerStats.highRun:
                 winnerStats.highRun = hrunW
+            if hrunW > winnerLifetime.highRun:
+                winnerLifetime.highRun = hrunW
             if hrunL > loserStats.highRun:
                 loserStats.highRun = hrunL
+            if hrunL > loserLifetime.highRun:
+                loserLifetime.highRun = hrunL
 
             winnerStats.put()
+            winnerLifetime.put()
             loserStats.put()
+            loserLifetime.put()
             successfully_added_match = True
             
             # Clear high runs for the next match

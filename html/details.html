@@ -39,6 +39,7 @@
     <table class="table table-condensed">
       <thead>
         <tr>
+          <th class="text-left">Season</th>
           <th class="text-left">Name</th>
           <th class="text-center">H'cap</th>
           <th class="text-center">Won</th>
@@ -53,6 +54,7 @@
       </thead>
       <tbody>
         <tr>
+          <td class="test-left">{{season.name}}</td>
           <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
           <td class="text-center">{{ summary.handicap }}</td>
           <td class="text-center">{{ summary.wins }}</td>
@@ -63,6 +65,19 @@
           <td class="text-center">{{ summary.highRun }}</td>
           <td class="text-center">{{ '%.2f' % summary.highRunTarget }}</td>
           <td class="text-center">{{ '%.2f' % summary.goal }}</td>
+        </tr>
+        <tr>
+          <td class="test-left">Lifetime</td>
+          <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
+          <td class="text-center">{{ lifesummary.handicap }}</td>
+          <td class="text-center">{{ lifesummary.wins }}</td>
+          <td class="text-center">{{ lifesummary.losses }}</td>
+          <td class="text-center">{{ lifesummary.forfeits }}</td>
+          <td class="text-center">{{ '%.2f' % lifesummary.pct }}</td>
+          <td class="text-center"></td>
+          <td class="text-center">{{ lifesummary.highRun }}</td>
+          <td class="text-center">{{ '%.2f' % lifesummary.highRunTarget }}</td>
+          <td class="text-center">{{ '%.2f' % lifesummary.goal }}</td>
         </tr>
       </tbody>
     </table>
