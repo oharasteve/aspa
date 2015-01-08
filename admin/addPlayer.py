@@ -76,15 +76,16 @@ class AddPlayerHandler(base_handler.BaseHandler):
                 stat.losses = 0
                 stat.put()
 
-                stat = stats.PlayerSummary()
-                stat.player = player.key
-                stat.season = lifetime.key
-                stat.handicap = int(context_player['handicap'])
-                stat.highRunTarget = float(context_player['highRunTarget'])
-                stat.highRun = 0
-                stat.wins = 0
-                stat.losses = 0
-                stat.put()
+                if lifetime:
+                   stat = stats.PlayerSummary()
+                   stat.player = player.key
+                   stat.season = lifetime.key
+                   stat.handicap = int(context_player['handicap'])
+                   stat.highRunTarget = float(context_player['highRunTarget'])
+                   stat.highRun = 0
+                   stat.wins = 0
+                   stat.losses = 0
+                   stat.put()
 
         self.render_response(TEMPLATE, **context)
 

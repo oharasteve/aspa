@@ -8,6 +8,100 @@ from google.appengine.ext import ndb
 import players
 import seasons
 
+def addMatch(season, player, win, hcap, score, hrun):
+
+   lifetimeStats = seasons.Season.get_by_id('lifetime')
+
+   Stats = PlayerSummary.query(
+       ndb.AND(PlayerSummary.player == player, PlayerSummary.season == season)).fetch(1)[0]
+   Lifetime = None
+   if lifetimeStats:
+      Lifetime = PlayerSummary.query(
+       ndb.AND(PlayerSummary.player == player, PlayerSummary.season == lifetimeStats.key)).fetch(1)[0]
+
+   # Update win / loss totals
+   hcapAdj = 0
+   if win == 1:
+      Stats.wins = Stats.wins + 1
+      if Lifetime:
+         Lifetime.wins = Lifetime.wins + 1
+      hcapAdj = 3
+   elif win == 0:
+      Stats.losses = Stats.losses + 1
+      if Lifetime:
+         Lifetime.losses = Lifetime.losses + 1
+      hcapAdj = -3
+   else:
+      Stats.forfeits = Stats.forfeits + 1
+      if Lifetime:
+         Lifetime.forfeits = Lifetime.forfeits + 1
+      hcapAdj = -3
+
+   # Update handicaps
+   Stats.handicap = Stats.handicap + hcapAdj
+   if Lifetime:
+      Lifetime.handicap = Stats.handicap
+
+   # Update high runs
+   if hrun > Stats.highRun:
+       Stats.highRun = hrun
+   if Lifetime and hrun > Lifetime.highRun:
+       Lifetime.highRun = hrun
+
+   Stats.put()
+   if Lifetime:
+      Lifetime.put()
+
+def removeMatch(season, player, win):
+
+   lifetimeStats = seasons.Season.get_by_id('lifetime')
+
+   Stats = PlayerSummary.query(
+       ndb.AND(PlayerSummary.player == player, PlayerSummary.season == season)).fetch(1)[0]
+   Lifetime = None
+   if lifetimeStats:
+      Lifetime = PlayerSummary.query(
+       ndb.AND(PlayerSummary.player == player, PlayerSummary.season == lifetimeStats.key)).fetch(1)[0]
+
+   # Update win / loss totals
+   hcapAdj = 0
+   if win == 1:
+      Stats.wins = Stats.wins - 1
+      if Lifetime:
+         Lifetime.wins = Lifetime.wins - 1
+      hcapAdj = 3
+   elif win == 0:
+      Stats.losses = Stats.losses - 1
+      if Lifetime:
+         Lifetime.losses = Lifetime.losses - 1
+      hcapAdj = -3
+   else:
+      Stats.forfeits = Stats.forfeits - 1
+      if Lifetime:
+         Lifetime.forfeits = Lifetime.forfeits - 1
+      hcapAdj = -3
+
+   # Update handicaps
+   Stats.handicap = Stats.handicap - hcapAdj
+   if Lifetime:
+      Lifetime.handicap = Stats.handicap
+
+   """
+   TODO:
+   We should scan session/all history for next lower IF hrun == highRun
+
+   # Update high runs
+   if hrun > Stats.highRun:
+       Stats.highRun = hrun
+   if hrun > Lifetime.highRun:
+       Lifetime.highRun = hrun
+   """
+
+   Stats.put()
+   if Lifetime:
+      Lifetime.put()
+
+
 class PlayerSummary(ndb.Model):
     """Models a players statistics for the season."""
     player = ndb.KeyProperty(kind=players.Player)

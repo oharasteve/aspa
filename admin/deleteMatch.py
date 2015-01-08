@@ -84,22 +84,10 @@ class DeleteMatchHandler(base_handler.BaseHandler):
                 # Delete the match
                 ndb.Key(matches.Match, match.key.id()).delete()
 
-                # Update statistics for the winner and loser
-                winnerStats = stats.PlayerSummary.query(
-                    ndb.AND(stats.PlayerSummary.player == match.playerW, stats.PlayerSummary.season == match.season)).fetch(1)[0]
-                loserStats = stats.PlayerSummary.query(
-                    ndb.AND(stats.PlayerSummary.player == match.playerL, stats.PlayerSummary.season == match.season)).fetch(1)[0]
+                stats.removeMatch(season.key, match.playerW, 1)
+                # TODO: Deal with undoing a forefit?
+                stats.removeMatch(season.key, match.playerL, 0)
 
-                # Update win / loss totals (in reverse)
-                winnerStats.wins = winnerStats.wins - 1
-                loserStats.losses = loserStats.losses - 1
-
-                # Update handicaps (in reverse)
-                winnerStats.handicap = winnerStats.handicap - 3
-                loserStats.handicap = loserStats.handicap + 3
-
-                winnerStats.put()
-                loserStats.put()
                 successfully_deleted_match = True
 
         context = {

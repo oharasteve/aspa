@@ -66,6 +66,7 @@
           <td class="text-center">{{ '%.2f' % summary.highRunTarget }}</td>
           <td class="text-center">{{ '%.2f' % summary.goal }}</td>
         </tr>
+     {%- if lifesummary %}
         <tr>
           <td class="test-left">Lifetime</td>
           <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
@@ -79,6 +80,7 @@
           <td class="text-center">{{ '%.2f' % lifesummary.highRunTarget }}</td>
           <td class="text-center">{{ '%.2f' % lifesummary.goal }}</td>
         </tr>
+     {% endif %}
       </tbody>
     </table>
 
