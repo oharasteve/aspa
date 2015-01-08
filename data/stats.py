@@ -4,6 +4,14 @@ from google.appengine.ext import ndb
 # Current statistics for each player, per season. These do not have history.
 # They only have the current values for handicaps, etc.
 #
+# When modifing stats you must use one of the accessor functions (addMatch/removeMatch)
+# as they are used to keep the lifetime stats structure in sync with the season
+# currently being run. It is still correct to use the Stat class to query a record for
+# display but NOT for updating any of the contained information.
+#
+# Creating a new session causes no issues but creating a new player needs to create the
+# lifetime record for them as well.
+#
 
 import players
 import seasons
