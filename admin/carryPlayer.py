@@ -26,6 +26,13 @@ import highRun
 
 TEMPLATE = 'html/carry_player.html'
 
+def most_recent_stat(x,y):
+   if x.season.get().startDate < y.season.get().startDate:
+      return y
+   else:
+      return x
+
+
 class CarryPlayerHandler(base_handler.BaseHandler):
     def post(self):
         context = {
@@ -47,9 +54,10 @@ class CarryPlayerHandler(base_handler.BaseHandler):
                 if dupStat:
                     error_messages.append("Duplicate player (%s) for season %s" % (cgi.escape(checkbox), season.name))
                 else:
-                    oldStat = stats.PlayerSummary.query(
-                        ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season != season.key)).order(-stats.PlayerSummary.season).fetch(1)[0]
+                    oldStats = stats.PlayerSummary.query(
+                        ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season != season.key)).fetch()
 
+                    oldStat = reduce(most_recent_stat, oldStats)
                     newStat = stats.PlayerSummary()
                     newStat.player = oldStat.player
                     newStat.season = season.key
