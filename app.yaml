@@ -25,6 +25,9 @@ handlers:
   script: admin.admin.app
   login: admin
 
+- url: /suggest/
+  script: admin.suggestMatch.app
+
 - url: /admin/
   script: admin.admin.app
   login: admin
