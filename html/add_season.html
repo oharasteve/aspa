@@ -29,7 +29,7 @@
   <h3>Add a New Season</h3>
   <hr/>
 
-  <form action="/admin/addSeason/" method="post" id="addSeasonForm", class="form-horizontal" fole="form">
+  <form action="/{{club.key.id()}}/admin/addSeason/" method="post" id="addSeasonForm", class="form-horizontal" fole="form">
     <div class="form-group">
       <label for="code" class="col-sm-2 control-label">Code</label>
       <div class="col-sm-7">
@@ -72,6 +72,5 @@
   </h3>
   {%- else %}
   <h3>Successfully added new season: {{ season_name }} ({{ season_code }})</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}

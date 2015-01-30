@@ -11,25 +11,29 @@ from data import stats
 TEMPLATE = 'html/charts.html'
 
 class ChartsHandler(base_handler.BaseHandler):
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
         player = players.Player.get_by_id(self.request.get('Player'))
 
         # Show the webpage
-        context = Charts().get_context(player)
+        context = Charts().get_context(player, club)
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/charts/', ChartsHandler)],
+app = webapp2.WSGIApplication([(r'([^/]*)/charts/', ChartsHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
 class Charts():
-    def get_match_details(self, player):
+    def get_match_details(self, player, club):
         entries = []
         seq = 0
-        season_matches = matches.Match.query( ndb.OR(
-            matches.Match.playerW == player.key, matches.Match.playerL ==
-            player.key))
+        season_matches = matches.Match.query( ndb.AND(matches.Match.club == club.key,
+              ndb.OR( matches.Match.playerW == player.key,
+                      matches.Match.playerL == player.key)))
         for match in season_matches:
             seq += 1
             match_data = matches.match_util(match)
@@ -69,19 +73,20 @@ class Charts():
             entries.append(entry)
         return entries
 
-    def get_summary(self, player):
-        stat = stats.PlayerSummary.query( 
+    def get_summary(self, player, club):
+        stat = stats.PlayerSummary.query( ndb.AND( stats.PlayerSummary.club == club.key,
             stats.PlayerSummary.player == player.key
-            ).fetch(1)[0]
+            )).fetch(1)[0]
         return stat
 
 
-    def get_context(self, player):
-        match_details = self.get_match_details(player)
-        summary = self.get_summary(player)
+    def get_context(self, player, club):
+        match_details = self.get_match_details(player, club)
+        summary = self.get_summary(player, club)
         context = {
                 'match_details': match_details,
                 'player': player,
+                'club': club,
                 'summary': summary,
                 }
         return context

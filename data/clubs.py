@@ -11,6 +11,8 @@ class Club(ndb.Model):
     address2 = ndb.StringProperty(default='')
     contact = ndb.StringProperty(default='')
     phone = ndb.StringProperty()
+    owners = ndb.UserProperty(repeated=True)
+    invited = ndb.StringProperty(repeated=True)
 
     @classmethod
     def getClubs(self):

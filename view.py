@@ -11,12 +11,20 @@ from data import players
 from data import matches
 from data import seasons
 from data import stats
+from data import clubs
 
 TEMPLATE = 'html/view.html'
 
-
 class ViewHandler(base_handler.BaseHandler):
     def get(self):
+      pass
+
+class ViewClubHandler(base_handler.BaseHandler):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
         seasonCode = self.request.GET.get('Season')
         season = None
         if seasonCode:
@@ -24,20 +32,23 @@ class ViewHandler(base_handler.BaseHandler):
         
         if not season:
             # Default to latest season
-            season = seasons.Season.query().order(-seasons.Season.startDate).get();
+            season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.startDate).get()
 
         # Show the webpage
-        context = View().get_context(season)
+        context = View().get_context(season, club)
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/', ViewHandler)],
+app = webapp2.WSGIApplication([
+            (r'/([^/]*)/', ViewClubHandler),
+            (r'/', ViewHandler)
+            ],
     debug=True,
     config=base_handler.CONFIG)
 
 
 class View():
-    def get_context(self, season):
+    def get_context(self, season, club):
         player_summaries = []
         if season:
             seq = 0
@@ -58,10 +69,13 @@ class View():
                     'summary': summary,
                     'player': players.Player.get_by_id(summary.player.id()),
                     'details_page_url':
-                    '/details/?Season={0}&Player={1}'.format(
+                    '/{2}/details/?Season={0}&Player={1}'.format(
                         cgi.escape(season.key.id()),
-                        cgi.escape(summary.player.id())),
+                        cgi.escape(summary.player.id()),
+                        cgi.escape(club.key.id()),
+                        ),
                     'season': season,
+                    'club': club,
                     }
                 player_summaries.append(player_summary)
 
@@ -72,8 +86,9 @@ class View():
             len(player_summaries)))
 
         context = {
-                'seasonList': seasons.Season.getSeasons(),
+                'seasonList': seasons.Season.getSeasons(club),
                 'season': season,
+                'club': club,
                 'player_summaries': player_summaries,
                 'weeks': weekCount,
                 'matches': matchCount,

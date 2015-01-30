@@ -17,7 +17,7 @@
   <h3>Carry Player(s) Forward</h3>
   <hr/>
 
-  <form action="/admin/carryPlayer/" method="post" id="carryPlayerForm" class="form-horizontal" role="form">
+  <form action="/{{club.key.id()}}/admin/carryPlayer/" method="post" id="carryPlayerForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="season_select" class="col-sm-2 control-label">Season</label>
       <div class="col-sm-7">
@@ -65,6 +65,5 @@
     <li>{{ addition }}</li>
     {%- endfor %}
     </ul>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}

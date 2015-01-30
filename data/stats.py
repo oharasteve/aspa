@@ -1,5 +1,7 @@
 from google.appengine.ext import ndb
 
+import logging
+
 #
 # Current statistics for each player, per season. These do not have history.
 # They only have the current values for handicaps, etc.
@@ -136,4 +138,21 @@ class PlayerSummary(ndb.Model):
                 'lastName': player.lastName,
                 }
             ret_list.append(my_dict)
+        return ret_list
+
+    @classmethod
+    def getPlayers(self, ssn):
+        playerdict = {}
+        ret_list = []
+        logging.info("players for "+ssn.key.id()+" for club "+ssn.club.id())
+        for item in self.query(PlayerSummary.season == ssn.key).order(PlayerSummary.player, PlayerSummary.handicap):
+            if item.player.id() in playerdict:
+               continue
+            player = players.Player.get_by_id(item.player.id())
+            playerdict[item.player.id()] = item.player.get()
+        for player in playerdict:
+            my_dict = playerdict[player].to_dict()
+            my_dict['id'] = playerdict[player].key.id()
+            ret_list.append(my_dict)
+        logging.info(ret_list)
         return ret_list

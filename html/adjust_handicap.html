@@ -86,7 +86,7 @@
   <h3>Adjust a Player's Handicap</h3>
   <hr/>
 
-  <form action="/admin/adjustHandicap/" method="post" id="adjustHandicapForm" class="form-horizontal" role="form">
+  <form action="/{{club.key.id()}}/admin/adjustHandicap/" method="post" id="adjustHandicapForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="todays_date" class="col-sm-2 control-label">Date</label>
       <div class="col-sm-2">
@@ -160,6 +160,5 @@
   {%- else %}
   <h3>Successfully adjusted handicap: {{ 'player.firstName' }} {{ 'player.lastName' }}
     ({{ 'adjustments.newHandicap' }}, {{ 'adjustments.newHighRunTarget' }})</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}

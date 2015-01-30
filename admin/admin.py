@@ -14,76 +14,115 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from google.appengine.api import users
+
 import base_handler
 import webapp2
 
 from data import seasons
+from data import clubs
 
 TEMPLATE = 'html/admin.html'
 
 class AdminHandler(base_handler.BaseHandler):
-    def get(self):
-        season = seasons.Season.query().order(-seasons.Season.endDate).get();
-        context = {
-            'season': season.key,
+    def get(self, clubid):
+        user = users.get_current_user()
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           if not users.is_current_user_admin():
+               self.response.clear()
+               self.response.set_status(405)
+               self.response.out.write("Not authorized")
+               return
+           context = {
+            'season': None,
+            'club': None,
             'choices': [
                 {
-                    'url': '/admin/suggestMatch/',
-                    'description': 'Suggest Match Targets',
-                    'help': 'help choose race',
-                },
-                {
-                    'url': '/admin/addMatch/',
-                    'description': 'Add Match Results',
-                    'help': 'once a week',
-                },
-                {
-                    'url': '/admin/saveResults/',
-                    'description': 'Upload Weekly Results',
-                    'help': 'once a week',
-                },
-                {
-                    'url': '/admin/addPlayer/',
-                    'description': 'Add New Player',
-                    'help': 'brand new players only',
-                },
-                {
-                    'url': '/admin/addVideo/',
-                    'description': 'Add a Video',
-                    'help': 'from YouTube',
-                },
-                {
-                    'url': '/admin/addPhoto/',
+                    'url': '/%s/admin/addPhoto/'%(clubid,),
                     'description': 'Add a Photo',
                     'help': 'one photo per person',
-                },
-                {
-                    'url': '/admin/addSeason/',
-                    'description': 'Add New Season',
-                    'help': 'once per season',
-                },
-                {
-                    'url': '/admin/addSeasonResult/',
-                    'description': 'Add Season Result',
-                    'help': 'season totals from a previous season',
                 },
                 {
                     'url': '/admin/addClub/',
                     'description': 'Add New Club',
                     'help': 'not needed yet',
                 },
+            ],
+           }
+           self.render_response(TEMPLATE, **context)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
+        season = seasons.Season.query().order(-seasons.Season.endDate);
+        context = {
+            'season': season,
+            'club': club,
+            'choices': [
                 {
-                    'url': '/admin/adjustHandicap/',
+                    'url': '/%s/admin/suggestMatch/'%(clubid,),
+                    'description': 'Suggest Match Targets',
+                    'help': 'help choose race',
+                },
+                {
+                    'url': '/%s/admin/addMatch/'%(clubid,),
+                    'description': 'Add Match Results',
+                    'help': 'once a week',
+                },
+                {
+                    'url': '/%s/admin/saveResults/'%(clubid,),
+                    'description': 'Upload Weekly Results',
+                    'help': 'once a week',
+                },
+                {
+                    'url': '/%s/admin/addPlayer/'%(clubid,),
+                    'description': 'Add New Player',
+                    'help': 'brand new players only',
+                },
+                {
+                    'url': '/%s/admin/addVideo/'%(clubid,),
+                    'description': 'Add a Video',
+                    'help': 'from YouTube',
+                },
+                {
+                    'url': '/%s/admin/addPhoto/'%(clubid,),
+                    'description': 'Add a Photo',
+                    'help': 'one photo per person',
+                },
+                {
+                    'url': '/%s/admin/addSeason/'%(clubid,),
+                    'description': 'Add New Season',
+                    'help': 'once per season',
+                },
+                {
+                    'url': '/%s/admin/addSeasonResult/'%(clubid,),
+                    'description': 'Add Season Result',
+                    'help': 'season totals from a previous season',
+                },
+                {
+                    'url': '/%s/admin/addClub/'%(clubid,),
+                    'description': 'Edit Club',
+                    'help': 'not needed yet',
+                },
+                {
+                    'url': '/%s/admin/adjustHandicap/'%(clubid,),
                     'description': 'Adjust Player Handicap',
                     'help': 'League Manager only',
                 },
                 {
-                    'url': '/admin/deleteMatch/',
+                    'url': '/%s/admin/deleteMatch/'%(clubid,),
                     'description': 'Delete Match Result',
                     'help': 'Rarely needed (hopefully)',
                 },
                 {
-                    'url': '/admin/carryPlayer/',
+                    'url': '/%s/admin/carryPlayer/'%(clubid,),
                     'description': 'Carry Player Forward',
                     'help': 'from previous season',
                 },
@@ -92,6 +131,6 @@ class AdminHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AdminHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', AdminHandler)],
     debug=True,
     config=base_handler.CONFIG)

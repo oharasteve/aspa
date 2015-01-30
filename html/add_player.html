@@ -7,7 +7,6 @@
   $().ready(function() {
     $("#addPlayerForm").validate({
       rules: {
-        season: "required",
         code: "required",
         firstName: "required",
         lastName: "required",
@@ -36,17 +35,7 @@
   <h3>Add a New Player</h3>
   <hr/>
 
-  <form action="/admin/addPlayer/" method="post" id="addPlayerForm" class="form-horizontal" role="form">
-    <div class="form-group">
-      <label for="season_select" class="col-sm-2 control-label">Season</label>
-      <div class="col-sm-7">
-        <select name="season_select" id="season_select" class="form-control">
-        {%- for season in seasons %}
-          <option value="{{ season.id }}">{{ season.name }}</option>
-        {%- endfor %}
-        </select>
-      </div>
-    </div>
+  <form action="/{{club.key.id()}}/admin/addPlayer/" method="post" id="addPlayerForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="code" class="col-sm-2 control-label">Code</label>
       <div class="col-sm-7">
@@ -117,6 +106,6 @@
   </h3>
   {%- else %}
   <h3>Successfully added new player: {{ player.firstName }} {{ player.lastName }} ({{ player.code }})</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/addPlayer/'">
+  <p><input type="button" value="Add another" onclick="window.location.href='/{{club.key.id()}}/admin/addPlayer/'">
   {%- endif %}
 {%- endblock %}

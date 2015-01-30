@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
 import base_handler
 import webapp2
 
@@ -27,9 +29,13 @@ from data import stats
 TEMPLATE = 'html/suggest_match.html'
 
 class SuggestMatchHandler(base_handler.BaseHandler):
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
         players_data = []
-        season = seasons.Season.query().order(-seasons.Season.endDate).get();
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
         for player in players.Player.query():
             # TODO: Get stats from user provided season.
             player_summary = stats.PlayerSummary.query(
@@ -44,7 +50,8 @@ class SuggestMatchHandler(base_handler.BaseHandler):
                     })
 
         context = {
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
+          'club': club,
           'players': players_data,
           'clubs': clubs.Club.getClubs(),
           'display_form': True,
@@ -52,6 +59,6 @@ class SuggestMatchHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', SuggestMatchHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', SuggestMatchHandler)],
     debug=True,
     config=base_handler.CONFIG)

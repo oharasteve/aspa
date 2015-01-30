@@ -21,32 +21,40 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
 
-- url: /admin
-  script: admin.admin.app
-  login: admin
-
-- url: /suggest/
-  script: admin.suggestMatch.app
-
 - url: /admin/
   script: admin.admin.app
+  login: required
+
+- url: /[^/]*/suggest/
+  script: admin.suggestMatch.app
+
+- url: /[^/]*/admin/
+  script: admin.admin.app
+  login: required
+
+- url: /admin/addClub/
+  script: admin.addClub.app
   login: admin
 
-- url: /admin/upload
+- url: /admin/uploadPhoto/
+  script: admin.uploadPhoto.app
+  login: required
+
+- url: /[^/]*/admin/upload
   script: admin.saveResults.app
-  login: admin
+  login: required
 
-- url: /admin/(.*)/
+- url: /[^/]*/admin/(.*)/
   script: admin.\1.app
-  login: admin
+  login: required
 
-- url: /details/.*
+- url: /[^/]*/details/.*
   script: details.app
 
-- url: /charts/.*
+- url: /[^/]*/charts/.*
   script: charts.app
 
-- url: /weekly/.*
+- url: /[^/]*/weekly/.*
   script: weekly.app
   
 - url: /showResults/.*
@@ -55,8 +63,15 @@ handlers:
 - url: /showPhoto/.*
   script: showPhoto.app
   
+- url: /[^/]*/
+  script: view.app
+
 - url: /
   script: view.app
+
+
+builtins:
+- remote_api: on
 
 libraries:
 - name: webapp2

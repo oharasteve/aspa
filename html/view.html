@@ -74,13 +74,13 @@
   <div>
     Season:
     <select name="season_select" id="season_select"
-        onchange="window.location=window.location.origin+'?Season='+season_select.value;">
+        onchange="window.location=window.location.origin+'/{{club.key.id()}}/?Season='+season_select.value;">
       {%- for ssn in seasonList %}
         <option value="{{ ssn.id }}" {%- if ssn.id == season.key.id() %}selected{%- endif %}>{{ ssn.name }}</option>
       {%- endfor %}
     </select>
   </div>
   <div>
-    <a href="/suggest/">Suggest Match</a>
+    <a href="/{{club.key.id()}}/suggest/">Suggest Match</a>
   </div>
 {%- endblock %}

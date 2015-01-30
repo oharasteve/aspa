@@ -9,11 +9,16 @@ from data import matches
 from data import players
 from data import seasons
 from data import stats
+from data import clubs
 
 TEMPLATE = 'html/details.html'
 
 class DetailsHandler(base_handler.BaseHandler):
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
         season = seasons.Season.get_by_id(self.request.get('Season'))
         player = players.Player.get_by_id(self.request.get('Player'))
 
@@ -22,7 +27,7 @@ class DetailsHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/details/', DetailsHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/details/', DetailsHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
@@ -59,8 +64,9 @@ class Details():
                     opponent['player'].id())
             entry = {
                     'entry_index': seq,
-                    'results_pdf_url': '/weekly/?Y=%d&M=%d&D=%d' %
-                        (match.date.year, match.date.month, match.date.day),
+                    'results_pdf_url': '/%s/weekly/?Y=%d&M=%d&D=%d' %
+                        (cgi.escape(match_data['club'].id()),
+                        match.date.year, match.date.month, match.date.day),
                     'date': match.date,
                     'result': result,
                     'player': participant,
@@ -68,9 +74,10 @@ class Details():
                     'win_mgn': win_mgn,
                     'lose_mgn': lose_mgn,
                     'opponent_details_page_url':
-                    '/details/?Season={0}&Player={1}'.format(
+                    '/{2}/details/?Season={0}&Player={1}'.format(
                         cgi.escape(season.key.id()),
-                        cgi.escape(opponent['player'].id())),
+                        cgi.escape(opponent['player'].id()),
+                        cgi.escape(match_data['club'].id())),
                     'video1': match.video1,
                     'video2': match.video2,
             }
@@ -99,7 +106,9 @@ class Details():
                 'summary': summary,
                 'lifesummary': lifesummary,
                 'charts_page_url':
-                '/charts/?Player={0}'.format(
-                    player.key.id(),),
+                '/{1}/charts/?Player={0}'.format(
+                    player.key.id(),
+                    season.club.id(),
+                    ),
                 }
         return context

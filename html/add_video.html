@@ -37,7 +37,7 @@
   <h3>Add a Video</h3>
   <hr/>
 
-  <form action="/admin/addVideo/" method="post" id="addVideoForm" class="form-horizontal" role="form">
+  <form action="/{{club.key.id()}}/admin/addVideo/" method="post" id="addVideoForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="date" class="col-sm-2 control-label">Date</label>
       <div class="col-sm-2">
@@ -92,6 +92,5 @@
   </h3>
   {%- else %}
   <h3>Successfully added video for match: {{ 'match.seq' }}</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
   {%- endif %}
 {%- endblock %}

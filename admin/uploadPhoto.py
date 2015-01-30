@@ -18,17 +18,34 @@ from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from google.appengine.api import images
 from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.api import users
+
 
 import base_handler
 import datetime
 import webapp2
 
 from data import players
+from data import clubs
 
 TEMPLATE = 'html/add_photo.html'
 
 class PostPhotoHandler(blobstore_handlers.BlobstoreUploadHandler):
-    def post(self):
+    def post(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         xplayer = self.request.get('player_select')
         upload_files = self.get_uploads('upload')  # 'file' is file upload field in the form
         blob_info = upload_files[0]
@@ -52,8 +69,8 @@ class PostPhotoHandler(blobstore_handlers.BlobstoreUploadHandler):
             else:
               error_messages.append("Unable to find %s" % player)
 
-        self.redirect('/admin/addPhoto/')
+        self.redirect('/%s/admin/addPhoto/'%(club.key.id(),))
 
-app = webapp2.WSGIApplication([(r'/.*', PostPhotoHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', PostPhotoHandler)],
     debug=True,
     config=base_handler.CONFIG)

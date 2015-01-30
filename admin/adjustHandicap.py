@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
 import base_handler
 import datetime
 import webapp2
@@ -23,11 +25,25 @@ from data import adjustments
 from data import players
 from data import seasons
 from data import stats
+from data import clubs
 
 TEMPLATE = 'html/adjust_handicap.html'
 
 class AdjustHandicapHandler(base_handler.BaseHandler):
-    def post(self):
+    def post(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         xseason = self.request.get('season_select')
         xwhen = self.request.get('todays_date')
         xname = self.request.get('player_select')
@@ -77,8 +93,8 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         
         context = {
           'page_title': 'Adjust a Handicap',
-          'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
+          'club': club,
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(season),
@@ -89,12 +105,26 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         }
         self.render_response(TEMPLATE, **context)
 
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'page_title': 'Adjust a Handicap',
           'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
+          'club': club,
           'todays_date': datetime.date.today().strftime('%Y-%m-%d'),
           'players': players.Player.getPlayers(),
           'player_summaries': stats.PlayerSummary.getPlayerSummaries(season),
@@ -105,6 +135,6 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AdjustHandicapHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', AdjustHandicapHandler)],
     debug=True,
     config=base_handler.CONFIG)

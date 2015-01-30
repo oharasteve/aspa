@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
 import base_handler
 import cgi
 import datetime
@@ -30,10 +32,22 @@ from data import stats
 TEMPLATE = 'html/add_match.html'
 
 class AddMatchHandler(base_handler.BaseHandler):
-    def post(self):
+    def post(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         xseason = self.request.get('season_select')
         xseq = self.request.get('seq')
-        xclub = self.request.get('club_select')
         xwhen = self.request.get('match_date')
         nameW = self.request.get('winner_select')
         nameL = self.request.get('loser_select')
@@ -65,10 +79,6 @@ class AddMatchHandler(base_handler.BaseHandler):
         season = seasons.Season.get_by_id(xseason)
         if not season:
             error_messages.append("Season is required")
-
-        club = clubs.Club.get_by_id(xclub)
-        if not club:
-            error_messages.append("Club is required")
 
         seq = int(xseq)
         hcapW = int(xhcapW)
@@ -121,12 +131,11 @@ class AddMatchHandler(base_handler.BaseHandler):
             xhrunL = 0
 
         context = {
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
           'match_date': xwhen,
           'seq': seq+1,
-          'players': players.Player.getPlayers(),
+          'players': stats.PlayerSummary.getPlayers(season),
           'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
-          'clubs': clubs.Club.getClubs(),
           'club': club,
           'winner': {
               'firstName': winner.firstName,
@@ -148,7 +157,7 @@ class AddMatchHandler(base_handler.BaseHandler):
               },
           'forfeit': forfeit,
           'season_selected': xseason,
-          'club_selected': xclub,
+          'club_selected': club,
           'winner_selected': nameW,
           'loser_selected': nameL,
           'display_form': True,
@@ -158,19 +167,32 @@ class AddMatchHandler(base_handler.BaseHandler):
 
         self.render_response(TEMPLATE, **context)
 
-    def get(self):
-        season = seasons.Season.query().order(-seasons.Season.endDate).get();
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
         currDate = datetime.date.today()
         weekDay = currDate.weekday()      # 0=Mon ... 6=Sun
         adjustDays = (weekDay + 6) % 7    # 6=Mon ... 5=Sun
         matchDate = currDate - datetime.timedelta(days=adjustDays)
         context = {
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
           'match_date': matchDate.strftime('%Y-%m-%d'),
           'seq': 1,
-          'players': players.Player.getPlayers(),
+          'players': stats.PlayerSummary.getPlayers(season),
           'playerStats': stats.PlayerSummary.getPlayerSummaries(season),
-          'clubs': clubs.Club.getClubs(),
+          'club': club,
           'winner': {
               'player_id': '',
               'handicap': '',
@@ -196,6 +218,6 @@ class AddMatchHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AddMatchHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', AddMatchHandler)],
     debug=True,
     config=base_handler.CONFIG)

@@ -32,7 +32,6 @@
     $("#addSeasonResultForm").validate({
       rules: {
         season_select: "required",
-        club_select: "required",
         player_select: "required",
         player_handicap: {
           required: true,
@@ -71,7 +70,6 @@
     $(function() { $( "#todays_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
 
     $('#season_select').val('{{ season_selected }}');
-    $('#club_select').val('{{ club_selected }}');
     $('#player_select').val('{{ player_selected }}');
   {%- endif %}
   });
@@ -82,23 +80,13 @@
   <h3>Add a Season Result</h3>
   <hr/>
 
-  <form action="/admin/addSeasonResult/" method="post" id="addSeasonResultForm" class="form-horizontal" role="form">
+  <form action="/{{club.key.id()}}/admin/addSeasonResult/" method="post" id="addSeasonResultForm" class="form-horizontal" role="form">
     <div class="form-group">
       <label for="season_select" class="col-sm-2 control-label">Season</label>
       <div class="col-sm-7">
         <select name="season_select" id="season_select" class="form-control" value="-1">
         {%- for ssn in seasons %}
           <option value="{{ ssn.id }}" {%- if ssn.id == season_selected %}selected{%- endif %}>{{ ssn.name }}</option>
-        {%- endfor %}
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="club_select" class="col-sm-2 control-label">Club</label>
-      <div class="col-sm-7">
-        <select name="club_select" id="club_select" class="form-control" value="-1">
-        {%- for club in clubs %}
-          <option value="{{ club.id }}">{{ club.name }}</option>
         {%- endfor %}
         </select>
       </div>

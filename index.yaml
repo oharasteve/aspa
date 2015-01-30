@@ -12,6 +12,12 @@ indexes:
 
 - kind: Match
   properties:
+  - name: club
+  - name: date
+  - name: seq
+
+- kind: Match
+  properties:
   - name: date
   - name: seq
 
@@ -74,6 +80,11 @@ indexes:
   properties:
   - name: player
   - name: season
+
+- kind: PlayerSummary
+  properties:
+  - name: player
+  - name: season
     direction: desc
 
 - kind: PlayerSummary
@@ -111,3 +122,15 @@ indexes:
   - name: wins
     direction: desc
   - name: losses
+
+- kind: Season
+  properties:
+  - name: club
+  - name: endDate
+    direction: desc
+
+- kind: Season
+  properties:
+  - name: club
+  - name: startDate
+    direction: desc

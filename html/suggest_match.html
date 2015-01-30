@@ -1,3 +1,4 @@
+
 {%- extends "/html/admin_template.html" %}
 {%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
 {%- block head %}
@@ -51,8 +52,6 @@
   $().ready(function() {
     $("#addPlayerForm").validate({
       rules: {
-        season_select: "required",
-        club_select: "required",
         playerA_select: "required",
         playerB_select: "required",
         playerA_handicap: {
@@ -75,16 +74,6 @@
   <hr/>
 
   <form class="form-horizontal" role="form">
-    <div class="form-group">
-      <label for="season_select" class="col-sm-2 control-label">Season</label>
-      <div class="col-sm-7">
-        <select name="season_select" id="season_select" class="form-control">
-        {%- for season in seasons %}
-          <option value="{{ season.id }}">{{ season.name }}</option>
-        {%- endfor %}
-        </select>
-      </div>
-    </div>
     <div class="form-group">
       <label for="playerA_select" class="col-sm-2 control-label">Player 1</label>
       <div class="col-sm-3">

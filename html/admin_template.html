@@ -2,5 +2,5 @@
 {%- block content %}
   <h1>American Straight Pool Association</h1>
   {%- block admin_content %}{%- endblock %}
-  <a href="/admin/">Go Back to the Admin Menu</a>
+  <a href="/{% if club %}{{club.key.id()}}/{% endif %}admin/">Go Back to the Admin Menu</a>
 {%- endblock %}

@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
 import base_handler
 import cgi
 import webapp2
@@ -22,13 +24,28 @@ import webapp2
 from data import players
 from data import seasons
 from data import stats
+from data import clubs
 
 TEMPLATE = 'html/add_player.html'
 
 class AddPlayerHandler(base_handler.BaseHandler):
-    def post(self):
+    def post(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         context = {
-            'seasons': seasons.Season.getSeasons(),
+            'seasons': seasons.Season.getSeasons(club),
+            'club': club,
             'player': {
                 'seasonName': self.request.get('season_select'),
                 'code': self.request.get('code'),
@@ -44,7 +61,7 @@ class AddPlayerHandler(base_handler.BaseHandler):
 
         error_messages = []
         context_player = context['player']
-        season = seasons.Season.get_by_id(context_player['seasonName'])
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.startDate).get()
         lifetime = seasons.Season.get_by_id('lifetime')
         player = players.Player.get_by_id(context_player['code'])
         if player:
@@ -89,9 +106,23 @@ class AddPlayerHandler(base_handler.BaseHandler):
 
         self.render_response(TEMPLATE, **context)
 
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         context = {
-            'seasons': seasons.Season.getSeasons(),
+            'club': club,
+            'seasons': seasons.Season.getSeasons(club),
             'player': {
                 'season': '',
                 'code': '',
@@ -107,6 +138,6 @@ class AddPlayerHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AddPlayerHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', AddPlayerHandler)],
     debug=True,
     config=base_handler.CONFIG)

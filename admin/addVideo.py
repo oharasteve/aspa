@@ -15,17 +15,33 @@
 # limitations under the License.
 #
 from google.appengine.ext import ndb
+from google.appengine.api import users
+
 import base_handler
 import datetime
 import webapp2
 
 from data import matches
 from data import seasons
+from data import clubs
 
 TEMPLATE = 'html/add_video.html'
 
 class AddVideoHandler(base_handler.BaseHandler):
-    def post(self):
+    def post(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         xseason = self.request.get('season_select')
         xwhen = self.request.get('date')
         xseq = self.request.get('seq')
@@ -63,7 +79,8 @@ class AddVideoHandler(base_handler.BaseHandler):
         context = {
           'page_title': 'Add a Video',
           'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
+          'club': club,
           'date': datetime.date.today().strftime('%Y-%m-%d'),
           'season_selected': season.key,
           'display_form': display_form,
@@ -71,12 +88,26 @@ class AddVideoHandler(base_handler.BaseHandler):
         }
         self.render_response(TEMPLATE, **context)
 
-    def get(self):
+    def get(self, clubid):
+        club = clubs.Club.get_by_id(clubid)
+        if club == None:
+           clubs.sendNoSuch(clubid)
+           return
+        user = users.get_current_user()
+        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+            self.response.clear()
+            self.response.set_status(405)
+            self.response.out.write("Not authorized")
+            return
+        if user not in club.owners:
+            club.owners.append(user)
+            club = club.put()
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
         context = {
           'page_title': 'Add a Video',
           'page_message': 'Click <a href="/admin">here</a> to go back to the admin page.',
-          'seasons': seasons.Season.getSeasons(),
+          'seasons': seasons.Season.getSeasons(club),
+          'club': club,
           'date': datetime.date.today().strftime('%Y-%m-%d'),
           'season_selected': season.key,
           'display_form': True,
@@ -84,6 +115,6 @@ class AddVideoHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'/.*', AddVideoHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/.*', AddVideoHandler)],
     debug=True,
     config=base_handler.CONFIG)

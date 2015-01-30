@@ -17,11 +17,18 @@
   </script>
 {%- endblock %}
 {%- block admin_content %}
+  <div> {{ user.email() }} </div>
   {%- if display_form %}
   <h3>Add a New Club</h3>
   <hr/>
 
-  <form action="/admin/addClub/" method="post" id="addClubForm", class="form-horizontal" fole="form">
+  <form
+  {%- if club %}
+  action="/{{club.key.id()}}/admin/addClub/"
+  {%- else %}
+  action="/admin/addClub/"
+  {%- endif %}
+  method="post" id="addClubForm", class="form-horizontal" fole="form">
     <div class="form-group">
       <label for="code" class="col-sm-2 control-label">Code</label>
       <div class="col-sm-7">
@@ -41,6 +48,23 @@
       </div>
     </div>
     <div class="form-group">
+      <label for="owner" class="col-sm-2 control-label">Add Operator</label>
+      <div class="col-sm-7">
+        <input type="text" name="owner" id="owner" class="form-control" value="" />
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <label for="remove" class="col-sm-2 control-label">Remove Operator</label>
+      {%- for owner in owners %}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="remove" value="{{ owner }}">
+            {{ owner }}
+        </label>
+      </div>
+      {%- endfor %}
+    </div>
+    <div class="form-group">
       <div class="col-sm-offset-2 col-sm-8">
         <button type="submit" class="btn btn-default">Submit</button>
       </div>
@@ -57,7 +81,6 @@
     </font>
   </h3>
   {%- else %}
-  <h3>Successfully added new club: {{ club_name }} ({{ club_code }})</h3>
-  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  <h3>Successfully updated club: {{ club_name }} ({{ club_code }})</h3>
   {%- endif %}
 {%- endblock %}
