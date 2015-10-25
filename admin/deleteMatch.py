@@ -38,7 +38,7 @@ class DeleteMatchHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -134,7 +134,7 @@ class DeleteMatchHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -145,7 +145,8 @@ class DeleteMatchHandler(base_handler.BaseHandler):
         season = seasons.Season.query().order(-seasons.Season.endDate).get();
         currDate = datetime.date.today()
         weekDay = currDate.weekday()      # 0=Mon ... 6=Sun
-        adjustDays = (weekDay + 6) % 7    # 6=Mon ... 5=Sun
+        seasonDay = season.startDate.weekday()         # 0=Mon ... 6=Sun
+        adjustDays = (weekDay + 7-seasonDay) % 7   # 6=Mon ... 5=Sun for seasonDay == Tue
         matchDate = currDate - datetime.timedelta(days=adjustDays)
         context = {
           'seasons': seasons.Season.getSeasons(club),

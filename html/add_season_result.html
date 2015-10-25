@@ -12,7 +12,7 @@
     for (var i in playerSummaries) {
       var playerSummary = playerSummaries[i];
       if (playerSummary.player.id == playerId) {
-        return playerSummary.handicap;
+        return playerSummary.player.handicap;
       }
     }
     return 0;

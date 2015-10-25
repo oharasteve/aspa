@@ -81,7 +81,7 @@ class View():
 
             weekCount = matches.Match.query(
                 matches.Match.season == season.key, projection=["date"], distinct=True).count()
-            
+
         logging.debug('Found %d player summary records.' % (
             len(player_summaries)))
 

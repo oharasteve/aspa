@@ -37,7 +37,7 @@ class AddSeasonHandler(base_handler.BaseHandler):
            return
 
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -86,35 +86,6 @@ class AddSeasonHandler(base_handler.BaseHandler):
             season.club = club.key
             season = season.put()
         self.render_response(TEMPLATE, **context)
-        if context['season_code'] == 'lifetime':
-            # One shot code to back update the lifetime stats from before the feature was added
-            s_list = stats.PlayerSummary.query().order(stats.PlayerSummary.player).fetch()
-            lifetime = None
-            for stat in s_list:
-                if lifetime and lifetime.player != stat.player:
-                    lifetime.put()
-
-                if lifetime == None or lifetime.player != stat.player:
-                    lifetime = stats.PlayerSummary()
-                    lifetime.player = stat.player
-                    lifetime.season = season
-                    lifetime.wins = 0
-                    lifetime.forfeits = 0
-                    lifetime.losses = 0
-                    lifetime.highRun = 0
-
-                # Update win / loss totals
-                lifetime.wins = lifetime.wins + stat.wins
-                lifetime.forfeits = lifetime.forfeits + stat.forfeits
-                lifetime.losses = lifetime.forfeits + stat.losses
-                if lifetime.handicap < stat.handicap:
-                    lifetime.handicap = stat.handicap
-                if lifetime.highRun < stat.highRun:
-                    lifetime.highRun = stat.highRun
-                if lifetime.highRunTarget < stat.highRunTarget:
-                    lifetime.highRunTarget = stat.highRunTarget
-            # Put last players stats.
-            lifetime.put()
 
     def get(self, clubid):
         club = clubs.Club.get_by_id(clubid)
@@ -123,7 +94,7 @@ class AddSeasonHandler(base_handler.BaseHandler):
            return
 
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")

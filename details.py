@@ -103,6 +103,7 @@ class Details():
                 'season': season,
                 'match_details': match_details,
                 'player': player,
+                'club': season.club,
                 'summary': summary,
                 'lifesummary': lifesummary,
                 'charts_page_url':

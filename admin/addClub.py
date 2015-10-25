@@ -41,22 +41,19 @@ class AddClubHandler(base_handler.BaseHandler):
         remove = self.request.get_all('remove')
         error_messages = []
         club = clubs.Club.get_by_id(context['club_code'])
-        if club and user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if club and user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
             return
         if club and user not in club.owners:
             club.owners.append(user)
-            del club.invited[club.invited.index(user.email())]
+            del club.invited[club.invited.index(user.email().lower())]
             club = club.put().get()
         if not club:
             club = clubs.Club(key=ndb.Key(clubs.Club, context['club_code']))
         if context['newowner']:
-           club.invited.append(context['newowner'])
-        logging.info(club.owners)
-        logging.info(club.invited)
-        logging.info("To remove "+str(remove))
+           club.invited.append(context['newowner'].lower())
         for email in remove:
            if email in club.invited:
                del club.invited[club.invited.index(email)]
@@ -75,7 +72,7 @@ class AddClubHandler(base_handler.BaseHandler):
     def get(self, clubid):
         user = users.get_current_user()
         club = clubs.Club.get_by_id(clubid)
-        if club and user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if club and user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")

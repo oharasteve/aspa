@@ -46,7 +46,7 @@ class SuggestMatchHandler(base_handler.BaseHandler):
                     'firstName': str(player.firstName),
                     'lastName': str(player.lastName),
                     'fullName': str('%s %s' % (player.firstName, player.lastName)),
-                    'handicap': player_summary.handicap,
+                    'handicap': player.handicap,
                     })
 
         context = {

@@ -1,0 +1,140 @@
+{%- extends "/html/admin_template.html" %}
+{%- block title %}ASPA {{ seasons[0].name }}{%- endblock %}
+{%- block head %}
+  {{ super() }}
+
+  <script>
+  {%- autoescape false %}
+  var ViewModel = new function() {
+    var self = this;
+    this.players =  ko.observableArray({{players}});
+    this.playerA_selected = ko.observable();
+    this.playerB_selected = ko.observable();
+    this.playerA_handicap = ko.computed(function() {
+            return this.playerA_selected() ? this.playerA_selected().handicap : '';
+            }, this);
+    this.playerB_handicap = ko.computed(function() {
+            return this.playerB_selected() ? this.playerB_selected().handicap : '';
+            }, this);
+    this.races = ko.observableArray([]);
+    this.generateRaces = function() {
+        var generated_races = [];
+        // Admin might have edited the text box to quickly check races between
+        // arbitrary handicaps. So use value of input instead of viewmodel.
+        var handicapA = parseInt($('#playerA_handicap').val(), 10);
+        var handicapB = parseInt($('#playerB_handicap').val(), 10);
+        if (handicapA >= 100 && handicapA < 1000) {
+            if (handicapB >= 100 && handicapB < 1000) {
+                var delta = Math.abs(handicapA - handicapB);
+                for (var x=50; x<=140; x+=10) {
+                    var lower = Math.round(x / Math.pow(2, delta/100.0) / 5) * 5;
+                    var playerA = '';
+                    var playerB = '';
+                    if (lower > 5) {
+                        if (handicapA > handicapB) {
+                            playerA = x;
+                            playerB = lower;
+                        } else {
+                            playerA = lower;
+                            playerB = x;
+                        }
+                    }
+                    generated_races.push({ 'playerA': playerA, 'playerB': playerB, });
+                }
+            }
+        }
+        self.races(generated_races);
+    };
+  };
+  {%- endautoescape %}
+
+  $().ready(function() {
+    $("#addPlayerForm").validate({
+      rules: {
+        season_select: "required",
+        club_select: "required",
+        playerA_select: "required",
+        playerB_select: "required",
+        playerA_handicap: {
+          required: true,
+          numeric: true,
+        },
+        playerB_handicap: {
+          required: true,
+          numeric: true,
+        },
+      }
+    });
+
+    ko.applyBindings(ViewModel);
+  });
+  </script>
+{%- endblock %}
+{%- block admin_content %}
+  <h3>Suggested Race:</h3>
+  <hr/>
+
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="season_select" class="col-sm-2 control-label">Season</label>
+      <div class="col-sm-7">
+        <select name="season_select" id="season_select" class="form-control">
+        {%- for season in seasons %}
+          <option value="{{ season.id }}">{{ season.name }}</option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="playerA_select" class="col-sm-2 control-label">Player 1</label>
+      <div class="col-sm-3">
+        <select name="playerA_select" id="playerA_select" class="form-control" value="-1"
+            data-bind="options: players,
+                       optionsText: 'fullName',
+                       optionsCaption: 'Choose ...',
+                       value: playerA_selected,
+                       event: { change: generateRaces }"
+                       ></select>
+      </div>
+      <label for="playerB_select" class="col-sm-1 control-label">Player 2</label>
+      <div class="col-sm-3">
+        <select name="playerB_select" id="playerB_select" class="form-control" value="-1"
+            data-bind="options: players,
+                       optionsText: 'fullName',
+                       optionsCaption: 'Choose ...',
+                       value: playerB_selected,
+                       event: { change: generateRaces }"
+            ></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="playerA_handicap" class="col-sm-2 control-label">Handicap</label>
+      <div class="col-sm-3">
+        <input id="playerA_handicap" name="playerA_handicap" class="form-control"
+            data-bind="value: playerA_handicap,
+                       event: {change: generateRaces }"/>
+      </div>
+      <label for="loser_handicap" class="col-sm-1 control-label">Handicap</label>
+      <div class="col-sm-3">
+        <input id="playerB_handicap" name="playerB_handicap" class="form-control"
+            data-bind="value: playerB_handicap,
+                       event: {change: generateRaces }"/>
+      </div>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-sm-offset-2 col-sm-7">
+      <table class="table table-bordered table-condensed table-hover">
+        <tbody>
+          <!-- ko foreach: races -->
+          <tr>
+            <td><span data-bind="text: playerA"></span></td>
+            <td><span data-bind="text: playerB"></span></td>
+          </tr>
+          <!-- /ko -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+{%- endblock %}

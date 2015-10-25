@@ -23,6 +23,7 @@
   <h1 class="text-center">American Straight Pool Association</h1>
   {%- if season %}
   <h2 class="text-center">
+    {{ club.name }}<br>
     {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
   </h2>
   {%- endif %}
@@ -53,7 +54,7 @@
         <td class="text-center">{{ entry.entry_index }}</td>
         <td class="text-left"><a href="{{ entry.details_page_url }}">
             {{ entry.player.firstName }} {{ entry.player.lastName }}</a></td>
-        <td class="text-center">{{ entry.summary.handicap }}</td>
+        <td class="text-center">{{ entry.player.handicap }}</td>
         <td class="text-center">{{ entry.summary.wins }}</td>
         <td class="text-center">{{ entry.summary.losses }}</td>
         <td class="text-center">{{ entry.summary.forfeits }}</td>

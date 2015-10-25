@@ -74,7 +74,7 @@ class Weekly():
         pdf_blob = blob_query.filter('filename =', pdf_name).get()
         if pdf_blob:
           pdf_key = pdf_blob.key()
-        
+
         context = {
                 'matchDate': matchDate,
                 'club': club,

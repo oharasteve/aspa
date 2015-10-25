@@ -35,7 +35,7 @@
         <div class="checkbox">
           <label>
             <input type="checkbox" name="Carry_{{ player.id  }}" value="{{ player.id }}">
-              {{ player.firstName }} {{ player.lastName }}
+              {{ player.firstName }} {{ player.lastName }} ({{player.handicap}})
           </label>
         </div>
         {%- endfor %}

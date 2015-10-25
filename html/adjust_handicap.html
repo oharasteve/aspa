@@ -6,8 +6,10 @@
   <script>
   var handicaps = [];
   var highruns = [];
+  {%- for player in players %}
+    handicaps['{{ player.id }}'] = {{ player.handicap }};
+  {%- endfor %}
   {%- for stat in player_summaries %}
-    handicaps['{{ stat.player.id }}'] = {{ stat.handicap }};
     highruns['{{ stat.player.id }}'] = {{ stat.highRunTarget }};
   {%- endfor %}
 

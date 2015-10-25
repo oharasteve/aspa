@@ -20,7 +20,7 @@ class SaveHandler(webapp2.RequestHandler):
        clubs.sendNoSuch(clubid)
        return
     user = users.get_current_user()
-    if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+    if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
         self.response.clear()
         self.response.set_status(405)
         self.response.out.write("Not authorized")
@@ -41,7 +41,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
        clubs.sendNoSuch(clubid)
        return
     user = users.get_current_user()
-    if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+    if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
         self.response.clear()
         self.response.set_status(405)
         self.response.out.write("Not authorized")

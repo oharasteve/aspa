@@ -36,7 +36,7 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -87,9 +87,10 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             # Update statistics for the player
             playerStats = stats.PlayerSummary.query(
                 ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season == season.key)).fetch(1)[0]
-            playerStats.handicap = hcapNew
+            player.handicap = hcapNew
             playerStats.highRunTarget = hrtNew
             playerStats.put()
+            player.put()
         
         context = {
           'page_title': 'Adjust a Handicap',
@@ -111,7 +112,7 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")

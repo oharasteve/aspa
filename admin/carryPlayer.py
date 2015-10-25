@@ -43,7 +43,7 @@ class CarryPlayerHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -61,7 +61,7 @@ class CarryPlayerHandler(base_handler.BaseHandler):
         error_messages = []
         season = seasons.Season.get_by_id(context['seasonName'])
         additions = []
-        
+
         for playerId in players.Player.getPlayers():
             checkbox = self.request.get('Carry_' + playerId['id'])
             if checkbox != '':
@@ -78,16 +78,15 @@ class CarryPlayerHandler(base_handler.BaseHandler):
                     newStat = stats.PlayerSummary()
                     newStat.player = oldStat.player
                     newStat.season = season.key
-                    newStat.handicap = oldStat.handicap
-                    newStat.highRunTarget = highRun.getHighRunTarget(oldStat.handicap)
+                    newStat.highRunTarget = highRun.getHighRunTarget(player.handicap)
                     newStat.wins = 0
                     newStat.forfeits = 0
                     newStat.losses = 0
                     newStat.highRun = 0
                     newStat.put()
-                    
+
                     additions.append("%s %s (%d, %.2f)" %
-                        (player.firstName, player.lastName, newStat.handicap, newStat.highRunTarget))
+                        (player.firstName, player.lastName, player.handicap, newStat.highRunTarget))
 
         if len(error_messages) > 0:
             context['error_messages'] = error_messages
@@ -102,7 +101,7 @@ class CarryPlayerHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")

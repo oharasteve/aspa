@@ -5,8 +5,8 @@
 
   <script>
   var handicaps = [];
-  {%- for stat in playerStats %}
-    handicaps['{{ stat.player.id }}'] = {{ stat.handicap }};
+  {%- for player in players %}
+    handicaps['{{ player.id }}'] = {{ player.handicap }};
   {%- endfor %}
 
   function setHandicap(selectName, inputName) {
@@ -23,43 +23,43 @@
     $("#addMatchForm").validate({
       rules: {
         season_select: "required",
-        winner_select: "required",
-        loser_select: "required",
-        winner_handicap: {
+        playera_select: "required",
+        playerb_select: "required",
+        playera_handicap: {
           required: true,
           number: true,
           range: [100, 1000]
         },
-        loser_handicap: {
+        playerb_handicap: {
           required: true,
           number: true,
           range: [100, 1000]
         },
-        winner_target: {
+        playera_target: {
           required: true,
           number: true,
           range: [1, 150]
         },
-        loser_target: {
+        playerb_target: {
           required: true,
           number: true,
           range: [1, 150]
         },
-        winner_score: {
+        playera_score: {
           required: true,
           number: true,
           range: [1, 150]
         },
-        loser_score: {
+        playerb_score: {
           required: true,
           number: true,
           range: [0, 150]
         },
-        winner_highrun: {
+        playera_highrun: {
           number: true,
           range: [0, 1000]
         },
-        loser_highrun: {
+        playerb_highrun: {
           number: true,
           range: [0, 1000]
         },
@@ -74,8 +74,8 @@
     $(function() { $( "#match_date" ).datepicker({ dateFormat: "yy-mm-dd" }); });
 
     $('#season_select').val('{{ season_selected }}');
-    $('#winner_select').val('{{ winner_selected }}');
-    $('#loser_select').val('{{ loser_selected }}');
+    $('#playera_select').val('{{ playera_selected }}');
+    $('#playerb_select').val('{{ playerb_selected }}');
   {%- endif %}
   });
   </script>
@@ -89,19 +89,19 @@
     <div class="form-group">
       <label for="match_date" class="col-sm-2 control-label">Match Date</label>
       <div class="col-sm-7">
-        <input type="text" name="match_date" id="match_date" class="form-control" value="{{ match_date }}"/>
+        <input tabindex=2 type="text" name="match_date" id="match_date" class="form-control" value="{{ match_date }}"/>
       </div>
     </div>
     <div class="form-group">
       <label for="seq" class="col-sm-2 control-label">Seq</label>
       <div class="col-sm-7">
-        <input type="text" name="seq" id="seq" class="form-control" value="{{ seq }}"/>
+        <input tabindex=2 type="text" name="seq" id="seq" class="form-control" value="{{ seq }}"/>
       </div>
     </div>
     <div class="form-group">
       <label for="season_select" class="col-sm-2 control-label">Season</label>
       <div class="col-sm-7">
-        <select name="season_select" id="season_select" class="form-control">
+        <select tabindex=2 name="season_select" id="season_select" class="form-control">
         {%- for season in seasons %}
           <option value="{{ season.id }}">{{ season.name }}</option>
         {%- endfor %}
@@ -109,23 +109,23 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="winner_select" class="col-sm-2 control-label">Winner</label>
+      <label for="playera_select" class="col-sm-2 control-label">Player A</label>
       <div class="col-sm-3">
-        <select name="winner_select" id="winner_select" class="form-control" value="-1"
-            onchange="setHandicap('winner_select', 'winner_handicap')">
+        <select tabindex=1 name="playera_select" id="playera_select" class="form-control" value="-1"
+            onchange="setHandicap('playera_select', 'playera_handicap')">
           {%- for stat in playerStats %}
-          <option value="{{ stat.player.id }}" {%- if stat.player.id == winner.player_id %}selected{%- endif %}>
+          <option value="{{ stat.player.id }}" {%- if stat.player.id == playera.player_id %}selected{%- endif %}>
             {{ stat.player.firstName }} {{ stat.player.lastName }}
           </option>
           {%- endfor %}
         </select>
       </div>
-      <label for="loser_select" class="col-sm-1 control-label">Loser</label>
+      <label for="playerb_select" class="col-sm-1 control-label">Player B</label>
       <div class="col-sm-3">
-        <select name="loser_select" id="loser_select" class="form-control"
-            onchange="setHandicap('loser_select', 'loser_handicap')">
+        <select tabindex=1 name="playerb_select" id="playerb_select" class="form-control"
+            onchange="setHandicap('playerb_select', 'playerb_handicap')">
           {%- for stat in playerStats %}
-          <option value="{{ stat.player.id }}" {%- if stat.player.id == loser.player_id %}selected{%- endif %}>
+          <option value="{{ stat.player.id }}" {%- if stat.player.id == playerb.player_id %}selected{%- endif %}>
             {{ stat.player.firstName }} {{ stat.player.lastName }}
           </option>
           {%- endfor %}
@@ -133,65 +133,68 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="winner_handicap" class="col-sm-2 control-label">Handicap</label>
+      <label for="playera_handicap" class="col-sm-2 control-label">Handicap</label>
       <div class="col-sm-3">
-        <input type="text" name="winner_handicap" id="winner_handicap" class="form-control" value="{{ winner.handicap }}"/>
+        <input type="text" name="playera_handicap" id="playera_handicap" class="form-control" value="{{ playera.handicap }}"/>
       </div>
-      <label for="loser_handicap" class="col-sm-1 control-label">Handicap</label>
+      <label for="playerb_handicap" class="col-sm-1 control-label">Handicap</label>
       <div class="col-sm-3">
-        <input type="text" name="loser_handicap" id="loser_handicap" class="form-control" value="{{ loser.handicap }}"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="winner_target" class="col-sm-2 control-label">Target</label>
-      <div class="col-sm-3">
-        <input type="text" name="winner_target" id="winner_target" class="form-control" value="{{ winner.target }}"
-            onchange="winner_score.value = this.value"/>
-      </div>
-      <label for="loser_target" class="col-sm-1 control-label">Target</label>
-      <div class="col-sm-3">
-        <input type="text" name="loser_target" id="loser_target" class="form-control" value="{{ loser.target }}"/>
+        <input type="text" name="playerb_handicap" id="playerb_handicap" class="form-control" value="{{ playerb.handicap }}"/>
       </div>
     </div>
     <div class="form-group">
-      <label for="winner_score" class="col-sm-2 control-label">Score</label>
+      <label for="playera_target" class="col-sm-2 control-label">Target</label>
       <div class="col-sm-3">
-        <input type="text" name="winner_score" id="winner_score" class="form-control" value="{{ winner.score }}"/>
+        <input tabindex=1 type="text" name="playera_target" id="playera_target" class="form-control" value="{{ playera.target }}"
+            onchange="if (playera_handicap.value >= playerb_handicap.value) { playerb_target.value = Math.round(playera_target.value / Math.pow(2, (playera_handicap.value - playerb_handicap.value)/100.0) / 5) * 5 } "/>
       </div>
-      <label for="loser_score" class="col-sm-1 control-label">Score</label>
+      <label for="playerb_target" class="col-sm-1 control-label">Target</label>
       <div class="col-sm-3">
-        <input type="text" name="loser_score" id="loser_score" class="form-control" value="{{ loser.score }}"/>
+        <input tabindex=1 type="text" name="playerb_target" id="playerb_target" class="form-control" value="{{ playerb.target }}"
+            onchange="if (playerb_handicap.value > playera_handicap.value) { playera_target.value = Math.round(playerb_target.value / Math.pow(2, (playerb_handicap.value - playera_handicap.value)/100.0) / 5) * 5 } "/>
       </div>
     </div>
     <div class="form-group">
-      <label for="winner_highrun" class="col-sm-2 control-label">High Run</label>
+      <label for="playera_score" class="col-sm-2 control-label">Score</label>
       <div class="col-sm-3">
-        <input type="text" name="winner_highrun" id="winner_highrun" class="form-control" value="{{ winner.highrun }}"/>
+        <input tabindex=1 type="text" name="playera_score" id="playera_score" class="form-control" value="{{ playera.score }}"
+            onchange="if (playera_score.value < playera_target.value) { playerb_score.value = playerb_target.value } "/>
       </div>
-      <label for="loser_highrun" class="col-sm-1 control-label">High Run</label>
+      <label for="playerb_score" class="col-sm-1 control-label">Score</label>
       <div class="col-sm-3">
-        <input type="text" name="loser_highrun" id="loser_highrun" class="form-control" value="{{ loser.highrun }}"/>
+        <input tabindex=1 type="text" name="playerb_score" id="playerb_score" class="form-control" value="{{ playerb.score }}"
+            onchange="if (playerb_score.value < playerb_target.value) { playera_score.value = playera_target.value } "/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="playera_highrun" class="col-sm-2 control-label">High Run</label>
+      <div class="col-sm-3">
+        <input tabindex=1 type="text" name="playera_highrun" id="playera_highrun" class="form-control" value="{{ playera.highrun }}"/>
+      </div>
+      <label for="playerb_highrun" class="col-sm-1 control-label">High Run</label>
+      <div class="col-sm-3">
+        <input tabindex=1 type="text" name="playerb_highrun" id="playerb_highrun" class="form-control" value="{{ playerb.highrun }}"/>
       </div>
     </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-8">
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="forfeit" id="forfeit"/>Forfeit
+            <input tabindex=2 type="checkbox" name="forfeit" id="forfeit"/>Forfeit
           </label>
         </div>
       </div>
     </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-8">
-        <button type="submit" class="btn btn-default">Submit</button>
+        <button tabindex=1 type="submit" class="btn btn-default">Submit</button>
       </div>
     </div>
   </form>
   {%- endif %}
   <div name="add_match_notes">
   {%- if successfully_added_match %}
-  <h3>Successfully added match result: {{ winner.firstName }} ({{ winner.score }}) beat {{ loser.firstName }} ({{ loser.score }}) </h3>
+  <h3>Successfully added match result: {{ playera.firstName }} ({{ playera.score }}) beat {{ playerb.firstName }} ({{ playerb.score }}) </h3>
   {%- endif %}
   {%- if error_messages %}
   <h3>

@@ -56,7 +56,7 @@
         <tr>
           <td class="test-left">{{season.name}}</td>
           <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
-          <td class="text-center">{{ summary.handicap }}</td>
+          <td class="text-center">{{ player.handicap }}</td>
           <td class="text-center">{{ summary.wins }}</td>
           <td class="text-center">{{ summary.losses }}</td>
           <td class="text-center">{{ summary.forfeits }}</td>
@@ -139,5 +139,5 @@
   </div>
 
   <a href="{{charts_page_url}}">Charts</a>
-  <a href="/">Home</a>
+  <a href="/{{club.id()}}/">Home</a>
 {%- endblock %}

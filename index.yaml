@@ -97,7 +97,6 @@ indexes:
   properties:
   - name: season
   - name: player
-  - name: handicap
 
 - kind: PlayerSummary
   properties:

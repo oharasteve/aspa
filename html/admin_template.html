@@ -1,6 +1,7 @@
 {%- extends "/html/base_template.html" %}
 {%- block content %}
   <h1>American Straight Pool Association</h1>
+  <h2>{{club.name}}</h2>
   {%- block admin_content %}{%- endblock %}
   <a href="/{% if club %}{{club.key.id()}}/{% endif %}admin/">Go Back to the Admin Menu</a>
 {%- endblock %}

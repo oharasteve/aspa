@@ -35,7 +35,7 @@ class AddPlayerHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -62,7 +62,6 @@ class AddPlayerHandler(base_handler.BaseHandler):
         error_messages = []
         context_player = context['player']
         season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.startDate).get()
-        lifetime = seasons.Season.get_by_id('lifetime')
         player = players.Player.get_by_id(context_player['code'])
         if player:
             error_messages.append("Duplicate player (%s)" % cgi.escape(
@@ -80,29 +79,18 @@ class AddPlayerHandler(base_handler.BaseHandler):
             player.lastName = context_player['lastName']
             player.phone = context_player['phone']
             player.email = context_player['email']
+            player.handicap = int(context_player['handicap'])
             player.put()
 
             if not noseason:
                 stat = stats.PlayerSummary()
                 stat.player = player.key
                 stat.season = season.key
-                stat.handicap = int(context_player['handicap'])
                 stat.highRunTarget = float(context_player['highRunTarget'])
                 stat.highRun = 0
                 stat.wins = 0
                 stat.losses = 0
                 stat.put()
-
-                if lifetime:
-                   stat = stats.PlayerSummary()
-                   stat.player = player.key
-                   stat.season = lifetime.key
-                   stat.handicap = int(context_player['handicap'])
-                   stat.highRunTarget = float(context_player['highRunTarget'])
-                   stat.highRun = 0
-                   stat.wins = 0
-                   stat.losses = 0
-                   stat.put()
 
         self.render_response(TEMPLATE, **context)
 

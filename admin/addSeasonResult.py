@@ -37,7 +37,7 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")
@@ -47,7 +47,6 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
             club = club.put()
         xseason = self.request.get('season_select')
         xname = self.request.get('player_select')
-        xhcap = self.request.get('player_handicap')
         xwins = self.request.get('player_wins')
         xlosses = self.request.get('player_losses')
         xforfeits = self.request.get('player_forfeits')
@@ -68,10 +67,9 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
         if not len(error_messages):
             # Create statistics for the player
             summary = stats.PlayerSummary()
-            
+
             summary.player = player.key
             summary.season = season.key
-            summary.handicap = int(xhcap)
             summary.wins = int(xwins)
             summary.losses = int(xlosses)
             summary.forfeits = int(xforfeits)
@@ -105,7 +103,7 @@ class AddSeasonResultHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
-        if user not in club.owners and user.email() not in club.invited and not users.is_current_user_admin():
+        if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
             self.response.clear()
             self.response.set_status(405)
             self.response.out.write("Not authorized")

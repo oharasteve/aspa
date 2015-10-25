@@ -7,6 +7,7 @@ import webapp2
 from data import matches
 from data import players
 from data import stats
+from data import clubs
 
 TEMPLATE = 'html/charts.html'
 
@@ -23,7 +24,7 @@ class ChartsHandler(base_handler.BaseHandler):
         self.render_response(TEMPLATE, **context)
 
 
-app = webapp2.WSGIApplication([(r'([^/]*)/charts/', ChartsHandler)],
+app = webapp2.WSGIApplication([(r'/([^/]*)/charts/', ChartsHandler)],
     debug=True,
     config=base_handler.CONFIG)
 
@@ -82,11 +83,9 @@ class Charts():
 
     def get_context(self, player, club):
         match_details = self.get_match_details(player, club)
-        summary = self.get_summary(player, club)
         context = {
                 'match_details': match_details,
                 'player': player,
                 'club': club,
-                'summary': summary,
                 }
         return context
