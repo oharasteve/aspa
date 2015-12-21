@@ -56,13 +56,19 @@ handlers:
 
 - url: /[^/]*/weekly/.*
   script: weekly.app
-  
+
+- url: /[^/]*/players/.*
+  script: players.app
+
+- url: /players/.*
+  script: players.app
+
 - url: /showResults/.*
   script: showResults.app
-  
+
 - url: /showPhoto/.*
   script: showPhoto.app
-  
+
 - url: /[^/]*/
   script: view.app
 

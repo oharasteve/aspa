@@ -63,24 +63,25 @@ class AddMatchHandler(base_handler.BaseHandler):
 
         nameW = nameA
         nameL = nameB
-        xhcapW = xhcapA
-        xhcapL = xhcapB
-        xtargetW = xtargetA
-        xtargetL = xtargetB
-        xscoreW = xscoreA
-        xscoreL = xscoreB
-        xhrunW = xhrunA
-        xhrunL = xhrunB
 
         seq = int(xseq)
-        hcapW = int(xhcapW)
-        hcapL = int(xhcapL)
-        targetW = int(xtargetW)
-        targetL = int(xtargetL)
-        scoreW = int(xscoreW)
-        scoreL = int(xscoreL)
-        hrunW = int(xhrunW)
-        hrunL = int(xhrunL)
+        hcapA = int(xhcapA)
+        hcapB = int(xhcapB)
+        targetA = int(xtargetA)
+        targetB = int(xtargetB)
+        scoreA = int(xscoreA)
+        scoreB = int(xscoreB)
+        hrunA = int(xhrunA)
+        hrunB = int(xhrunB)
+
+        hcapW = hcapA
+        hcapL = hcapB
+        targetW = targetA
+        targetL = targetB
+        scoreW = scoreA
+        scoreL = scoreB
+        hrunW = hrunA
+        hrunL = hrunB
 
         winner = players.Player.get_by_id(nameW)
         loser = players.Player.get_by_id(nameL)
@@ -96,20 +97,20 @@ class AddMatchHandler(base_handler.BaseHandler):
           'playera': {
               'firstName': winner.firstName,
               'lastName': winner.lastName,
-              'player_id': nameW,
-              'handicap': xhcapW,
-              'target': xtargetW,
-              'highrun': xhrunW,
-              'score': xscoreW,
+              'player_id': nameA,
+              'handicap': xhcapA,
+              'target': xtargetA,
+              'highrun': xhrunA,
+              'score': xscoreA,
               },
           'playerb': {
               'firstName': loser.firstName,
               'lastName': loser.lastName,
-              'player_id': nameL,
-              'handicap': xhcapL,
-              'target': xtargetL,
-              'highrun': xhrunL,
-              'score': xscoreL,
+              'player_id': nameB,
+              'handicap': xhcapB,
+              'target': xtargetB,
+              'highrun': xhrunB,
+              'score': xscoreB,
               },
           'forfeit': forfeit,
           'season_selected': xseason,
@@ -122,14 +123,15 @@ class AddMatchHandler(base_handler.BaseHandler):
         if int(xtargetA) != int(xscoreA):
             nameW = nameB
             nameL = nameA
-            xhcapW = xhcapB
-            xhcapL = xhcapA
-            xtargetW = xtargetB
-            xtargetL = xtargetA
-            xscoreW = xscoreB
-            xscoreL = xscoreA
-            xhrunW = xhrunB
-            xhrunL = xhrunA
+            hcapW = hcapB
+            hcapL = hcapA
+            targetW = targetB
+            targetL = targetA
+            scoreW = scoreB
+            scoreL = scoreA
+            hrunW = hrunB
+            hrunL = hrunA
+            winner,loser = loser,winner
 
         successfully_added_match = False
         error_messages = []
@@ -156,8 +158,8 @@ class AddMatchHandler(base_handler.BaseHandler):
         if not len(error_messages):
             # Setup context for new match
             context['seq'] = context['seq']+1
-            context['playera'] = {}
-            context['playerb'] = {}
+            context['playera']['highrun'] = 0
+            context['playerb']['highrun'] = 0
             context['playera_selected'] = 0
             context['playerb_selected'] = 0
 

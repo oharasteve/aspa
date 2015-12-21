@@ -75,8 +75,6 @@ def removeMatch(season, player, win):
    # Update high runs
    if hrun > Stats.highRun:
        Stats.highRun = hrun
-   if hrun > Lifetime.highRun:
-       Lifetime.highRun = hrun
    """
 
    Stats.put()

@@ -9,6 +9,7 @@ class Player(ndb.Model):
     firstName = ndb.StringProperty()
     lastName = ndb.StringProperty()
     phone = ndb.StringProperty()
+    email = ndb.StringProperty()
     photo = ndb.StringProperty()
     handicap = ndb.IntegerProperty()
 
