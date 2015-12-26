@@ -12,6 +12,7 @@ class Player(ndb.Model):
     email = ndb.StringProperty()
     photo = ndb.StringProperty()
     handicap = ndb.IntegerProperty()
+    seasons = ndb.KeyProperty(repeated=True)
 
     @classmethod
     def getPlayers(self):

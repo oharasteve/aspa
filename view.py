@@ -17,7 +17,12 @@ TEMPLATE = 'html/view.html'
 
 class ViewHandler(base_handler.BaseHandler):
     def get(self):
-      pass
+        TEMPLATE = 'html/viewall.html'
+
+        context = {
+            'players': players.Player.getPlayers(),
+        }
+        self.render_response(TEMPLATE, **context)
 
 class ViewClubHandler(base_handler.BaseHandler):
     def get(self, clubid):
@@ -29,7 +34,7 @@ class ViewClubHandler(base_handler.BaseHandler):
         season = None
         if seasonCode:
             season = seasons.Season.query(seasons.Season.key == ndb.Key(seasons.Season, seasonCode)).get();
-        
+
         if not season:
             # Default to latest season
             season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.startDate).get()

@@ -1,0 +1,38 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block header %}
+  <h1 class="text-center">American Straight Pool Association</h1>
+{% endblock %}
+
+{% block content %}
+  <table id="players-summary" class="table table-hover table-condensed sortable-table">
+    <thead>
+      <tr>
+        <th class="sortable-header text-left">Name</th>
+        <th class="sortable-header text-center">H'cap</th>
+        <th class="sortable-header text-center">Latest Plays</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for player in players %}
+      <tr>
+        <td class="text-left"><a href="">
+            {{ player.firstName }} {{ player.lastName }}</a></td>
+        <td class="text-center">{{ player.handicap }}</td>
+        <td class="text-left">
+        {% for season in player.seasons %}
+            <a href="/{{season.get().club.id()}}/details/?Season={{season.id()}}&Player={{player.id}}">
+            {{season.get().club.get().name}} - {{ season.get().name }}
+            </a>
+        {%- endfor %}
+        </td>
+      </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+
+{%- endblock %}

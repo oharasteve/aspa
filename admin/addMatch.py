@@ -156,6 +156,21 @@ class AddMatchHandler(base_handler.BaseHandler):
           error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
 
         if not len(error_messages):
+            if season.key not in winner.seasons:
+                for (season_idx, season_rec) in enumerate(winner.seasons):
+                    if season_rec.get().club == club.key:
+                        del winner.seasons[season_idx]
+                        break
+                winner.seasons.append(season.key)
+                winner.put()
+            if season.key not in loser.seasons:
+                for (season_idx, season_rec) in enumerate(loser.seasons):
+                    if season_rec.get().club == club.key:
+                        del loser.seasons[season_idx]
+                        break
+                loser.seasons.append(season.key)
+                loser.put()
+
             # Setup context for new match
             context['seq'] = context['seq']+1
             context['playera']['highrun'] = 0
