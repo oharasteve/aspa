@@ -20,8 +20,7 @@
     <tbody>
     {% for player in players %}
       <tr>
-        <td class="text-left"><a href="">
-            {{ player.firstName }} {{ player.lastName }}</a></td>
+        <td class="text-left"> {{ player.firstName }} {{ player.lastName }}</td>
         <td class="text-center">{{ player.handicap }}</td>
         <td class="text-left">
         {% for season in player.seasons %}
