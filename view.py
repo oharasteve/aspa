@@ -84,8 +84,10 @@ class View():
                     }
                 player_summaries.append(player_summary)
 
-            weekCount = matches.Match.query(
-                matches.Match.season == season.key, projection=["date"], distinct=True).count()
+            weeks = matches.Match.query(
+                matches.Match.season == season.key, projection=["date"], distinct=True).order(-matches.Match.date)
+            weekCount = weeks.count()
+            last_update = weeks.fetch()[0]
 
         logging.debug('Found %d player summary records.' % (
             len(player_summaries)))
@@ -96,6 +98,7 @@ class View():
                 'club': club,
                 'player_summaries': player_summaries,
                 'weeks': weekCount,
+                'updated': last_update.date,
                 'matches': matchCount,
                 }
         return context

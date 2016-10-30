@@ -5,7 +5,10 @@
   <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
     $("#player-summary").tablesorter({
-      sortList:[[0,1]],  // sort by date ascending.
+      sortList:[[0,-1]],  // sort by date ascending.
+      sortAppend: {
+        0 : [[ 1, 's' ]]  // sort match number in the same direction as date.
+      },
       headers: { },
       widgets: ['zebra'],
       cssAsc: "header-sort-up",
@@ -41,7 +44,7 @@
         <tr>
           <th class="text-left">Season</th>
           <th class="text-left">Name</th>
-          <th class="text-center">H'cap</th>
+          <th class="text-center">H'Cap</th>
           <th class="text-center">Won</th>
           <th class="text-center">Lost</th>
           <th class="text-center">Forfeits</th>
@@ -56,7 +59,7 @@
         <tr>
           <td class="test-left">{{season.name}}</td>
           <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
-          <td class="text-center">{{ player.handicap }}</td>
+          <td class="text-center">{{ summary.handicap }}</td>
           <td class="text-center">{{ summary.wins }}</td>
           <td class="text-center">{{ summary.losses }}</td>
           <td class="text-center">{{ summary.forfeits }}</td>
@@ -89,6 +92,7 @@
       <thead>
         <tr>
           <th class="sortable-header text-left">Date</th>
+          <th class="sortable-header text-left">Match Number</th>
           <th class="sortable-header text-center">Result</th>
           <th class="sortable-header text-center">H'cap</th>
           <th class="sortable-header text-center">Score</th>
@@ -109,6 +113,7 @@
           <td>{{ entry.entry_index }}</td>
           -->
           <td class="text-left"><a href="{{ entry.results_pdf_url }}">{{ entry.date|datetimeformat('%Y-%m-%d') }}</a></td>
+          <td class="text-center">{{ entry.seq }}</td>
           <td class="text-center">{{ entry.result }}</td>
           <td class="text-center">{{ entry.player.handicap }}</td>
           <td class="text-center">{{ entry.player.score }} / {{ entry.player.target }}</td>

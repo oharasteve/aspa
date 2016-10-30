@@ -64,6 +64,7 @@ class Details():
                     opponent['player'].id())
             entry = {
                     'entry_index': seq,
+                    'seq': match.seq,
                     'results_pdf_url': '/%s/weekly/?Y=%d&M=%d&D=%d' %
                         (cgi.escape(match_data['club'].id()),
                         match.date.year, match.date.month, match.date.day),
@@ -95,6 +96,9 @@ class Details():
     def get_context(self, season, player):
         match_details = self.get_match_details(season, player)
         summary = self.get_summary(season, player)
+        if summary.handicap == None:
+            summary.handicap = player.handicap;
+            summary.put()
         lifetime = seasons.Season.get_by_id('lifetime')
         lifesummary = {}
         if lifetime:

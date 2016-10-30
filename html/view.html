@@ -26,6 +26,7 @@
     {{ club.name }}<br>
     {{ season.name }}: {{ season.startDate|datetimeformat('%b %d, %Y') }} to {{ season.endDate|datetimeformat('%b %d, %Y') }}
   </h2>
+  updated: {{ updated }}
   {%- endif %}
 {% endblock %}
 

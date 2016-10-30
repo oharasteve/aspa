@@ -71,6 +71,12 @@ indexes:
   - name: season
   - name: date
 
+- kind: Match
+  properties:
+  - name: season
+  - name: date
+    direction: desc
+
 - kind: Player
   properties:
   - name: firstName
