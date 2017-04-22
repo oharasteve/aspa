@@ -47,7 +47,6 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         xseason = self.request.get('season_select')
         xwhen = self.request.get('todays_date')
         xname = self.request.get('player_select')
-        xhcapOld = self.request.get('oldHandicap')
         xhcapNew = self.request.get('newHandicap')
         xhrtOld = self.request.get('oldHighRunTarget')
         xhrtNew = self.request.get('newHighRunTarget')
@@ -67,7 +66,6 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
         if not season:
             error_messages.append("Season is required")
 
-        hcapOld = int(xhcapOld)
         hcapNew = int(xhcapNew)
         hrtOld = float(xhrtOld)
         hrtNew = float(xhrtNew)
@@ -77,7 +75,7 @@ class AdjustHandicapHandler(base_handler.BaseHandler):
             adjustment.date = when
             adjustment.season = season.key
             adjustment.player = player.key
-            adjustment.oldHandicap = hcapOld
+            adjustment.oldHandicap = 0
             adjustment.newHandicap = hcapNew
             adjustment.oldHighRunTarget = hrtOld
             adjustment.newHighRunTarget = hrtNew
