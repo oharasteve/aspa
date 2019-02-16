@@ -35,8 +35,8 @@ class AdminHandler(base_handler.BaseHandler):
                self.response.out.write("Not authorized")
                return
            context = {
-            'season': None,
-            'club': None,
+            'season': {'name':""},
+            'club': {'key': {'id':lambda: ""}},
             'choices': [
                 {
                     'url': '/%s/admin/addPhoto/'%(clubid,),
@@ -62,6 +62,8 @@ class AdminHandler(base_handler.BaseHandler):
             club.owners.append(user)
             club = club.put()
         season = seasons.Season.query().order(-seasons.Season.endDate);
+        if not season:
+            season = {'name':""}
         context = {
             'season': season,
             'club': club,
@@ -85,6 +87,11 @@ class AdminHandler(base_handler.BaseHandler):
                     'url': '/%s/admin/addPlayer/'%(clubid,),
                     'description': 'Add New Player',
                     'help': 'brand new players only',
+                },
+                {
+                    'url': '/%s/admin/editPlayer/'%(clubid,),
+                    'description': 'Edit Player',
+                    'help': 'update email or fix name',
                 },
                 {
                     'url': '/%s/admin/addVideo/'%(clubid,),

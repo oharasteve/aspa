@@ -1,0 +1,119 @@
+{%- extends "/html/admin_template.html" %}
+{%- block title %}ASPA{%- endblock %}
+{%- block head %}
+  {{ super() }}
+  <script>
+  var players = [];
+  {%- for player in players %}
+  players['{{ player.id }}'] = {
+       'firstName':"{{ player.firstName }}",
+       'lastName':"{{ player.lastName }}",
+       'email':"{{ player.email }}",
+       'phone':"{{ player.phone }}"
+  };
+  {%- endfor %}
+
+  function setFields(selectName) {
+    var id = document.getElementById(selectName).value;
+    document.getElementById('firstName').value = players[id]['firstName'];
+    document.getElementById('lastName').value = players[id]['lastName'];
+    document.getElementById('phone').value = players[id]['phone'];
+    document.getElementById('email').value = players[id]['email'];
+  }
+
+  $().ready(function() {
+    $("#editPlayerForm").validate({
+      rules: {
+        code: "required",
+        firstName: "required",
+        lastName: "required",
+        handicap: {
+          required: true,
+          number: true,
+          range: [0, 1000]
+        },
+        highRunTarget: {
+          required: true,
+          range: [0, 1000]
+        },
+        phone: {
+          phoneUS: true
+        },
+        email: {
+          email: true
+        }
+      }
+    });
+    
+  {%- if display_form %}
+    $('#player_select').prop('selectedIndex', {{ player_selectedIndex }})
+  {%- endif %}
+  });
+  </script>
+{%- endblock %}
+{%- block admin_content %}
+  {%- if display_form %}
+  <h3>Edit Player</h3>
+  <hr/>
+
+  <form action="/{{club.key.id()}}/admin/editPlayer/" method="post"
+        id="EditPlayerForm" class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="player_select" class="col-sm-2 control-label">Player</label>
+      <div class="col-sm-2">
+        <select name="player_select" id="player_select" class="form-control" value="-1"
+            onchange="setFields('player_select');">
+        {%- for player in players %}
+          <option value="{{ player.id }}" {%- if player.id == player.player_id %}selected{%- endif %}>
+        {{ player.firstName }} {{ player.lastName }}
+          </option>
+        {%- endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="firstName" class="col-sm-2 control-label">First Name</label>
+      <div class="col-sm-7">
+          <input type="text" name="firstName" id="firstName" class="form-control" value="{{ player.firstName }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+      <div class="col-sm-7">
+        <input type="text" name="lastName" id="lastName" class="form-control" value="{{ player.lastName }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone" class="col-sm-2 control-label">Phone</label>
+      <div class="col-sm-7">
+        <input type="text" name="phone" id="phone" class="form-control" value="{{ player.phone }}"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-7">
+        <input type="text" name="email" id="email" class="form-control" value="{{ player.email }}"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+  </form>
+  {%- elif error_messages %}
+  <h3>
+    <font color=red>Unable to add photo:
+    <ul>
+    {%- for message in error_messages %}
+    <li>{{ message }}</li>
+    {%- endfor %}
+    </ul>
+    </font>
+  </h3>
+  {%- else %}
+  <h3>Successfully updated: {{ player.firstName}} {{ player.lastName }}</h3>
+  <p><input type="button" value="Done" onclick="window.location.href='/admin/'">
+  {%- endif %}
+{%- endblock %}
