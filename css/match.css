@@ -1,0 +1,59 @@
+.playersbox {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+}
+
+.playerbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.statbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.controlbox {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 2vw;
+}
+
+.name {
+  font-size: 3em;
+  text-align: center;
+  grid-column: span 2;
+}
+
+.p1 {
+  background-color: #ffe0e0;
+}
+
+.p2 {
+  background-color: #e0ffff;
+}
+
+.active > .name {
+  background-color: lightgreen;
+}
+
+#p1_progress_outer {
+  grid-column: span 2;
+}
+
+#p2_progress_outer {
+  grid-column: span 2;
+}
+
+.progress:nth-child(odd)  {
+  height: 100%;
+  display: inline-block;
+  background-color: rgba(100,100, 100,0.5);
+}
+
+.progress:nth-child(even)  {
+  height: 100%;
+  display: inline-block;
+  background-color: rgba(23,23,23,0.5);
+}
+
