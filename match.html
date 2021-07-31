@@ -1,0 +1,69 @@
+<html>
+
+  <head>
+    <title>Match CJ vs Shelby</title>
+    <link rel="stylesheet" type="text/css" href="/css/match.css">
+  </head>
+
+  <body>
+    <div id=header>14.1 match for Lucky Shots</div>
+    <div id="players" class="playersbox">
+      <div id="player1" class="playerbox p1 active">
+        <div id="p1_name" class="name"></div>
+        <div id="p1_progress_outer"><span class="progress"></span></div>
+        <div id="p1_stat" class="statbox">
+          <label>Target</label>
+          <div id="p1_target"></div>
+          <label>Score</label>
+          <div id="p1_score"></div>
+          <label>This rack</label>
+          <div id="p1_this_rack"></div>
+          <label>Longest Run</label>
+          <div id="p1_high_run"></div>
+          <label>Fouls</label>
+          <div id="p1_fouls"></div>
+        </div>
+      </div>
+      <div id="controls" class="controlbox">
+        <div>
+          <label>This run</label>
+          <span id="run">0</span>
+        </div>
+        <div>
+          <label>This rack</label>
+          <span id="rack_run">0</span>
+        </div>
+        <div>
+          <label>Left on table</label>
+          <span id="rack">3</span>
+        </div>
+        <button id="plus1" onclick="plus1()">+1</button>
+        <button id="plus5" onclick="plus5()">+5</button>
+        <button id="plus14" onclick="plus14()">run out</button>
+        <button id="miss" onclick="miss()">miss</button>
+        <button id="foul" onclick="foul()">foul</button>
+        <button id="minus1" onclick="minus1()">undo +1</button>
+      </div>
+      <div id="player2" class="playerbox p2">
+        <div id="p2_name" class="name"></div>
+        <div id="p2_progress_outer"><span class="progress"></span></div>
+        <div id="p2_stat" class="statbox">
+          <label>Target</label>
+          <div id="p2_target"></div>
+          <label>Score</label>
+          <div id="p2_score"></div>
+          <label>This rack</label>
+          <div id="p2_this_rack"></div>
+          <label>Longest Run</label>
+          <div id="p2_high_run"></div>
+          <label>Fouls</label>
+          <div id="p2_fouls"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/js/match.js"></script>
+  </body>
+
+</html>
+
