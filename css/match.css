@@ -23,8 +23,14 @@
   font-size: 2em;
 }
 
-.name {
+.score {
   font-size: 3em;
+  text-align: center;
+  grid-column: span 2;
+}
+
+.name {
+  font-size: 2em;
   text-align: center;
   grid-column: span 2;
 }
