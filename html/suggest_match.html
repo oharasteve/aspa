@@ -31,6 +31,7 @@
                     var lower = Math.round(x / Math.pow(2, delta/100.0) / 5) * 5;
                     var playerA = '';
                     var playerB = '';
+                    var urlParam = '';
                     if (lower > 5) {
                         if (handicapA > handicapB) {
                             playerA = x;
@@ -40,7 +41,13 @@
                             playerB = x;
                         }
                     }
-                    generated_races.push({ 'playerA': playerA, 'playerB': playerB, });
+                    urlParam = "?p1_name="+this.playerA_selected().playerId+
+                               "&p2_name="+this.playerB_selected().playerId+
+                               "&p1_target="+playerA+
+                               "&p2_target="+playerB
+                    generated_races.push({ 'playerA': playerA, 'playerB': playerB,
+                      'urlParam': urlParam,
+                    });
                 }
             }
         }
@@ -118,6 +125,7 @@
         <tbody>
           <!-- ko foreach: races -->
           <tr>
+            <td><a data-bind="attr: {href: '/apps/match.html'+urlParam}" target="_blank" rel="noopener noreferrer">Start</a></td>
             <td><span data-bind="text: playerA"></span></td>
             <td><span data-bind="text: playerB"></span></td>
           </tr>

@@ -19,6 +19,10 @@
   grid-gap: 2vw;
 }
 
+#miss {
+  font-size: 2em;
+}
+
 .name {
   font-size: 3em;
   text-align: center;
