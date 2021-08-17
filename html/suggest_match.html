@@ -4,6 +4,7 @@
 {%- block head %}
   {{ super() }}
 
+  <script type="text/javascript" src="https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
   <script>
   {%- autoescape false %}
   var ViewModel = new function() {
@@ -32,6 +33,7 @@
                     var playerA = '';
                     var playerB = '';
                     var urlParam = '';
+                    var qrUrl = '';
                     if (lower > 5) {
                         if (handicapA > handicapB) {
                             playerA = x;
@@ -41,12 +43,16 @@
                             playerB = x;
                         }
                     }
-                    urlParam = "?p1_name="+this.playerA_selected().playerId+
+                    urlParam = "/apps/match.html"+
+                               "?p1_name="+this.playerA_selected().playerId+
                                "&p2_name="+this.playerB_selected().playerId+
                                "&p1_target="+playerA+
-                               "&p2_target="+playerB
+                               "&p2_target="+playerB;
+
+                    qrUrl = new QRCode("qr", urlParam);
+                    qrUrl = qrUrl._elImage.src;
                     generated_races.push({ 'playerA': playerA, 'playerB': playerB,
-                      'urlParam': urlParam,
+                      'urlParam': urlParam, 'qrUrl': qrUrl,
                     });
                 }
             }
@@ -125,7 +131,8 @@
         <tbody>
           <!-- ko foreach: races -->
           <tr>
-            <td><a data-bind="attr: {href: '/apps/match.html'+urlParam}" target="_blank" rel="noopener noreferrer">Start</a></td>
+            <td><a data-bind="attr: {href: urlParam}" target="_blank" rel="noopener noreferrer">Start</a>
+                <img data-bind="attr: {src: qrUrl}"/></td>
             <td><span data-bind="text: playerA"></span></td>
             <td><span data-bind="text: playerB"></span></td>
           </tr>
@@ -134,4 +141,5 @@
       </table>
     </div>
   </div>
+  <div style="display: none" id="qr"></div>
 {%- endblock %}
