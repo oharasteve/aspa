@@ -74,6 +74,11 @@ class AdminHandler(base_handler.BaseHandler):
                     'help': 'help choose race',
                 },
                 {
+                    'url': '/%s/admin/openMatches/'%(clubid,),
+                    'description': 'List of open matches to fill in scores',
+                    'help': 'fill out open matches',
+                },
+                {
                     'url': '/%s/admin/addMatch/'%(clubid,),
                     'description': 'Add Match Results',
                     'help': 'once a week',
