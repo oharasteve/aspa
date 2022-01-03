@@ -6,6 +6,7 @@ import webapp2
 
 from data import matches
 from data import players
+from data import seasons
 from data import stats
 from data import clubs
 
@@ -34,8 +35,9 @@ class Charts():
         seq = 0
         season_matches = matches.Match.query( ndb.AND(matches.Match.club == club.key,
               ndb.OR( matches.Match.playerW == player.key,
-                      matches.Match.playerL == player.key))).order(matches.Match.date, matches.Match.seq)
-        for match in season_matches:
+                      matches.Match.playerL == player.key))).order(-matches.Match.date, matches.Match.seq)
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.startDate).get()
+        for match in season_matches.fetch(10):
             if match.scoreW is None:
                 continue
             seq += 1
@@ -71,6 +73,11 @@ class Charts():
                     'opp_skill_color': self.skill_color(opponent['player_obj'].handicap),
                     'win_mgn': win_mgn,
                     'lose_mgn': lose_mgn,
+                    'opponent_details_page_url':
+                    '/{2}/details/?Season={0}&Player={1}'.format(
+                        cgi.escape(season.key.id()),
+                        cgi.escape(opponent['player'].id()),
+                        cgi.escape(match_data['club'].id())),
                     'video1': match.video1,
                     'video2': match.video2,
             }
