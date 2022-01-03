@@ -40,6 +40,8 @@ class Details():
             player.key), stats.PlayerSummary.season == season.key
             )).order(matches.Match.date, matches.Match.seq)
         for match in season_matches:
+            if match.scoreW is None:
+                continue
             seq += 1
             match_data = matches.match_util(match)
             if player.key == match_data['winner']['player']:

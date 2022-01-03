@@ -47,7 +47,6 @@ class AddMatchHandler(base_handler.BaseHandler):
         if user not in club.owners:
             club.owners.append(user)
             club = club.put()
-        match_key = self.request.get('match_id')
         xseason = self.request.get('season_select')
         xseq = self.request.get('seq')
         xwhen = self.request.get('match_date')
@@ -66,15 +65,15 @@ class AddMatchHandler(base_handler.BaseHandler):
         nameW = nameA
         nameL = nameB
 
-        seq = int(xseq) if xseq else None
-        hcapA = int(xhcapA) if xhcapA else None
-        hcapB = int(xhcapB) if xhcapB else None
-        targetA = int(xtargetA) if xtargetA else None
-        targetB = int(xtargetB) if xtargetB else None
-        scoreA = int(xscoreA) if xscoreA else None
-        scoreB = int(xscoreB) if xscoreB else None
-        hrunA = int(xhrunA) if xhrunA else None
-        hrunB = int(xhrunB) if xhrunB else None
+        seq = int(xseq)
+        hcapA = int(xhcapA)
+        hcapB = int(xhcapB)
+        targetA = int(xtargetA)
+        targetB = int(xtargetB)
+        scoreA = int(xscoreA)
+        scoreB = int(xscoreB)
+        hrunA = int(xhrunA)
+        hrunB = int(xhrunB)
 
         hcapW = hcapA
         hcapL = hcapB
@@ -122,7 +121,7 @@ class AddMatchHandler(base_handler.BaseHandler):
           'display_form': True,
         }
 
-        if targetA != scoreA:
+        if int(xtargetA) != int(xscoreA):
             nameW = nameB
             nameL = nameA
             hcapW = hcapB
@@ -152,21 +151,20 @@ class AddMatchHandler(base_handler.BaseHandler):
             error_messages.append("Season is required")
 
 
-        if scoreW is not None:
-            if not forfeit and scoreW != targetW:
-              error_messages.append("Winner score (%s) does not match target (%s)\n" % (scoreW, targetW))
-            if scoreL >= targetL:
-              error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
+        if not forfeit and scoreW != targetW:
+          error_messages.append("Winner score (%s) does not match target (%s)\n" % (scoreW, targetW))
+        if scoreL >= targetL:
+          error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, targetL))
 
         if not len(error_messages):
-            if scoreW and season.key not in winner.seasons:
+            if season.key not in winner.seasons:
                 for (season_idx, season_rec) in enumerate(winner.seasons):
                     if season_rec.get().club == club.key:
                         del winner.seasons[season_idx]
                         break
                 winner.seasons.append(season.key)
                 winner.put()
-            if scoreL and season.key not in loser.seasons:
+            if season.key not in loser.seasons:
                 for (season_idx, season_rec) in enumerate(loser.seasons):
                     if season_rec.get().club == club.key:
                         del loser.seasons[season_idx]
@@ -174,11 +172,15 @@ class AddMatchHandler(base_handler.BaseHandler):
                 loser.seasons.append(season.key)
                 loser.put()
 
+            # Setup context for new match
+            context['seq'] = context['seq']+1
+            context['playera']['highrun'] = 0
+            context['playerb']['highrun'] = 0
+            context['playera_selected'] = 0
+            context['playerb_selected'] = 0
+
             # record match
-            if match_key:
-                match = match_key.get()
-            else:
-                match = matches.Match()
+            match = matches.Match()
             match.date = when
             match.seq = seq
             match.season = season.key
@@ -198,18 +200,6 @@ class AddMatchHandler(base_handler.BaseHandler):
             match.highRunL = hrunL
 
             match.put()
-
-            if scoreW is None:
-                return
-
-            # Setup context for new match
-            context['seq'] = context['seq']+1
-            context['playera']['score'] = 0
-            context['playerb']['score'] = 0
-            context['playera']['highrun'] = 0
-            context['playerb']['highrun'] = 0
-            context['playera_selected'] = 0
-            context['playerb_selected'] = 0
 
             # Update statistics for the winner and loser
             stats.addMatch(match.season, winner.key, 1, hcapW, scoreW, hrunW)

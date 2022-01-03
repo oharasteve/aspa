@@ -4,9 +4,9 @@
 {%- block head %}
   {{ super() }}
 
-  <script type="text/javascript" src="https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
   <script>
   {%- autoescape false %}
+
   var ViewModel = new function() {
     var self = this;
     this.players =  ko.observableArray({{players}});
@@ -33,7 +33,6 @@
                     var playerA = '';
                     var playerB = '';
                     var urlParam = '';
-                    var qrUrl = '';
                     if (lower > 5) {
                         if (handicapA > handicapB) {
                             playerA = x;
@@ -49,10 +48,12 @@
                                "&p1_target="+playerA+
                                "&p2_target="+playerB;
 
-                    qrUrl = new QRCode("qr", urlParam);
-                    qrUrl = qrUrl._elImage.src;
+                    recommend = ""
+                    if ((130 < (playerA + playerB)) && ((playerA + playerB) < 150)) {
+                          recommend = 'lightgreen'
+                    }
                     generated_races.push({ 'playerA': playerA, 'playerB': playerB,
-                      'urlParam': urlParam, 'qrUrl': qrUrl,
+                      'urlParam': urlParam, 'recommend': recommend,
                     });
                 }
             }
@@ -60,6 +61,43 @@
         self.races(generated_races);
     };
   };
+
+function register_match(event) {
+console.log("in update");
+  var parent = event.target.parentElement.parentElement;
+  //var url = "https://reqbin.com/echo/post/form";
+  var url="/{{club.key.id()}}/admin/startMatch/";
+
+var xhr = new XMLHttpRequest();
+xhr.open("POST", url);
+
+xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+xhr.onreadystatechange = function () {
+   if (xhr.readyState === 4) {
+      console.log(xhr.status);
+      console.log(xhr.responseText);
+   }};
+var fields = Array.from(parent.getElementsByClassName('field'));
+console.log(fields);
+          var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+if(dd<10){dd='0'+dd};
+if(mm<10){mm='0'+mm};
+today = yyyy+'-'+mm+'-'+dd;
+          var data = "season_select={{ seasons[0].id }}&match_date="+today;
+          data += "&playera_select="+ViewModel.playerA_selected().playerId;
+          data += "&playerb_select="+ViewModel.playerB_selected().playerId;
+          data += "&playera_handicap="+document.getElementById('playerA_handicap').value;
+          data += "&playerb_handicap="+document.getElementById('playerB_handicap').value;
+          fields.forEach(field => {data += "&"+field.id+"="+(field.innerText || field.value)});
+
+console.log(data);
+xhr.send(data);
+
+      }
   {%- endautoescape %}
 
   $().ready(function() {
@@ -130,11 +168,11 @@
       <table class="table table-bordered table-condensed table-hover">
         <tbody>
           <!-- ko foreach: races -->
-          <tr>
-            <td><a data-bind="attr: {href: urlParam}" target="_blank" rel="noopener noreferrer">Start</a>
-                <img data-bind="attr: {src: qrUrl}"/></td>
-            <td><span data-bind="text: playerA"></span></td>
-            <td><span data-bind="text: playerB"></span></td>
+          <tr data-bind="style: {backgroundColor: recommend}">
+            <td><a data-bind="attr: {href: urlParam}" target="_blank" rel="noopener noreferrer">scoreboard</a>
+                <button onclick="register_match(event)">select</button></td>
+            <td><span id="playera_target" class="field" data-bind="text: playerA"></span></td>
+            <td><span id="playerb_target" class="field" data-bind="text: playerB"></span></td>
           </tr>
           <!-- /ko -->
         </tbody>

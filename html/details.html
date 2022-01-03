@@ -2,6 +2,76 @@
 {% block title %}ASPA {{ season.name }}{% endblock %}
 {% block head %}
   {{ super() }}
+<style>
+
+.circle-indicator{
+    background: none;
+    margin: 0 auto;
+    box-shadow: none;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    position: relative;
+}
+.circle-indicator:after{
+    content: "";
+    border-radius: 50%;
+    border: 15px solid #f2f5f5;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+.circle-indicator > span{
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+}
+.circle-indicator .circle-indicator-left{
+    left: 0;
+}
+.circle-indicator .circle-indicator-bar{
+    border-width: 15px;
+    border-style: solid;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: none;
+    top: 0;
+    border-color: #26abfd;
+}
+.circle-indicator .circle-indicator-left .circle-indicator-bar{
+    left: 100%;
+    border-top-right-radius: 80px;
+    border-bottom-right-radius: 80px;
+    border-left: 0;
+    -webkit-transform-origin: center left;
+    transform-origin: center left;
+}
+.circle-indicator .circle-indicator-right{
+    right: 0;
+}
+.circle-indicator .circle-indicator-right .circle-indicator-bar{
+    left: -100%;
+    -webkit-transform-origin: center right;
+    transform-origin: center right;
+    border-top-left-radius: 80px;
+    border-bottom-left-radius: 80px;
+    border-right: 0;
+}
+.circle-indicator .circle-indicator-value{
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+</style>
   <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
     $("#player-summary").tablesorter({
@@ -68,6 +138,17 @@
           <td class="text-center">{{ summary.highRun }}</td>
           <td class="text-center">{{ '%.2f' % summary.highRunTarget }}</td>
           <td class="text-center">{{ '%.2f' % summary.goal }}</td>
+          <td>
+              <div class="circle-indicator">
+                    <span class="circle-indicator-left" >
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins > summary.losses %} {{ summary.wins / (summary.wins + summary.losses) * 360 - 180 }}{%- else -%} 0{%- endif -%}deg)"></span>
+                    </span>
+                    <span class="circle-indicator-right">
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins >= summary.losses %} 180{%- else -%} {{ summary.wins / (summary.wins + summary.losses) * 360 }}{%- endif -%}deg)"></span>
+                    </span>
+                    <div class="circle-indicator-value">{{(summary.wins / (summary.wins + summary.losses) * 100)|round|int}}%</div> 
+                </div>
+          </td>
         </tr>
      {%- if lifesummary %}
         <tr>
@@ -82,6 +163,17 @@
           <td class="text-center">{{ lifesummary.highRun }}</td>
           <td class="text-center">{{ '%.2f' % lifesummary.highRunTarget }}</td>
           <td class="text-center">{{ '%.2f' % lifesummary.goal }}</td>
+          <td>
+              <div class="circle-indicator">
+                    <span class="circle-indicator-left" >
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins > summary.losses %} {{ summary.wins / (summary.wins + summary.losses) * 360 - 180 }}{%- else -%} 0{%- endif -%}deg)"></span>
+                    </span>
+                    <span class="circle-indicator-right">
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins >= summary.losses %} 180{%- else -%} {{ summary.wins / (summary.wins + summary.losses) * 360 }}{%- endif -%}deg)"></span>
+                    </span>
+                    <div class="circle-indicator-value">{{(summary.wins / (summary.wins + summary.losses) * 100)|round|int}}%</div> 
+                </div>
+          </td>
         </tr>
      {% endif %}
       </tbody>

@@ -34,8 +34,10 @@ class Charts():
         seq = 0
         season_matches = matches.Match.query( ndb.AND(matches.Match.club == club.key,
               ndb.OR( matches.Match.playerW == player.key,
-                      matches.Match.playerL == player.key)))
+                      matches.Match.playerL == player.key))).order(matches.Match.date, matches.Match.seq)
         for match in season_matches:
+            if match.scoreW is None:
+                continue
             seq += 1
             match_data = matches.match_util(match)
             if player.key == match_data['winner']['player']:
@@ -66,6 +68,7 @@ class Charts():
                     'result': result,
                     'player': participant,
                     'opponent': opponent,
+                    'opp_skill_color': self.skill_color(opponent['player_obj'].handicap),
                     'win_mgn': win_mgn,
                     'lose_mgn': lose_mgn,
                     'video1': match.video1,
@@ -73,6 +76,12 @@ class Charts():
             }
             entries.append(entry)
         return entries
+
+    def skill_color(self, handicap):
+        handicap -= 400
+        handicap /= 50
+        colors = ('#FFFFE5', '#FFF7BC', '#FEE391', '#FEC44F', '#FB9A29', '#EC7014', '#CC4C02')
+        return colors[handicap]
 
     def get_summary(self, player, club):
         stat = stats.PlayerSummary.query( ndb.AND( stats.PlayerSummary.club == club.key,

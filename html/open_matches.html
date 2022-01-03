@@ -1,0 +1,81 @@
+{% extends "/html/base_template.html" %}
+{% block title %}ASPA {{ season.name }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block header %}
+  <h1 class="text-center">American Straight Pool Association</h1>
+  {%- if season %}
+  <h2 class="text-center">
+    {{ club.name }}<br>
+    {{ season.name }}
+  </h2>
+  {%- endif %}
+{% endblock %}
+
+{% block content %}
+  <table id="open-matches" class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th class="text-left">Date</th>
+        <th class="text-center">Player</th>
+        <th class="text-center">Target</th>
+        <th class="text-center">Score</th>
+        <th class="text-center">High Run</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for entry in matches %}
+      <tr>
+  <tr>
+      <td rowspan=2 class="text-center"><span class="field" id="date">{{ entry.date }}</span>
+          <span hidden id="match_id" class="field">{{ entry.key }}</span></td>
+      <td class="text-center">{{ entry.playera.name }} <span hidden  id="a_id" class="field">{{ entry.playera.id }}</span></td>
+      <td class="text-center">{{ entry.playera.target }}</td>
+    <td class="text-center"><input class="field" id="a_score" size=5></td>
+    <td class="text-center"><input class="field" id="a_highrun" size=5></td>
+  </tr>
+  <tr>
+      <td class="text-center">{{ entry.playerb.name }} <span hidden  id="b_id" class="field">{{ entry.playerb.id }}</span></td>
+      <td class="text-center">{{ entry.playerb.target }}</td>
+    <td class="text-center"><input class="field" id="b_score" size=5></td>
+    <td class="text-center"><input class="field" id="b_highrun" size=5></td>
+    <td class="text-center"><button onclick="update_match(event)">update</button></td>
+  </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+
+  <div>
+    <a href="/{{club.key.id()}}/suggest/">Suggest Match</a>
+  </div>
+  <script type="text/javascript" charset="utf-8">
+function update_match(event) {
+console.log("in update");
+  var parent = event.target.parentElement.parentElement;
+  var url = "/{{club.key.id()}}/admin/openMatches/";
+var xhr = new XMLHttpRequest();
+xhr.open("POST", url);
+
+xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+xhr.onreadystatechange = function () {
+   if (xhr.readyState === 4) {
+      console.log(xhr.status);
+      console.log(xhr.responseText);
+      parent.previousElementSibling.remove();
+      parent.remove();
+   }};
+var fields = Array.from(parent.getElementsByClassName('field'));
+fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByClassName('field')));
+console.log(fields);
+          var data = "";
+          fields.forEach(field => {data += "&"+field.id+"="+(field.innerText || field.value)});
+
+console.log(data);
+xhr.send(data);
+
+      }
+  </script>
+{%- endblock %}

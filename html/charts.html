@@ -2,73 +2,89 @@
 {% block title %}ASPA{% endblock %}
 {% block head %}
   {{ super() }}
-  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
+<style>
+* { box-sizing: border-box; }
 
-  <script type="text/javascript" charset="utf-8">
-  $(document).ready(function() {
-    $("#player-summary").tablesorter({
-      sortList:[[0,1]],  // sort by date ascending.
-      headers: { },
-      widgets: ['zebra'],
-      cssAsc: "header-sort-up",
-      cssDesc: "header-sort-down"
-    });
-  });
-  </script>
-  <script type="text/javascript" charset="utf-8">
- google.setOnLoadCallback(drawChart);
- function drawChart() {
-   var data = google.visualization.arrayToDataTable([
-     ['Skill', 'Margin', {id: null, role: 'tooltip'}],
-      {%- for entry in match_details %}
-          [{{ entry.opponent.handicap }},
-          {%- if entry.win_mgn %}
-          {{ entry.win_mgn }}
-          {%- else %}
-          -{{ entry.lose_mgn }}
-          {%- endif %}
-          ,"{{ entry.date|datetimeformat('%Y-%m-%d') }} {{ entry.player.score }} vs {{ entry.opponent.score }} {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}"
-          ]
-          {%- if not loop.last %}
-            ,
-          {%- endif %}
-      {%- endfor %}
-   ]);
-
-   var options = {
-     title: 'Opponent vs. Margin comparison',
-     legend: 'none',
-     crosshair: { trigger: 'both', orientation: 'both' },
-     hAxis: { title: 'Opponent handicap' },
-     vAxis: { title: 'Win/loss gap' },
-     trendlines: {
-       0: {
-         type: 'polynomial',
-         degree: 1,
-         visibleInLegend: true,
-       }
-     }
-   };
-
-   var chart = new google.visualization.ScatterChart(document.getElementById('polynomial2_div'));
-   chart.draw(data, options);
+html, body {
+  margin: 0;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
 }
-  </script>
+
+.chart {
+  display: grid;
+  grid-template-columns: repeat(200, 1fr);
+  grid-row-gap: 5px;
+  min-height: 80vh;
+  width: 70vw;
+  padding: 10px 5px;
+}
+
+.bar {
+  border-radius: 0 5px 5px 0;
+  background-color: var(--skill);
+  grid-column-start: var(--start);
+  grid-column-end: 100;
+  text-align: right;
+}
+.rbar {
+  border-radius: 5px 0 0 5px;
+  background-color: var(--skill);
+  grid-column-end: var(--start);
+  grid-column-start: 100;
+}
+
+.win {
+  grid-column-start: 1;
+  grid-column-end: 100;
+  text-align: center;
+}
+.loss {
+  grid-column-end: 201;
+  grid-column-start: 100;
+  text-align: center;
+}
+
+</style>
 {% endblock %}
 
 {% block header %}
   <h1 class="text-center">American Straight Pool Association</h1>
 
-  <h2 class="text-center">All Seasons</h2>
+  <h2 class="text-center">Play history</h2>
 {% endblock %}
 
 {% block content %}
   <h2 class="text-center">{{ player.firstName }} {{ player.lastName }}</h2>
-  {%- if player.photo %}
-    <p><img height="200" src="{{ player.photo }}" title={{ player.firstName }} {{ player.lastName }}/></p>
-  {%- endif %}
 
-  <div id='polynomial2_div' style='width: 900px; height: 500px;'></div>
+<div class="chart">
+      {%- for entry in match_details %}
+            {%- if entry.win_mgn %}
+                <div class="win">
+                  {{ entry.date|datetimeformat('%Y-%m-%d') }}<a href="{{ entry.opponent_details_page_url }}">
+                  {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}</a>
+                </div>
+                <div class="bar" style='--start: {{ 100 + entry.win_mgn }}; --skill: {{ entry.opp_skill_color }} '>{{ entry.win_mgn }}</div>
+            {%- else %}
+            <div class="rbar" style='--start: {{ 100 - entry.lose_mgn }}; --skill: {{ entry.opp_skill_color }}'>{{ entry.lose_mgn }}</div>
+                <div class="loss">
+                    {{ entry.date|datetimeformat('%Y-%m-%d') }}<a href="{{ entry.opponent_details_page_url }}">
+                    {{ entry.opponent.player_obj.firstName }} {{ entry.opponent.player_obj.lastName }}</a>
+                </div>
+            {%- endif %}
+      {%- endfor %}
+</div>
+<div>
+    <span style="background: #FFFFE5">400</span>
+    <span style="background: #FFF7BC">450</span>
+    <span style="background: #FEE391">500</span>
+    <span style="background: #FEC44F">550</span>
+    <span style="background: #FB9A29">600</span>
+    <span style="background: #EC7014">650</span>
+    <span style="background: #CC4C02">700</span>
+</div>
 
   <a href="/{{club.key.id()}}/">Home</a>
 {%- endblock %}
+
