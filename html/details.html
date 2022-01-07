@@ -153,25 +153,25 @@
      {%- if lifesummary %}
         <tr>
           <td class="test-left">Lifetime</td>
-          <td class="text-left">{{ player.firstName }} {{ player.lastName }}</td>
-          <td class="text-center">{{ lifesummary.handicap }}</td>
+          <td class="text-left"></td>
+          <td class="text-center"></td>
           <td class="text-center">{{ lifesummary.wins }}</td>
           <td class="text-center">{{ lifesummary.losses }}</td>
           <td class="text-center">{{ lifesummary.forfeits }}</td>
           <td class="text-center">{{ '%.2f' % lifesummary.pct }}</td>
           <td class="text-center"></td>
           <td class="text-center">{{ lifesummary.highRun }}</td>
-          <td class="text-center">{{ '%.2f' % lifesummary.highRunTarget }}</td>
-          <td class="text-center">{{ '%.2f' % lifesummary.goal }}</td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
           <td>
               <div class="circle-indicator">
                     <span class="circle-indicator-left" >
-                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins > summary.losses %} {{ summary.wins / (summary.wins + summary.losses) * 360 - 180 }}{%- else -%} 0{%- endif -%}deg)"></span>
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if lifesummary.wins > lifesummary.losses %} {{ lifesummary.wins / (lifesummary.wins + lifesummary.losses) * 360 - 180 }}{%- else -%} 0{%- endif -%}deg)"></span>
                     </span>
                     <span class="circle-indicator-right">
-                        <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins >= summary.losses %} 180{%- else -%} {{ summary.wins / (summary.wins + summary.losses) * 360 }}{%- endif -%}deg)"></span>
+                        <span class="circle-indicator-bar" style="transform: rotate( {% if lifesummary.wins >= lifesummary.losses %} 180{%- else -%} {{ lifesummary.wins / (lifesummary.wins + lifesummary.losses) * 360 }}{%- endif -%}deg)"></span>
                     </span>
-                    <div class="circle-indicator-value">{{(summary.wins / (summary.wins + summary.losses) * 100)|round|int}}%</div> 
+                    <div class="circle-indicator-value">{{(lifesummary.wins / (lifesummary.wins + lifesummary.losses) * 100)|round|int}}%</div> 
                 </div>
           </td>
         </tr>

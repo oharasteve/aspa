@@ -87,6 +87,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         winner = players.Player.get_by_id(nameW)
         loser = players.Player.get_by_id(nameL)
         season = seasons.Season.get_by_id(xseason)
+        lifetime = seasons.Season.get_by_id('lifetime')
 
         context = {
           'seasons': seasons.Season.getSeasons(club),
@@ -203,10 +204,17 @@ class AddMatchHandler(base_handler.BaseHandler):
 
             # Update statistics for the winner and loser
             stats.addMatch(match.season, winner.key, 1, hcapW, scoreW, hrunW)
+            if lifetime:
+               stats.addMatch(lifetime.key, winner.key, 1, hcapW, scoreW, hrunW)
             if forfeit:
                stats.addMatch(match.season, loser.key, None, hcapL, scoreL, hrunL)
+               if lifetime:
+                   stats.addMatch(lifetime.key, loser.key, None, hcapL, scoreL, hrunL)
+
             else:
                stats.addMatch(match.season, loser.key, 0, hcapL, scoreL, hrunL)
+               if lifetime:
+                   stats.addMatch(lifetime.key, loser.key, 0, hcapL, scoreL, hrunL)
 
             successfully_added_match = True
 

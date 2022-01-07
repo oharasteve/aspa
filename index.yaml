@@ -13,14 +13,6 @@ indexes:
 - kind: Match
   properties:
   - name: club
-  - name: playerW
-  - name: date
-    direction: desc
-  - name: seq
-
-- kind: Match
-  properties:
-  - name: club
   - name: date
   - name: seq
 
@@ -44,6 +36,14 @@ indexes:
   - name: club
   - name: playerW
   - name: date
+  - name: seq
+
+- kind: Match
+  properties:
+  - name: club
+  - name: playerW
+  - name: date
+    direction: desc
   - name: seq
 
 - kind: Match

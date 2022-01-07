@@ -49,6 +49,7 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             club.owners.append(user)
             club = club.put()
 
+        lifetime = seasons.Season.get_by_id('lifetime')
         match_key = self.request.get('match_id')
         xwhen = self.request.get('date')
         nameA = self.request.get('a_id')
@@ -59,7 +60,6 @@ class OpenMatchesHandler(base_handler.BaseHandler):
         xhrunB = self.request.get('b_highrun')
 
         match = matches.Match.get_by_id(int(match_key))
-        print(match, match_key)
 
         nameW = nameA
         nameL = nameB
@@ -133,6 +133,9 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             # Update statistics for the winner and loser
             stats.addMatch(match.season, winner.key, 1, match.handicapW, match.scoreW, match.highRunW)
             stats.addMatch(match.season, loser.key, 0, match.handicapL, match.scoreL, match.highRunL)
+            if lifetime:
+                stats.addMatch(lifetime.key, winner.key, 1, match.handicapW, match.scoreW, match.highRunW)
+                stats.addMatch(lifetime.key, loser.key, 0, match.handicapL, match.scoreL, match.highRunL)
 
             successfully_added_match = True
 

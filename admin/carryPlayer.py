@@ -71,12 +71,8 @@ class CarryPlayerHandler(base_handler.BaseHandler):
                 if dupStat:
                     error_messages.append("Duplicate player (%s) for season %s" % (cgi.escape(checkbox), season.name))
                 else:
-                    oldStats = stats.PlayerSummary.query(
-                        ndb.AND(stats.PlayerSummary.player == player.key, stats.PlayerSummary.season != season.key)).fetch()
-
-                    oldStat = reduce(most_recent_stat, oldStats)
                     newStat = stats.PlayerSummary()
-                    newStat.player = oldStat.player
+                    newStat.player = player.key
                     newStat.season = season.key
                     newStat.highRunTarget = highRun.getHighRunTarget(player.handicap)
                     newStat.wins = 0
