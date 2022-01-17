@@ -47,7 +47,7 @@ var params = getSearchParameters();
 
 // Core logic
 var p1 = {
-  name: params.p1_name,
+  name: decodeURI(params.p1_name),
   target: params.p1_target,
   score: 0,
   this_rack: 0,
@@ -56,7 +56,7 @@ var p1 = {
   progress: document.getElementById("p1_progress_outer")
 };
 var p2 = {
-  name: params.p2_name,
+  name: decodeURI(params.p2_name),
   target: params.p2_target,
   score: 0,
   this_rack: 0,
@@ -72,10 +72,10 @@ var game = {
   current_player: p1
 };
 
-document.getElementById("p1_name").innerText = params.p1_name;
-document.getElementById("p2_name").innerText = params.p2_name;
-document.getElementById("p1_target").innerText = params.p1_target;
-document.getElementById("p2_target").innerText = params.p2_target;
+document.getElementById("p1_name").innerText = p1.name;
+document.getElementById("p2_name").innerText = p2.name;
+document.getElementById("p1_target").innerText = p1.target;
+document.getElementById("p2_target").innerText = p2.target;
 document.title = p1.name + " vs " + p2.name;
 
 p1.progress.style.backgroundImage = "repeating-linear-gradient(to right, transparent, black 0 1px, transparent 1px " + (100 / p1.target) + "%)";

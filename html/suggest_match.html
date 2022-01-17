@@ -4,6 +4,10 @@
 {%- block head %}
   {{ super() }}
 
+<style>
+.registered { background-color: lightblue }
+.recommend { background-color: lightgreen }
+</style>
   <script>
   {%- autoescape false %}
 
@@ -42,18 +46,26 @@
                             playerB = x;
                         }
                     }
+                    var a_name = "Player A";
+                    var b_name = "Player B";
+                    if (this.playerA_selected() != undefined) {
+                        a_name = this.playerA_selected().fullName;
+                    }
+                    if (this.playerB_selected() != undefined) {
+                        b_name = this.playerB_selected().fullName;
+                    }
                     urlParam = "/apps/match.html"+
-                               "?p1_name="+this.playerA_selected().playerId+
-                               "&p2_name="+this.playerB_selected().playerId+
+                               "?p1_name="+a_name+
+                               "&p2_name="+b_name+
                                "&p1_target="+playerA+
                                "&p2_target="+playerB;
 
                     recommend = ""
                     if ((130 < (playerA + playerB)) && ((playerA + playerB) < 150)) {
-                          recommend = 'lightgreen'
+                          recommend = 'recommend'
                     }
                     generated_races.push({ 'playerA': playerA, 'playerB': playerB,
-                      'urlParam': urlParam, 'recommend': recommend,
+                      'urlParam': urlParam, 'recommend': recommend, 'register': (this.playerA_selected() && this.playerB_selected())
                     });
                 }
             }
@@ -63,41 +75,46 @@
   };
 
 function register_match(event) {
-console.log("in update");
-  var parent = event.target.parentElement.parentElement;
-  //var url = "https://reqbin.com/echo/post/form";
-  var url="/{{club.key.id()}}/admin/startMatch/";
+    console.log("in update");
+    var parent = event.target.parentElement.parentElement;
+    parent.className ='registered';
 
-var xhr = new XMLHttpRequest();
-xhr.open("POST", url);
+    //var url = "https://reqbin.com/echo/post/form";
+    var url="/{{club.key.id()}}/admin/startMatch/";
 
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
 
-xhr.onreadystatechange = function () {
-   if (xhr.readyState === 4) {
-      console.log(xhr.status);
-      console.log(xhr.responseText);
-   }};
-var fields = Array.from(parent.getElementsByClassName('field'));
-console.log(fields);
-          var today = new Date();
-var dd = today.getDate();
-var mm = today.getMonth()+1; //January is 0!
-var yyyy = today.getFullYear();
-if(dd<10){dd='0'+dd};
-if(mm<10){mm='0'+mm};
-today = yyyy+'-'+mm+'-'+dd;
-          var data = "season_select={{ seasons[0].id }}&match_date="+today;
-          data += "&playera_select="+ViewModel.playerA_selected().playerId;
-          data += "&playerb_select="+ViewModel.playerB_selected().playerId;
-          data += "&playera_handicap="+document.getElementById('playerA_handicap').value;
-          data += "&playerb_handicap="+document.getElementById('playerB_handicap').value;
-          fields.forEach(field => {data += "&"+field.id+"="+(field.innerText || field.value)});
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-console.log(data);
-xhr.send(data);
+    xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+        console.log(xhr.status);
+        console.log(xhr.responseText);
+    }};
 
-      }
+    var fields = Array.from(parent.getElementsByClassName('field'));
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){dd='0'+dd};
+    if(mm<10){mm='0'+mm};
+    today = yyyy+'-'+mm+'-'+dd;
+
+    var data = "season_select={{ seasons[0].id }}&match_date="+today;
+    data += "&playera_select="+ViewModel.playerA_selected().playerId;
+    data += "&playerb_select="+ViewModel.playerB_selected().playerId;
+    data += "&playera_handicap="+document.getElementById('playerA_handicap').value;
+    data += "&playerb_handicap="+document.getElementById('playerB_handicap').value;
+    fields.forEach(field => {data += "&"+field.id+"="+(field.innerText || field.value)});
+
+    console.log(data);
+    xhr.send(data);
+
+    var buttons = parent.parentElement.querySelectorAll('button');
+    buttons.forEach(function (e) { e.remove(); });
+}
   {%- endautoescape %}
 
   $().ready(function() {
@@ -151,14 +168,14 @@ xhr.send(data);
       <label for="playerA_handicap" class="col-sm-2 control-label">Handicap</label>
       <div class="col-sm-3">
         <input id="playerA_handicap" name="playerA_handicap" class="form-control"
-            data-bind="value: playerA_handicap,
-                       event: {change: generateRaces }"/>
+            data-bind="value: playerA_handicap"
+            onchange="ViewModel.generateRaces()" />
       </div>
-      <label for="loser_handicap" class="col-sm-1 control-label">Handicap</label>
+      <label for="playerB_handicap" class="col-sm-1 control-label">Handicap</label>
       <div class="col-sm-3">
         <input id="playerB_handicap" name="playerB_handicap" class="form-control"
-            data-bind="value: playerB_handicap,
-                       event: {change: generateRaces }"/>
+            data-bind="value: playerB_handicap"
+            onchange="ViewModel.generateRaces()" />
       </div>
     </div>
   </form>
@@ -168,9 +185,9 @@ xhr.send(data);
       <table class="table table-bordered table-condensed table-hover">
         <tbody>
           <!-- ko foreach: races -->
-          <tr data-bind="style: {backgroundColor: recommend}">
+          <tr data-bind="css: recommend">
             <td><a data-bind="attr: {href: urlParam}" target="_blank" rel="noopener noreferrer">scoreboard</a>
-                <button onclick="register_match(event)">select</button></td>
+                <button data-bind="if: register" onclick="register_match(event)">register</button></td>
             <td><span id="playera_target" class="field" data-bind="text: playerA"></span></td>
             <td><span id="playerb_target" class="field" data-bind="text: playerB"></span></td>
           </tr>
