@@ -31,7 +31,7 @@ def addMatch(season, player, win, hcap, score, hrun):
       hcapAdj = -3
    else:
       hcapAdj = -3
-   if Stats.wins + Stats.losses < 30 or season.id == 'lifetime':
+   if Stats.wins + Stats.losses < 30 or season.id() == 'lifetime':
        if win == 1:
           Stats.wins = Stats.wins + 1
        elif win == 0:
@@ -39,7 +39,7 @@ def addMatch(season, player, win, hcap, score, hrun):
        else:
           Stats.forfeits = Stats.forfeits + 1
 
-   if season.id != 'lifetime':
+   if season.id() != 'lifetime':
        # Update handicaps
        _player = player.get()
        _player.handicap = _player.handicap + hcapAdj
