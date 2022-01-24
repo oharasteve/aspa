@@ -35,6 +35,7 @@
       <td class="text-center">{{ entry.playera.target }}</td>
     <td class="text-center"><input class="field" id="a_score" size=5></td>
     <td class="text-center"><input class="field" id="a_highrun" size=5></td>
+    <td class="text-center"><button onclick="delete_match(event)">delete</button></td>
   </tr>
   <tr>
       <td class="text-center">{{ entry.playerb.name }} <span hidden  id="b_id" class="field">{{ entry.playerb.id }}</span></td>
@@ -51,6 +52,36 @@
     <a href="/{{club.key.id()}}/suggest/">Suggest Match</a>
   </div>
   <script type="text/javascript" charset="utf-8">
+function delete_match(event) {
+console.log("in update");
+  var parent = event.target.parentElement.parentElement;
+  var url = "/{{club.key.id()}}/admin/openMatches/";
+var xhr = new XMLHttpRequest();
+xhr.open("POST", url);
+
+xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+xhr.onreadystatechange = function () {
+   if (xhr.readyState === 4) {
+      console.log(xhr.status);
+      console.log(xhr.responseText);
+      parent.nextElementSibling.remove();
+      parent.remove();
+   }};
+var fields = Array.from(parent.getElementsByClassName('field'));
+fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByClassName('field')));
+console.log(fields);
+          var data = "";
+          fields.forEach(field => {
+                    if (field.id == "match_id" || field.id == "club) {
+                        data += "&"+field.id+"="+(field.innerText || field.value)
+                    }
+                });
+
+console.log(data);
+xhr.send(data);
+
+      }
 function update_match(event) {
 console.log("in update");
   var parent = event.target.parentElement.parentElement;

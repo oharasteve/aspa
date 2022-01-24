@@ -34,6 +34,7 @@ TEMPLATE = 'html/open_matches.html'
 
 class OpenMatchesHandler(base_handler.BaseHandler):
 
+
     def post(self, clubid):
         club = clubs.Club.get_by_id(clubid)
         if club == None:
@@ -60,6 +61,12 @@ class OpenMatchesHandler(base_handler.BaseHandler):
         xhrunB = self.request.get('b_highrun')
 
         match = matches.Match.get_by_id(int(match_key))
+
+        if xwhen is '':
+            match.key.delete()
+            self.response.clear()
+            self.response.set_status(200)
+            return
 
         nameW = nameA
         nameL = nameB

@@ -44,6 +44,8 @@ class Weekly():
             matches.Match.club == club.key,
             matches.Match.date == matchDate)).order(matches.Match.seq)
         for match in weekly_matches:
+            if match.scoreW is None:
+                continue
             playerW = players.Player.get_by_id(match.playerW.id())
             playerL = players.Player.get_by_id(match.playerL.id())
 
