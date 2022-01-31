@@ -159,12 +159,14 @@ class OpenMatchesHandler(base_handler.BaseHandler):
            clubs.sendNoSuch(clubid)
            return
         user = users.get_current_user()
+        authorized = True
         if user not in club.owners and user.email().lower() not in club.invited and not users.is_current_user_admin():
-            self.response.clear()
-            self.response.set_status(405)
-            self.response.out.write("Not authorized")
-            return
-        if user not in club.owners:
+            authorized = False
+            #self.response.clear()
+            #self.response.set_status(405)
+            #self.response.out.write("Not authorized")
+            #return
+        if authorized and user not in club.owners:
             club.owners.append(user)
             club = club.put()
         season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
@@ -192,6 +194,7 @@ class OpenMatchesHandler(base_handler.BaseHandler):
           'club': club,
           'matches': open_match_context,
           'display_form': True,
+          'admin': authorized,
           }
 
         self.render_response(TEMPLATE, **context)

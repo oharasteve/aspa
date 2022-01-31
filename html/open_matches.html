@@ -21,8 +21,10 @@
         <th class="text-left">Date</th>
         <th class="text-center">Player</th>
         <th class="text-center">Target</th>
-        <th class="text-center">Score</th>
-        <th class="text-center">High Run</th>
+        {%- if admin %}
+          <th class="text-center">Score</th>
+          <th class="text-center">High Run</th>
+        {%- endif %}
       </tr>
     </thead>
     <tbody>
@@ -33,16 +35,21 @@
           <span hidden id="match_id" class="field">{{ entry.key }}</span></td>
       <td class="text-center">{{ entry.playera.name }} <span hidden  id="a_id" class="field">{{ entry.playera.id }}</span></td>
       <td class="text-center">{{ entry.playera.target }}</td>
+      {%- if admin %}
     <td class="text-center"><input class="field" id="a_score" size=5></td>
     <td class="text-center"><input class="field" id="a_highrun" size=5></td>
-    <td class="text-center"><button onclick="delete_match(event)">delete</button></td>
+
+        <td class="text-center"><button onclick="delete_match(event)">delete</button></td>
+    {%- endif %}
   </tr>
   <tr>
       <td class="text-center">{{ entry.playerb.name }} <span hidden  id="b_id" class="field">{{ entry.playerb.id }}</span></td>
       <td class="text-center">{{ entry.playerb.target }}</td>
+    {%- if admin %}
     <td class="text-center"><input class="field" id="b_score" size=5></td>
     <td class="text-center"><input class="field" id="b_highrun" size=5></td>
-    <td class="text-center"><button onclick="update_match(event)">update</button></td>
+      <td class="text-center"><button onclick="update_match(event)">update</button></td>
+    {%- endif %}
   </tr>
     {%- endfor %}
     </tbody>
@@ -51,6 +58,7 @@
   <div>
     <a href="/{{club.key.id()}}/suggest/">Suggest Match</a>
   </div>
+    {%- if admin %}
   <script type="text/javascript" charset="utf-8">
 function delete_match(event) {
 console.log("in update");
@@ -73,7 +81,7 @@ fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByCla
 console.log(fields);
           var data = "";
           fields.forEach(field => {
-                    if (field.id == "match_id" || field.id == "club) {
+                    if (field.id == "match_id" || field.id == "club") {
                         data += "&"+field.id+"="+(field.innerText || field.value)
                     }
                 });
@@ -109,4 +117,5 @@ xhr.send(data);
 
       }
   </script>
+    {%- endif %}
 {%- endblock %}
