@@ -175,6 +175,10 @@ class AddMatchHandler(base_handler.BaseHandler):
 
             # Setup context for new match
             context['seq'] = context['seq']+1
+            context['playera']['target'] = 0
+            context['playerb']['target'] = 0
+            context['playera']['score'] = 0
+            context['playerb']['score'] = 0
             context['playera']['highrun'] = 0
             context['playerb']['highrun'] = 0
             context['playera_selected'] = 0
@@ -243,7 +247,7 @@ class AddMatchHandler(base_handler.BaseHandler):
         season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
         currDate = datetime.date.today()
         weekDay = currDate.weekday()               # 0=Mon ... 6=Sun
-        seasonDay = season.startDate.weekday()         # 0=Mon ... 6=Sun
+        seasonDay = season.startDate.weekday()     # 0=Mon ... 6=Sun
         adjustDays = (weekDay + 7-seasonDay) % 7   # 6=Mon ... 5=Sun for seasonDay == Tue
         matchDate = currDate - datetime.timedelta(days=adjustDays)
         context = {

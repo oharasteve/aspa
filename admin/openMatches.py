@@ -68,6 +68,15 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             self.response.set_status(200)
             return
 
+        # backdate to league night
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
+        currDate = datetime.datetime.strptime(xwhen, "%Y-%m-%d")
+        weekDay = currDate.weekday()               # 0=Mon ... 6=Sun
+        seasonDay = season.startDate.weekday()     # 0=Mon ... 6=Sun
+        adjustDays = (weekDay + 7-seasonDay) % 7   # 6=Mon ... 5=Sun for seasonDay == Tue
+        matchDate = currDate - datetime.timedelta(days=adjustDays)
+        xwhen = matchDate.strftime('%Y-%m-%d')
+
         nameW = nameA
         nameL = nameB
 
