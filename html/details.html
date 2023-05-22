@@ -146,7 +146,9 @@
                     <span class="circle-indicator-right">
                         <span class="circle-indicator-bar" style="transform: rotate( {% if summary.wins >= summary.losses %} 180{%- else -%} {{ summary.wins / (summary.wins + summary.losses) * 360 }}{%- endif -%}deg)"></span>
                     </span>
+                    {%- if summary.wins %}
                     <div class="circle-indicator-value">{{(summary.wins / (summary.wins + summary.losses) * 100)|round|int}}%</div> 
+                    {%- endif %}
                 </div>
           </td>
         </tr>

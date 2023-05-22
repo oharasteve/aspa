@@ -48,6 +48,10 @@ class Weekly():
                 continue
             playerW = players.Player.get_by_id(match.playerW.id())
             playerL = players.Player.get_by_id(match.playerL.id())
+            try:
+                margin = match.targetL - match.scoreL
+            except TypeError:
+                margin = '??'
 
             match_summary = {
                 'seq': match.seq,
@@ -62,7 +66,7 @@ class Weekly():
                 'scoreL': match.scoreL,
                 'targetL': match.targetL,
                 'highRunL': match.highRunL,
-                'margin': match.targetL - match.scoreL,
+                'margin': margin,
                 'video1': match.video1,
                 'video2': match.video2,
             }

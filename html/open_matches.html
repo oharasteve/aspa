@@ -34,7 +34,7 @@
       <td rowspan=2 class="text-center"><span class="field" id="date">{{ entry.date }}</span>
           <span hidden id="match_id" class="field">{{ entry.key }}</span></td>
       <td class="text-center">{{ entry.playera.name }} <span hidden  id="a_id" class="field">{{ entry.playera.id }}</span></td>
-      <td class="text-center">{{ entry.playera.target }}</td>
+      <td class="text-center"><input class="field" id="a_target" size=5 value="{{ entry.playera.target }}"></td>
       {%- if admin %}
     <td class="text-center"><input class="field" id="a_score" size=5></td>
     <td class="text-center"><input class="field" id="a_highrun" size=5></td>
@@ -44,7 +44,7 @@
   </tr>
   <tr>
       <td class="text-center">{{ entry.playerb.name }} <span hidden  id="b_id" class="field">{{ entry.playerb.id }}</span></td>
-      <td class="text-center">{{ entry.playerb.target }}</td>
+      <td class="text-center"><input class="field" id="b_target" size=5 value="{{ entry.playerb.target }}"></td>
     {%- if admin %}
     <td class="text-center"><input class="field" id="b_score" size=5></td>
     <td class="text-center"><input class="field" id="b_highrun" size=5></td>

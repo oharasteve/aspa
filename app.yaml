@@ -55,6 +55,9 @@ handlers:
 - url: /[^/]*/details/.*
   script: details.app
 
+- url: /[^/]*/hr/
+  script: hr.app
+
 - url: /[^/]*/charts/.*
   script: charts.app
 

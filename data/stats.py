@@ -50,6 +50,9 @@ def addMatch(season, player, win, hcap, score, hrun):
    if hrun > Stats.highRun:
        Stats.highRun = hrun
 
+   if hrun > 0:
+       Stats.highRuns.append(hrun)
+
    Stats.put()
 
 def removeMatch(season, player, win):
@@ -93,6 +96,8 @@ class PlayerSummary(ndb.Model):
     handicap = ndb.IntegerProperty()
     highRunTarget = ndb.FloatProperty()
     highRun = ndb.IntegerProperty()
+    highRuns = ndb.IntegerProperty(repeated=True)
+    highRunCount = ndb.ComputedProperty(lambda self: len([x for x in self.highRuns if x > self.highRunTarget/2]))
     wins = ndb.IntegerProperty()
     losses = ndb.IntegerProperty()
     forfeits = ndb.IntegerProperty(default=0)

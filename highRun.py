@@ -2,6 +2,9 @@ def getHighRunTarget(handicap):
   if handicap < 100 or handicap >= 850:
     return 0
 
+  
+  highRunAdjust = 0.8   # Per Tan, targets are too high
+
   # This is a lookup table for calculating high run target,
   # given a player's handicap. It is a piecewise linear function,
   # interpolating between the points
@@ -29,6 +32,6 @@ def getHighRunTarget(handicap):
   prev_target = 0
   if i > 0:
       prev_handicap = highRuns[i-1][0]
-      prev_target = highRuns[i-1][1]
-  scale = (float(highRuns[i][0]) - prev_handicap) / (highRuns[i][1] - prev_target)
+      prev_target = highRuns[i-1][1] * highRunAdjust
+  scale = (float(highRuns[i][0]) - prev_handicap) / (highRuns[i][1] * highRunAdjust - prev_target)
   return round(prev_target + (handicap - prev_handicap) / scale)
