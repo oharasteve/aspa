@@ -101,7 +101,7 @@ class View():
                 'club': club,
                 'player_summaries': player_summaries,
                 'weeks': weekCount,
-                'updated': last_update.date,
+                'updated': last_update.date(),
                 'matches': matchCount,
                 }
         return context
