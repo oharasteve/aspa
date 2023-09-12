@@ -34,20 +34,20 @@
       <td rowspan=2 class="text-center"><span class="field" id="date">{{ entry.date }}</span>
           <span hidden id="match_id" class="field">{{ entry.key }}</span></td>
       <td class="text-center">{{ entry.playera.name }} <span hidden  id="a_id" class="field">{{ entry.playera.id }}</span></td>
-      <td class="text-center"><input class="field" id="a_target" size=5 value="{{ entry.playera.target }}"></td>
+      <td class="text-center"><input class="field" autocomplete="off" id="a_target-{{ entry.key }}" size=5 value="{{ entry.playera.target }}"></td>
       {%- if admin %}
-    <td class="text-center"><input class="field" id="a_score" size=5></td>
-    <td class="text-center"><input class="field" id="a_highrun" size=5></td>
+      <td class="text-center"><input class="field" autocomplete="off" id="a_score-{{ entry.key }}" size=5></td>
+      <td class="text-center"><input class="field" autocomplete="off" id="a_highrun-{{ entry.key }}" size=5></td>
 
         <td class="text-center"><button onclick="delete_match(event)">delete</button></td>
     {%- endif %}
   </tr>
   <tr>
       <td class="text-center">{{ entry.playerb.name }} <span hidden  id="b_id" class="field">{{ entry.playerb.id }}</span></td>
-      <td class="text-center"><input class="field" id="b_target" size=5 value="{{ entry.playerb.target }}"></td>
+      <td class="text-center"><input class="field" autocomplete="off" id="b_target-{{ entry.key }}" size=5 value="{{ entry.playerb.target }}"></td>
     {%- if admin %}
-    <td class="text-center"><input class="field" id="b_score" size=5></td>
-    <td class="text-center"><input class="field" id="b_highrun" size=5></td>
+    <td class="text-center"><input class="field" autocomplete="off" id="b_score-{{ entry.key }}" size=5></td>
+    <td class="text-center"><input class="field" autocomplete="off" id="b_highrun-{{ entry.key }}" size=5></td>
       <td class="text-center"><button onclick="update_match(event)">update</button></td>
     {%- endif %}
   </tr>
@@ -81,10 +81,11 @@ fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByCla
 console.log(fields);
           var data = "";
           fields.forEach(field => {
-                    if (field.id == "match_id" || field.id == "club") {
-                        data += "&"+field.id+"="+(field.innerText || field.value)
-                    }
-                });
+                id = field.id.split('-')[0];
+                if (id == "match_id" || id == "club") {
+                  data += "&"+id+"="+(field.innerText || field.value)
+                }
+          });
 
 console.log(data);
 xhr.send(data);
@@ -110,7 +111,12 @@ var fields = Array.from(parent.getElementsByClassName('field'));
 fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByClassName('field')));
 console.log(fields);
           var data = "";
-          fields.forEach(field => {data += "&"+field.id+"="+(field.innerText || field.value)});
+          fields.forEach(field => {
+            id = field.id.split('-')[0];
+            if (id == "match_id" || id == "club") {
+              data += "&"+id+"="+(field.innerText || field.value)
+            }
+          });
 
 console.log(data);
 xhr.send(data);
