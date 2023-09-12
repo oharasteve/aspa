@@ -56,6 +56,7 @@ class View():
                 summaries = stats.PlayerSummary.query(stats.PlayerSummary.season
                     == season.key).order( -stats.PlayerSummary.points)
             for summary in summaries:
+                highRuns = sorted(summary.highRuns, reverse=True)
                 player = players.Player.get_by_id(summary.player.id())
                 seq += 1
                 matchCount += summary.wins
@@ -63,6 +64,7 @@ class View():
                 player_summary = {
                     'entry_index': seq,
                     'summary': summary,
+                    'highRuns': highRuns,
                     'player': players.Player.get_by_id(summary.player.id()),
                     'details_page_url':
                     '/{2}/details/?Season={0}&Player={1}'.format(

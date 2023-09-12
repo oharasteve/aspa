@@ -59,30 +59,30 @@
         <td class="text-center">{{ entry.player.handicap }}</td>
         <td class="text-right">{{ '%.2f' % entry.summary.highRunTarget }}</td>
         <td
-          {% if entry.summary.highRuns[0]|default(0) >= entry.summary.highRunTarget/2 %}
+          {% if entry.highRuns[0]|default(0) >= entry.summary.highRunTarget/2 %}
           class="half text-center"
           {% endif %}
-            class="text-center">{{ entry.summary.highRuns[0] }}</td>
+            class="text-center">{{ entry.highRuns[0] }}</td>
         <td
-          {% if entry.summary.highRuns[1]|default(0) >= entry.summary.highRunTarget/2 %}
+          {% if entry.highRuns[1]|default(0) >= entry.summary.highRunTarget/2 %}
           class="half text-center"
           {% endif %}
-            class="text-center">{{ entry.summary.highRuns[1] }}</td>
+            class="text-center">{{ entry.highRuns[1] }}</td>
         <td
-          {% if entry.summary.highRuns[2]|default(0) >= entry.summary.highRunTarget/2 %}
+          {% if entry.highRuns[2]|default(0) >= entry.summary.highRunTarget/2 %}
           class="half text-center"
           {% endif %}
-            class="text-center">{{ entry.summary.highRuns[2] }}</td>
+            class="text-center">{{ entry.highRuns[2] }}</td>
         <td
-          {% if entry.summary.highRuns[3]|default(0) >= entry.summary.highRunTarget/2 %}
+          {% if entry.highRuns[3]|default(0) >= entry.summary.highRunTarget/2 %}
           class="half text-center"
           {% endif %}
-            class="text-center">{{ entry.summary.highRuns[3] }}</td>
+            class="text-center">{{ entry.highRuns[3] }}</td>
         <td
-          {% if entry.summary.highRuns[4]|default(0) >= entry.summary.highRunTarget/2 %}
+          {% if entry.highRuns[4]|default(0) >= entry.summary.highRunTarget/2 %}
           class="half text-center"
           {% endif %}
-            class="text-center">{{ entry.summary.highRuns[4] }}</td>
+            class="text-center">{{ entry.highRuns[4] }}</td>
         <td class="text-right">{{ entry.summary.highRunCount }}</td>
       </tr>
     {%- endfor %}
