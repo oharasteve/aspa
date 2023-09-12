@@ -3,6 +3,7 @@ function getHighRunTarget(handicap) {
     return 0;
   }
 
+  var highRunAdjust  = 0.8; // Per Tan targets are too high
   // This is a lookup table for calculating high run target,
   // given a player's handicap. It is a piecewise linear function,
   // interpolating between the points
@@ -31,9 +32,9 @@ function getHighRunTarget(handicap) {
   var prev_target = 0;
   if (i > 0) {
     prev_handicap = highRuns[i-1][0];
-    prev_target = highRuns[i-1][1];
+    prev_target = highRuns[i-1][1] * highRunAdjust;
   }
-  var scale = (1.0*highRuns[i][0] - prev_handicap) / (highRuns[i][1] - prev_target);
+  var scale = (1.0*highRuns[i][0] - prev_handicap) / (highRuns[i][1] * highRunAdjust - prev_target);
   return Math.round(prev_target + (handicap - prev_handicap) / scale);
 }
 

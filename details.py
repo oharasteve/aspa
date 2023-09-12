@@ -48,12 +48,18 @@ class Details():
                 participant = match_data['winner']
                 opponent = match_data['loser']
                 result = 'Won'
-                win_mgn = opponent['target'] - opponent['score']
+                try:
+                    win_mgn = opponent['target'] - opponent['score']
+                except TypeError:
+                    win_mgn = repr(opponent['target']) + ' - ' + repr(opponent['score'])
                 lose_mgn = ''
             else:
                 participant = match_data['loser']
                 opponent = match_data['winner']
-                lose_mgn = participant['target'] - participant['score']
+                try:
+                    lose_mgn = participant['target'] - participant['score']
+                except TypeError:
+                    lose_mgn = repr(participant['target']) + ' - ' + repr(participant['score'])
                 win_mgn = ''
                 if match_data['forfeited']:
                     result = 'Forfeit'

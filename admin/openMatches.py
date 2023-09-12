@@ -55,6 +55,8 @@ class OpenMatchesHandler(base_handler.BaseHandler):
         xwhen = self.request.get('date')
         nameA = self.request.get('a_id')
         nameB = self.request.get('b_id')
+        xtargetA = self.request.get('a_target')
+        xtargetB = self.request.get('b_target')
         xscoreA = self.request.get('a_score')
         xscoreB = self.request.get('b_score')
         xhrunA = self.request.get('a_highrun')
@@ -68,14 +70,27 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             self.response.set_status(200)
             return
 
+        # backdate to league night
+        season = seasons.Season.query(seasons.Season.club == club.key).order(-seasons.Season.endDate).get();
+        currDate = datetime.datetime.strptime(xwhen, "%Y-%m-%d")
+        weekDay = currDate.weekday()               # 0=Mon ... 6=Sun
+        seasonDay = season.startDate.weekday()     # 0=Mon ... 6=Sun
+        adjustDays = (weekDay + 7-seasonDay) % 7   # 6=Mon ... 5=Sun for seasonDay == Tue
+        matchDate = currDate - datetime.timedelta(days=adjustDays)
+        xwhen = matchDate.strftime('%Y-%m-%d')
+
         nameW = nameA
         nameL = nameB
 
+        targetA = int(xtargetA) if xtargetA else None
+        targetB = int(xtargetB) if xtargetB else None
         scoreA = int(xscoreA) if xscoreA else None
         scoreB = int(xscoreB) if xscoreB else None
         hrunA = int(xhrunA) if xhrunA else None
         hrunB = int(xhrunB) if xhrunB else None
 
+        targetW = targetA
+        targetL = targetB
         scoreW = scoreA
         scoreL = scoreB
         hrunW = hrunA
@@ -84,7 +99,9 @@ class OpenMatchesHandler(base_handler.BaseHandler):
         winner = players.Player.get_by_id(nameW)
         loser = players.Player.get_by_id(nameL)
 
-        if match.targetW != scoreW:
+        if targetW != scoreW:
+            targetW = targetB
+            targetL = targetA
             scoreW = scoreB
             scoreL = scoreA
             hrunW = hrunB
@@ -93,7 +110,6 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             # Now fix up the match record fields
             match.playerW, match.playerL = match.playerL, match.playerW
             match.handicapW, match.handicapL = match.handicapL, match.handicapW
-            match.targetW, match.targetL = match.targetL, match.targetW
 
         successfully_added_match = False
         error_messages = []
@@ -105,9 +121,9 @@ class OpenMatchesHandler(base_handler.BaseHandler):
             error_messages.append("Loser is required")
 
         if scoreW is not None:
-            if scoreW != match.targetW:
+            if scoreW != targetW:
               error_messages.append("Winner score (%s) does not match target (%s)\n" % (scoreW, match.targetW))
-            if scoreL >= match.targetL:
+            if scoreL >= targetL:
               error_messages.append("Loser score (%s) is too high (%s)\n" % (scoreL, match.targetL))
 
         if not len(error_messages):
@@ -127,11 +143,13 @@ class OpenMatchesHandler(base_handler.BaseHandler):
                 loser.put()
 
             # update record match
-            match.seq = 0 # TODO(snoonan) 21.12 Make this useful again
+            match.seq = 1 # TODO(snoonan) 21.12 Make this useful again
 
+            match.targetW = targetW
             match.scoreW = scoreW
             match.highRunW = hrunW
 
+            match.targetL = targetL
             match.scoreL = scoreL
             match.highRunL = hrunL
 
