@@ -88,9 +88,9 @@ class View():
             weeks = matches.Match.query(
                 matches.Match.season == season.key, projection=["date"], distinct=True).order(-matches.Match.date)
             weekCount = weeks.count()
-            last_update = datetime.datetime.today()
+            last_update = datetime.datetime.today().date()
             if weekCount:
-                last_update = weeks.fetch()[0]
+                last_update = weeks.fetch()[0].date
 
         logging.debug('Found %d player summary records.' % (
             len(player_summaries)))
@@ -101,7 +101,7 @@ class View():
                 'club': club,
                 'player_summaries': player_summaries,
                 'weeks': weekCount,
-                'updated': last_update.date(),
+                'updated': last_update,
                 'matches': matchCount,
                 }
         return context

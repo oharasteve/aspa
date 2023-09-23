@@ -11,6 +11,9 @@ handlers:
   static_files: highrun_rules.html
   upload: highrun_rules.html
 
+- url: /static/
+  static_dir: static
+
 - url: /css/
   static_dir: css
 
