@@ -49,6 +49,12 @@ indexes:
 
 - kind: Match
   properties:
+  - name: club
+  - name: season
+  - name: seq
+
+- kind: Match
+  properties:
   - name: date
   - name: seq
 

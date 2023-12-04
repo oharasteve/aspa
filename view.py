@@ -29,7 +29,7 @@ class ViewClubHandler(base_handler.BaseHandler):
     def get(self, clubid):
         club = clubs.Club.get_by_id(clubid)
         if club == None:
-           clubs.sendNoSuch(clubid)
+           self.response.write("No such club exists")
            return
         seasonCode = self.request.GET.get('Season')
         season = None

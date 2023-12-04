@@ -76,16 +76,9 @@ xhr.onreadystatechange = function () {
       parent.nextElementSibling.remove();
       parent.remove();
    }};
-var fields = Array.from(parent.getElementsByClassName('field'));
-fields = fields.concat(Array.from(parent.previousElementSibling.getElementsByClassName('field')));
-console.log(fields);
-          var data = "";
-          fields.forEach(field => {
-                id = field.id.split('-')[0];
-                if (id == "match_id" || id == "club") {
-                  data += "&"+id+"="+(field.innerText || field.value)
-                }
-          });
+   var field = parent.childNodes[1].childNodes[2]
+   var data = "";
+   data += "&match_id="+(field.innerText);
 
 console.log(data);
 xhr.send(data);
@@ -113,9 +106,7 @@ console.log(fields);
           var data = "";
           fields.forEach(field => {
             id = field.id.split('-')[0];
-            if (id == "match_id" || id == "club") {
-              data += "&"+id+"="+(field.innerText || field.value)
-            }
+            data += "&"+id+"="+(field.innerText || field.value);
           });
 
 console.log(data);

@@ -18,6 +18,40 @@ import logging
 import players
 import seasons
 
+def getHighRunTarget(handicap):
+  if handicap < 400 or handicap >= 850:
+    return 0
+
+  highRunAdjust = 0.8; # Per Tan targets are too high
+  # This is a lookup table for calculating high run target,
+  # given a player's handicap. It is a piecewise linear function,
+  # interpolating between the points
+  highRuns = [
+    [350, 16],
+    [400, 18],
+    [450, 20],
+    [500, 22],
+    [550, 26],
+    [600, 32],
+    [650, 44],
+    [700, 58],
+    [725, 72],
+    [750, 86],
+    [775, 100],
+    [800, 114],
+    [825, 128],
+    [850, 144]
+  ];
+
+  for i in range(len(highRuns)):
+    if handicap < highRuns[i][0]:
+      break;
+
+  prev_handicap = highRuns[i-1][0];
+  prev_target = highRuns[i-1][1] * highRunAdjust;
+  scale = (1.0*highRuns[i][0] - prev_handicap) / (highRuns[i][1] * highRunAdjust - prev_target);
+  return int((prev_target + (handicap - prev_handicap) / scale) + 0.5)
+
 def addMatch(season, player, win, hcap, score, hrun):
 
    Stats = PlayerSummary.query(
@@ -41,10 +75,13 @@ def addMatch(season, player, win, hcap, score, hrun):
 
    if season.id() != 'lifetime':
        # Update handicaps
+       if hrun >= Stats.highRunTarget/2:
+           Stats.HighRunCount += 1
        _player = player.get()
        _player.handicap = _player.handicap + hcapAdj
        _player.put()
        Stats.handicap = _player.handicap
+       Stats.highRunTarget = getHighRunTarget(_player.handicap)
 
    # Update high runs
    if hrun > Stats.highRun:
@@ -55,7 +92,7 @@ def addMatch(season, player, win, hcap, score, hrun):
 
    Stats.put()
 
-def removeMatch(season, player, win):
+def removeMatch(season, player, win, hrun):
 
    Stats = PlayerSummary.query(
        ndb.AND(PlayerSummary.player == player, PlayerSummary.season == season)).fetch(1)[0]
@@ -77,6 +114,11 @@ def removeMatch(season, player, win):
    _player.handicap = _player.handicap - hcapAdj
    _player.put()
 
+   Stats.highRunTarget = getHighRunTarget(_player.handicap)
+   if hrun >= Stats.highRunTarget/2:
+       Stats.HighRunCount -= 1
+
+   Stats.highRuns.remove(hrun)
    """
    TODO:
    We should scan session/all history for next lower IF hrun == highRun
@@ -94,10 +136,10 @@ class PlayerSummary(ndb.Model):
     player = ndb.KeyProperty(kind=players.Player)
     season = ndb.KeyProperty(kind=seasons.Season)
     handicap = ndb.IntegerProperty()
-    highRunTarget = ndb.FloatProperty()
+    highRunTarget = ndb.FloatProperty(default=999)
     highRun = ndb.IntegerProperty()
     highRuns = ndb.IntegerProperty(repeated=True)
-    highRunCount = ndb.ComputedProperty(lambda self: len([x for x in self.highRuns if x > self.highRunTarget/2]))
+    highRunCount = ndb.IntegerProperty(default=0)
     wins = ndb.IntegerProperty()
     losses = ndb.IntegerProperty()
     forfeits = ndb.IntegerProperty(default=0)

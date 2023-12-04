@@ -94,9 +94,9 @@ class DeleteMatchHandler(base_handler.BaseHandler):
                 # Delete the match
                 ndb.Key(matches.Match, match.key.id()).delete()
 
-                stats.removeMatch(season.key, match.playerW, 1)
+                stats.removeMatch(season.key, match.playerW, 1, match.highRunW)
                 # TODO: Deal with undoing a forefit?
-                stats.removeMatch(season.key, match.playerL, 0)
+                stats.removeMatch(season.key, match.playerL, 0, match.highRunL)
 
                 successfully_deleted_match = True
 
