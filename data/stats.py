@@ -76,7 +76,7 @@ def addMatch(season, player, win, hcap, score, hrun):
    if season.id() != 'lifetime':
        # Update handicaps
        if hrun >= Stats.highRunTarget/2:
-           Stats.HighRunCount += 1
+           Stats.highRunCount += 1
        _player = player.get()
        _player.handicap = _player.handicap + hcapAdj
        _player.put()
@@ -116,7 +116,7 @@ def removeMatch(season, player, win, hrun):
 
    Stats.highRunTarget = getHighRunTarget(_player.handicap)
    if hrun >= Stats.highRunTarget/2:
-       Stats.HighRunCount -= 1
+       Stats.highRunCount -= 1
 
    Stats.highRuns.remove(hrun)
    """
